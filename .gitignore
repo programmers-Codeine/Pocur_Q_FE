@@ -26,3 +26,4 @@ gitmessage.txt
 
 # env files
 *.env
+*storybook.log

@@ -24,6 +24,13 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       'prettier/prettier': 'error',
+      'import/no-extraneous-dependencies': [
+        'error',
+        {
+          devDependencies: ['**/stories/**'],
+          optionalDependencies: false,
+        },
+      ],
     },
   },
   eslintConfigPrettier
