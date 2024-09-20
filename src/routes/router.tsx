@@ -1,49 +1,44 @@
-import { createBrowserRouter } from "react-router-dom";
-import Layout from "@/components/common/Layout/Layout";
-import { ErrorPage } from "@/pages/Error";
-import { LoginPage } from "@/pages/Login";
-import { SettingPage, MenuPage, DesignPage, EtcPage } from "@/pages/Setting";
-import {
-  ManagePage,
-  RealTimeMenuPage,
-  StatisticsPage,
-  TablePage,
-} from "@/pages/Manage";
+import { createBrowserRouter } from 'react-router-dom';
+import Layout from '@/components/common/Layout/Layout';
+import { ErrorPage } from '@/pages/Error';
+import { LoginPage } from '@/pages/Login';
+import { SettingPage, MenuPage, DesignPage, EtcPage } from '@/pages/Setting';
+import { ManagePage, RealTimeMenuPage, StatisticsPage, TablePage } from '@/pages/Manage';
 
 export const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Layout />,
-     // 관리자 or 손님 선택페이지로 하거나, 프로젝트 소개페이지로 구성예상
+    // 관리자 or 손님 선택페이지로 하거나, 프로젝트 소개페이지로 구성예상
     errorElement: <ErrorPage />,
   },
   {
-    path: "/admin",
+    path: '/admin',
     element: <Layout />,
     children: [
-      { path: "login", element: <LoginPage /> },
+      { path: 'login', element: <LoginPage /> },
       {
-        path: "manage",
+        path: 'manage',
         element: <ManagePage />,
         children: [
-          { path: "table", element: <TablePage /> },
-          { path: "real-time-menu", element: <RealTimeMenuPage /> },
-          { path: "statistics", element: <StatisticsPage /> },
+          { path: 'table', element: <TablePage /> },
+          { path: 'real-time-menu', element: <RealTimeMenuPage /> },
+          { path: 'statistics', element: <StatisticsPage /> },
         ],
       },
       {
-        path: "setting",
+        path: 'setting',
         element: <SettingPage />,
         children: [
-          { path: "menu", element: <MenuPage /> },
-          { path: "design", element: <DesignPage /> },
-          { path: "etc", element: <EtcPage /> },
+          { path: 'menu', element: <MenuPage /> },
+          { path: 'design', element: <DesignPage /> },
+          { path: 'etc', element: <EtcPage /> },
         ],
       },
     ],
   },
   {
-    path: "/customer",
+    path: '/customer',
     element: <Layout />,
   },
 ]);
