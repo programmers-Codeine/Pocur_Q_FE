@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Layout from '@/components/common/Layout/Layout';
+import Introduce from '@/components/common/Layout/Introduce';
 import { ErrorPage } from '@/pages/Error';
 import { LoginPage } from '@/pages/Login';
 import { SettingPage, MenuPage, DesignPage, EtcPage } from '@/pages/Setting';
@@ -8,7 +9,7 @@ import { ManagePage, RealTimeMenuPage, StatisticsPage, TablePage } from '@/pages
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <Layout />,
+    element: <Introduce />,
     // 관리자 or 손님 선택페이지로 하거나, 프로젝트 소개페이지로 구성예상
     errorElement: <ErrorPage />,
   },
