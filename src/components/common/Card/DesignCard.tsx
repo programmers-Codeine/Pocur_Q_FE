@@ -1,11 +1,4 @@
-import { MouseEvent } from 'react';
-type Props = {
-  title?: string;
-  edit?: string;
-  image?: string;
-  state?: 'normal' | 'active';
-  onContextMenu?: (e: MouseEvent<HTMLDivElement>) => void;
-};
+import { DesignCardProps } from './DesignCard.types';
 
 export default function DesignCard({
   title = '디자인 이름이름',
@@ -13,7 +6,7 @@ export default function DesignCard({
   image,
   state = 'normal',
   onContextMenu,
-}: Props) {
+}: DesignCardProps) {
   const className = {
     getState: () => {
       switch (state) {
@@ -34,9 +27,9 @@ export default function DesignCard({
       onContextMenu={onContextMenu}
     >
       <div className="bg-d10 w-full h-full border flex justify-center items-center">
-        <img src={image} alt="designCardImage" />
+        <img src={image} alt="design preview" />
       </div>
-      <div className={`${className.getState()[1]}`}>
+      <div className={className.getState()[1]}>
         <p className="text-2xl font-bold">{title}</p>
         <p className="text-base">{edit}</p>
       </div>

@@ -3,12 +3,11 @@ import { fn } from '@storybook/test';
 import DesignCard from './DesignCard';
 
 const meta = {
-  title: 'Card/DesignCard',
+  title: 'common/DesignCard',
   component: DesignCard,
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
   args: { onContextMenu: fn() },
 } satisfies Meta<typeof DesignCard>;
 
