@@ -1,4 +1,4 @@
-export default function Introduce() {
+export default function AdminHome() {
   return (
     <div className="flex w-screen h-screen gap-1.5 p-2 bg-d10">
       <aside className="flex items-center justify-center w-[40%] bg-b100">
