@@ -10,14 +10,13 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <AdminHome />,
-    // 관리자 or 손님 선택페이지로 하거나, 프로젝트 소개페이지로 구성예상
+    children: [{ path: 'login', element: <LoginPage /> }],
     errorElement: <ErrorPage />,
   },
   {
     path: '/admin',
     element: <Layout />,
     children: [
-      { path: 'login', element: <LoginPage /> },
       {
         path: 'manage',
         element: <ManagePage />,
