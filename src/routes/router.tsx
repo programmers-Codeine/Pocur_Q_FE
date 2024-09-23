@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import Layout from '@/components/common/Layout/Layout';
 import AdminHome from '@/components/common/Layout/AdminHome';
 import { ErrorPage } from '@/pages/Error';
-import { LoginPage } from '@/pages/Login';
+import { LoginPage, RegisterPage } from '@/pages/AdminHome';
 import { SettingPage, MenuPage, DesignPage, EtcPage } from '@/pages/Setting';
 import { ManagePage, RealTimeMenuPage, StatisticsPage, TablePage } from '@/pages/Manage';
 
@@ -10,7 +10,10 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <AdminHome />,
-    children: [{ path: 'login', element: <LoginPage /> }],
+    children: [
+      { path: 'login', element: <LoginPage /> },
+      { path: 'register', element: <RegisterPage /> },
+    ],
     errorElement: <ErrorPage />,
   },
   {
