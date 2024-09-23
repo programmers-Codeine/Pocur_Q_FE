@@ -10,7 +10,7 @@ export default {
         b200: '#2b7fff',
         b300: '#0065ff',
         b400: '#0047b3',
-        b500: '#e6f0ff',
+        b500: '#003e9c',
 
         d10: '#fafbfb',
         d30: '#ebedf0',
