@@ -1,13 +1,15 @@
+import clsx from 'clsx';
 import React from 'react';
+import { SubText } from './Input.type';
 
 interface Props {
   id: string;
   label?: string;
   type: React.HTMLInputTypeAttribute; // input의 type
   placeholder: string;
-  iconUrl?: string; // icon svg 타입 찾기
+  iconUrl?: string; // icon 이미지 url 찾기
   onClickIcon?: () => void; // 상황에 맞는 API 요청
-  subText?: string; // input 하단 문구(경고 문구, 안내 문구)
+  subText?: SubText; // input 하단 안내 문구
 }
 
 export default function Input({
@@ -22,7 +24,7 @@ export default function Input({
   return (
     <>
       {label && (
-        <label className="text-lg font-semibold" htmlFor={id}>
+        <label className="text-em font-semibold" htmlFor={id}>
           {label}
         </label>
       )}
@@ -39,7 +41,11 @@ export default function Input({
           </div>
         )}
       </div>
-      {subText && <p className="w-full text-base text-d200">{subText}</p>}
+      {subText && (
+        <p className={clsx('w-full text-base text-d200', subText.warn && 'text-highlightRed')}>
+          {subText.text}
+        </p>
+      )}
     </>
   );
 }
