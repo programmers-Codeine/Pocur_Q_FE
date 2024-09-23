@@ -2,9 +2,9 @@ import { ButtonProps } from './Button.types';
 
 export default function Button({ children, title, type, state, onClick }: ButtonProps) {
   return (
-    <div>
+    <div className="w-full min-w-[280px] max-w-[400px]">
       <button
-        className={`min-w-[380px] flex justify-center items-center border rounded py-2 text-2xl
+        className={`w-full flex justify-center items-center border rounded-lg py-2 text-2xl
         ${
           type === 'menu' &&
           (state === 'normal'
