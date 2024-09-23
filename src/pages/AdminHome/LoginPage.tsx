@@ -6,6 +6,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   const handleNavigate = (src: string) => {
+    if (src === 'search-password') return;
     navigate(`/${src}`);
   };
   return (
