@@ -1,44 +1,66 @@
 import { createBrowserRouter } from 'react-router-dom';
-import Layout from '@/components/common/Layout/Layout';
-import AdminHome from '@/components/common/Layout/AdminHome';
 import { ErrorPage } from '@/pages/Error';
-import { LoginPage } from '@/pages/Login';
-import { SettingPage, MenuPage, DesignPage, EtcPage } from '@/pages/Setting';
-import { ManagePage, RealTimeMenuPage, StatisticsPage, TablePage } from '@/pages/Manage';
+import { LoginPage, RegisterPage } from '@/pages/AdminHome';
+import { MenuPage, DesignPage, EtcPage } from '@/pages/Setting';
+import { RealTimeMenuPage, StatisticsPage, TablePage } from '@/pages/Manage';
+import {
+  ROUTE_LOGIN,
+  ROUTE_REGISTER,
+  ROUTE_ADMIN,
+  ROUTE_MANAGE,
+  ROUTE_TABLE,
+  ROUTE_REAL_TIME_MENU,
+  ROUTE_STATISTICS,
+  ROUTE_SETTING,
+  ROUTE_MENU,
+  ROUTE_DESIGN,
+  ROUTE_ETC,
+  ROUTE_CUSTOMER,
+} from '@/constants/routing';
+import {
+  AdminHomeLayout,
+  AdminLayout,
+  ManageLayout,
+  SettingLayout,
+  CustomerLayout,
+} from '@/components/common/Layout';
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <AdminHome />,
-    children: [{ path: 'login', element: <LoginPage /> }],
+    element: <AdminHomeLayout />,
+    children: [
+      { path: ROUTE_LOGIN, element: <LoginPage /> },
+      { path: ROUTE_REGISTER, element: <RegisterPage /> },
+    ],
     errorElement: <ErrorPage />,
   },
   {
-    path: '/admin',
-    element: <Layout />,
+    path: `/${ROUTE_ADMIN}`,
+    element: <AdminLayout />,
     children: [
       {
-        path: 'manage',
-        element: <ManagePage />,
+        path: ROUTE_MANAGE,
+        element: <ManageLayout />,
         children: [
-          { path: 'table', element: <TablePage /> },
-          { path: 'real-time-menu', element: <RealTimeMenuPage /> },
-          { path: 'statistics', element: <StatisticsPage /> },
+          { path: ROUTE_TABLE, element: <TablePage /> },
+          { path: ROUTE_REAL_TIME_MENU, element: <RealTimeMenuPage /> },
+          { path: ROUTE_STATISTICS, element: <StatisticsPage /> },
         ],
       },
       {
-        path: 'setting',
-        element: <SettingPage />,
+        path: ROUTE_SETTING,
+        element: <SettingLayout />,
         children: [
-          { path: 'menu', element: <MenuPage /> },
-          { path: 'design', element: <DesignPage /> },
-          { path: 'etc', element: <EtcPage /> },
+          { path: ROUTE_MENU, element: <MenuPage /> },
+          { path: ROUTE_DESIGN, element: <DesignPage /> },
+          { path: ROUTE_ETC, element: <EtcPage /> },
         ],
       },
     ],
   },
   {
-    path: '/customer',
-    element: <Layout />,
+    path: `/${ROUTE_CUSTOMER}`,
+    element: <CustomerLayout />,
   },
 ]);

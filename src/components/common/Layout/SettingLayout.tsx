@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 
-export default function SettingPage() {
+export default function SettingLayout() {
   return (
     <div>
       <Outlet />
