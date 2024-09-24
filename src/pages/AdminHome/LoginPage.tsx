@@ -1,8 +1,11 @@
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import Button from '@/components/common/Button/Button';
 import Input from '@/components/common/Input/Input';
 
 export default function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleNavigate = (src: string) => {
@@ -14,7 +17,14 @@ export default function LoginPage() {
   return (
     <div className="flex w-[50%] flex-col items-center gap-6">
       <div className="w-full max-w-[400px]">
-        <Input id="email" label="이메일" type="email" placeholder="이메일을 입력하세요." />
+        <Input
+          id="email"
+          label="이메일"
+          type="email"
+          placeholder="이메일을 입력하세요."
+          value={email}
+          handleInputChange={e => setEmail(e.target.value)}
+        />
       </div>
       <div className="w-full max-w-[400px]">
         <Input
@@ -22,6 +32,8 @@ export default function LoginPage() {
           label="비밀번호"
           type="password"
           placeholder="비밀번호를 입력하세요."
+          value={password}
+          handleInputChange={e => setPassword(e.target.value)}
         />
       </div>
       <Button title="로그인" type="others" onClick={() => handleNavigate('admin/manage')} />
