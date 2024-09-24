@@ -7,6 +7,8 @@ export default function LoginPage() {
 
   const handleNavigate = (src: string) => {
     // TODO: 로그인 버튼을 통한 접속에 대한 처리가 필요함.
+    // TODO: 성공적으로 로그인되었을 떄, 사용자가 첫 사용인지 체크.
+    // TODO: navigate options에 처음 사용자인지(등록한 가게가 있는지)에 대한 결과 전달
     navigate(`/${src}`);
   };
   return (

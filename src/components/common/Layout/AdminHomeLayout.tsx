@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import logoPhone from '@/assets/images/pocurq_phone2.png';
 
-export default function AdminHome() {
+export default function AdminHomeLayout() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 

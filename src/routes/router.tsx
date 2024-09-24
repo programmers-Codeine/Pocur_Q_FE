@@ -1,10 +1,8 @@
 import { createBrowserRouter } from 'react-router-dom';
-import Layout from '@/components/common/Layout/Layout';
-import AdminHome from '@/components/common/Layout/AdminHome';
 import { ErrorPage } from '@/pages/Error';
 import { LoginPage, RegisterPage } from '@/pages/AdminHome';
-import { SettingPage, MenuPage, DesignPage, EtcPage } from '@/pages/Setting';
-import { ManagePage, RealTimeMenuPage, StatisticsPage, TablePage } from '@/pages/Manage';
+import { MenuPage, DesignPage, EtcPage } from '@/pages/Setting';
+import { RealTimeMenuPage, StatisticsPage, TablePage } from '@/pages/Manage';
 import {
   ROUTE_LOGIN,
   ROUTE_REGISTER,
@@ -19,11 +17,18 @@ import {
   ROUTE_ETC,
   ROUTE_CUSTOMER,
 } from '@/constants/routing';
+import {
+  AdminHomeLayout,
+  AdminLayout,
+  ManageLayout,
+  SettingLayout,
+  CustomerLayout,
+} from '@/components/common/Layout';
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <AdminHome />,
+    element: <AdminHomeLayout />,
     children: [
       { path: ROUTE_LOGIN, element: <LoginPage /> },
       { path: ROUTE_REGISTER, element: <RegisterPage /> },
@@ -32,11 +37,11 @@ export const router = createBrowserRouter([
   },
   {
     path: `/${ROUTE_ADMIN}`,
-    element: <Layout />,
+    element: <AdminLayout />,
     children: [
       {
         path: ROUTE_MANAGE,
-        element: <ManagePage />,
+        element: <ManageLayout />,
         children: [
           { path: ROUTE_TABLE, element: <TablePage /> },
           { path: ROUTE_REAL_TIME_MENU, element: <RealTimeMenuPage /> },
@@ -45,7 +50,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTE_SETTING,
-        element: <SettingPage />,
+        element: <SettingLayout />,
         children: [
           { path: ROUTE_MENU, element: <MenuPage /> },
           { path: ROUTE_DESIGN, element: <DesignPage /> },
@@ -56,6 +61,6 @@ export const router = createBrowserRouter([
   },
   {
     path: `/${ROUTE_CUSTOMER}`,
-    element: <Layout />,
+    element: <CustomerLayout />,
   },
 ]);
