@@ -1,16 +1,5 @@
 import clsx from 'clsx';
-import React from 'react';
-import { SubText } from './Input.type';
-
-interface Props {
-  id: string;
-  label?: string;
-  type: React.HTMLInputTypeAttribute; // input의 type
-  placeholder: string;
-  iconUrl?: string; // icon 이미지 url 찾기
-  onClickIcon?: () => void; // 상황에 맞는 API 요청
-  subText?: SubText; // input 하단 안내 문구
-}
+import { InputProps } from './Input.types';
 
 export default function Input({
   id,
@@ -20,7 +9,7 @@ export default function Input({
   iconUrl,
   onClickIcon,
   subText,
-}: Props) {
+}: InputProps) {
   return (
     <>
       {label && (
