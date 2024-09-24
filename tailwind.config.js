@@ -3,6 +3,9 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      fontSize: {
+        em: '1em',
+      },
       colors: {
         b50: '#e6f0ff',
         b75: '#96c0ff',
@@ -19,7 +22,7 @@ export default {
         d200: '#6b788e',
         d400: '#505f79',
         d700: '#c2c7d0',
-        d900: '#091e42',
+        d800: '#091e42',
 
         highlightRed: '#dc2626',
         highlightYellow: '#ffd446',

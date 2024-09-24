@@ -22,7 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-gitmessage.txt
+.gitmessage.txt
 
 # env files
 *.env
