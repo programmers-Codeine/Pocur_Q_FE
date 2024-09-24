@@ -6,6 +6,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   const handleNavigate = (src: string) => {
+    // TODO: 로그인 버튼을 통한 접속에 대한 처리가 필요함.
     navigate(`/${src}`);
   };
   return (
@@ -21,7 +22,7 @@ export default function LoginPage() {
           placeholder="비밀번호를 입력하세요."
         />
       </div>
-      <Button title="로그인" type="others" />
+      <Button title="로그인" type="others" onClick={() => handleNavigate('admin/manage')} />
       <div className="flex cursor-pointer gap-4 text-d900">
         <span className="underline hover:font-bold">비밀번호를 잃어버리셨나요 ?</span>
         <span className="underline hover:font-bold" onClick={() => handleNavigate('register')}>
