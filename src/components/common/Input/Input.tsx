@@ -3,9 +3,11 @@ import { InputProps } from './Input.types';
 
 export default function Input({
   id,
-  label,
   type,
   placeholder,
+  value,
+  handleInputChange,
+  label,
   iconUrl,
   onClickIcon,
   subText,
@@ -22,7 +24,9 @@ export default function Input({
           className="w-full px-4 py-2 rounded-lg text-base placeholder:text-d200 border border-d50"
           type={type}
           id={id}
+          value={value}
           placeholder={placeholder}
+          onChange={handleInputChange}
         />
         {iconUrl && (
           <div className="absolute flex items-center justify-center right-4 top-0 h-full cursor-pointer">
