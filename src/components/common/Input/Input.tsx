@@ -1,26 +1,17 @@
 import clsx from 'clsx';
-import React from 'react';
-import { SubText } from './Input.type';
-
-interface Props {
-  id: string;
-  label?: string;
-  type: React.HTMLInputTypeAttribute; // input의 type
-  placeholder: string;
-  iconUrl?: string; // icon 이미지 url 찾기
-  onClickIcon?: () => void; // 상황에 맞는 API 요청
-  subText?: SubText; // input 하단 안내 문구
-}
+import { InputProps } from './Input.types';
 
 export default function Input({
   id,
-  label,
   type,
   placeholder,
+  value,
+  handleInputChange,
+  label,
   iconUrl,
   onClickIcon,
   subText,
-}: Props) {
+}: InputProps) {
   return (
     <>
       {label && (
@@ -33,7 +24,9 @@ export default function Input({
           className="w-full px-4 py-2 rounded-lg text-base placeholder:text-d200 border border-d50"
           type={type}
           id={id}
+          value={value}
           placeholder={placeholder}
+          onChange={handleInputChange}
         />
         {iconUrl && (
           <div className="absolute flex items-center justify-center right-4 top-0 h-full cursor-pointer">
