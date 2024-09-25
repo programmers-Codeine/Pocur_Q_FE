@@ -3,20 +3,21 @@ import { useState } from 'react';
 import Input from '@/components/common/Input/Input';
 import Button from '@/components/common/Button/Button';
 import CheckBox from '@/components/common/CheckBox/CheckBox';
-import { termsOfUseList, registerInputList } from '@/stores/termsOfUseData';
-import { UserFormTypes } from './AdminHome.types';
+import { termsOfUseList, registerInputList } from '@/pages/AdminHome/formFieldsData';
+import { RegisterUserFormTypes } from './AdminHome.types';
 
 export default function RegisterPage() {
-  const [agreeList, setAgreeList] = useState(
-    termsOfUseList.reduce(
-      (acc, item) => {
-        acc[item.id] = false;
-        return acc;
-      },
+  const [agreeList, setAgreeList] = useState<Record<string, boolean>>(() => {
+    return termsOfUseList.reduce(
+      (acc, { id }) => ({
+        ...acc,
+        [id]: false,
+      }),
       {} as Record<string, boolean>
-    )
-  );
-  const [registerForm, setRegisterForm] = useState<UserFormTypes>({
+    );
+  });
+
+  const [registerForm, setRegisterForm] = useState<RegisterUserFormTypes>({
     email: '',
     password: '',
     nickname: '',
@@ -42,7 +43,6 @@ export default function RegisterPage() {
     // TODO: 회원가입 로직
     // TODO: 체크리스트 및 이메일, 패스워드, 닉네임 규칙 확인
     // TODO: /join api 전달 및 첫 /login으로 리다이렉트
-    console.log(registerForm);
   };
 
   return (
@@ -54,7 +54,7 @@ export default function RegisterPage() {
             label={item.label}
             type={item.type}
             placeholder={item.placeholder}
-            value={registerForm[item.id] || ''}
+            value={registerForm[item.id] as keyof RegisterUserFormTypes}
             handleInputChange={e => handleRegisterFormChange(e.target.id, e.target.value)}
           />
         </div>

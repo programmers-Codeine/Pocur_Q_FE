@@ -2,11 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Button from '@/components/common/Button/Button';
 import Input from '@/components/common/Input/Input';
-import { loginInputList } from '@/stores/termsOfUseData';
-import { UserFormTypes } from './AdminHome.types';
+import { loginInputList } from '@/pages/AdminHome/formFieldsData';
+import { UserLoginFormTypes } from './AdminHome.types';
 
 export default function LoginPage() {
-  const [loginForm, setLoginForm] = useState<UserFormTypes>({
+  const [loginForm, setLoginForm] = useState<UserLoginFormTypes>({
     email: '',
     password: '',
   });
@@ -25,15 +25,15 @@ export default function LoginPage() {
 
   return (
     <div className="flex w-[50%] flex-col items-center gap-6">
-      {loginInputList.map(item => (
-        <div className="w-full max-w-[400px]" key={item.id}>
+      {loginInputList.map(({ id, label, type, placeholder }) => (
+        <div className="w-full max-w-[400px]" key={id}>
           <Input
-            id={item.id}
-            label={item.label}
-            type={item.type}
-            placeholder={item.placeholder}
-            value={loginForm[item.id] || ''}
-            handleInputChange={e => handleInputChange(item.id, e.target.value)}
+            id={id}
+            label={label}
+            type={type}
+            placeholder={placeholder}
+            value={loginForm[id as keyof UserLoginFormTypes]}
+            handleInputChange={e => handleInputChange(id, e.target.value)}
           />
         </div>
       ))}
