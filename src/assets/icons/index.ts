@@ -9,6 +9,7 @@ import Trash from './trash.svg';
 import ToggleOn from './toggle-on.svg';
 import ToggleOff from './toggle-off.svg';
 import Modify from './modify.svg';
+import Info from './Info.svg';
 
 export {
   Plus,
@@ -22,4 +23,5 @@ export {
   ToggleOn,
   ToggleOff,
   Modify,
+  Info,
 };
