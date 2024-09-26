@@ -9,9 +9,18 @@ import Trash from './trash.svg';
 import ToggleOn from './toggle-on.svg';
 import ToggleOff from './toggle-off.svg';
 import Modify from './modify.svg';
+import Avatar from './avatar.svg';
+import Logout from './logout.svg';
+import Setting from './setting.svg';
+import CircleArrow from './circleArrow.svg';
 import Info from './Info.svg';
 
 export {
+  Avatar,
+  Logout,
+  Setting,
+  CircleArrow,
+  Info,
   Plus,
   Search,
   Exclamation,
@@ -23,5 +32,4 @@ export {
   ToggleOn,
   ToggleOff,
   Modify,
-  Info,
 };
