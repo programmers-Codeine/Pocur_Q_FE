@@ -5,7 +5,7 @@ export default function Table({ table }: TableProps) {
 
   return (
     <div
-      key={tableNo}
+      key={tableNo
       className="max-w-1/6 relative flex max-h-[170px] min-h-[155px] min-w-[240px] cursor-pointer flex-col rounded-lg border border-d900 p-4 text-d900"
     >
       {newOrderNo !== 0 && (
