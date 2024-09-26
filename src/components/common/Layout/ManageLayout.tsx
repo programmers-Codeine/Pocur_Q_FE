@@ -7,9 +7,5 @@ export default function ManageLayout() {
   // TODO 첫 사용자라면, 가게 생성 작성
   // TODO 첫 사용자가 아니라면, /table 로 이동
   // TODO 사용자가 아니라면 / 로 이동
-  return (
-    <div>
-      <Outlet />
-    </div>
-  );
+  return <Outlet />;
 }
