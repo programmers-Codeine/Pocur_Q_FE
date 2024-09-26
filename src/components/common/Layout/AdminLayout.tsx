@@ -2,9 +2,7 @@ import SideBar from '@/components/SideBar/SideBar';
 import { Outlet } from 'react-router-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { manageNavList, settingNavList } from '@/stores/navItemData';
-import Avatar from '@/assets/icons/avatar.svg';
-import Logout from '@/assets/icons/logout.svg';
-import Setting from '@/assets/icons/setting.svg';
+import { Avatar, Logout, Setting } from '@/assets/icons';
 import Button from '../Button/Button';
 
 export default function AdminLayout() {
