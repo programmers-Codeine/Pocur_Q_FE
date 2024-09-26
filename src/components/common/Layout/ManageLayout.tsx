@@ -9,7 +9,7 @@ export default function ManageLayout() {
 
   /* TODO 처음을 알 수 있는 data 사용
     로그인 시 data를 받아와 localStorage에 저장 후 해당 페이지로 넘어올 때 localStorage에서 가져와서 사용
-    중요한 정보가 아니기 때문에 localStorage에 저장해서 사용  
+    중요한 정보가 아니기 때문에 localStorage에 저장해서 사용
   */
   // TODO: 사용자가 리로드했을 때 => 로컬 스토리지
 
@@ -17,9 +17,5 @@ export default function ManageLayout() {
 
   if (isFirstTime) return <FirstPage setIsFirstTime={setIsFirstTime} />;
 
-  return (
-    <div>
-      <Outlet />
-    </div>
-  );
+  return <Outlet />;
 }
