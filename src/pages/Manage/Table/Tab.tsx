@@ -1,12 +1,6 @@
 import clsx from 'clsx';
 import { PropsWithChildren } from 'react';
-
-interface Props {
-  id: string;
-  index: number;
-  currentTab: string;
-  handleTabChange: (id: string) => void;
-}
+import { TabProps } from './Tab.types';
 
 export default function Tab({
   id,
@@ -14,7 +8,7 @@ export default function Tab({
   currentTab,
   handleTabChange,
   children,
-}: PropsWithChildren<Props>) {
+}: PropsWithChildren<TabProps>) {
   const leftPosition = `left-[${130 * index}px]`; // 고정된 160px에 대한 값
 
   return (
