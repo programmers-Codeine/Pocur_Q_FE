@@ -7,3 +7,9 @@ export type ButtonProps = {
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
   children?: ReactNode;
 };
+
+export type ItemButtonProps = {
+  title: string;
+  state: 'normal' | 'active';
+  onContextMenu?: (e: MouseEvent<HTMLDivElement>) => void;
+};
