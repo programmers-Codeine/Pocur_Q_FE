@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.gitmessage.txt
+
+# env files
+*.env
+*storybook.log

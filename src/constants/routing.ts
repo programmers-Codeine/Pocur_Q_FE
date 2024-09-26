@@ -1,0 +1,12 @@
+export const ROUTE_LOGIN = 'login';
+export const ROUTE_REGISTER = 'register';
+export const ROUTE_ADMIN = 'admin';
+export const ROUTE_MANAGE = 'manage';
+export const ROUTE_TABLE = 'table';
+export const ROUTE_REAL_TIME_MENU = 'real-time-menu';
+export const ROUTE_STATISTICS = 'statistics';
+export const ROUTE_SETTING = 'setting';
+export const ROUTE_MENU = 'menu';
+export const ROUTE_DESIGN = 'design';
+export const ROUTE_ETC = 'etc';
+export const ROUTE_CUSTOMER = 'customer';
