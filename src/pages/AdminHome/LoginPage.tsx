@@ -2,10 +2,14 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Button from '@/components/common/Button/Button';
 import Input from '@/components/common/Input/Input';
+import { loginInputList } from '@/pages/AdminHome/formFieldsData';
+import { UserLoginFormTypes } from './AdminHome.types';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [loginForm, setLoginForm] = useState<UserLoginFormTypes>({
+    email: '',
+    password: '',
+  });
   const navigate = useNavigate();
 
   const handleNavigate = (src: string) => {
@@ -14,28 +18,25 @@ export default function LoginPage() {
     // TODO: navigate options에 처음 사용자인지(등록한 가게가 있는지)에 대한 결과 전달
     navigate(`/${src}`);
   };
+
+  const handleInputChange = (id: string, value: string) => {
+    setLoginForm(prev => ({ ...prev, [id]: value }));
+  };
+
   return (
     <div className="flex w-[50%] flex-col items-center gap-6">
-      <div className="w-full max-w-[400px]">
-        <Input
-          id="email"
-          label="이메일"
-          type="email"
-          placeholder="이메일을 입력하세요."
-          value={email}
-          handleInputChange={e => setEmail(e.target.value)}
-        />
-      </div>
-      <div className="w-full max-w-[400px]">
-        <Input
-          id="password"
-          label="비밀번호"
-          type="password"
-          placeholder="비밀번호를 입력하세요."
-          value={password}
-          handleInputChange={e => setPassword(e.target.value)}
-        />
-      </div>
+      {loginInputList.map(({ id, label, type, placeholder }) => (
+        <div className="w-full max-w-[400px]" key={id}>
+          <Input
+            id={id}
+            label={label}
+            type={type}
+            placeholder={placeholder}
+            value={loginForm[id as keyof UserLoginFormTypes]}
+            handleInputChange={e => handleInputChange(id, e.target.value)}
+          />
+        </div>
+      ))}
       <Button title="로그인" type="others" onClick={() => handleNavigate('admin/manage')} />
       <div className="flex cursor-pointer gap-4 text-d900">
         <span className="underline hover:font-bold">비밀번호를 잃어버리셨나요 ?</span>
