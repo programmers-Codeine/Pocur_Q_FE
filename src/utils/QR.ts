@@ -76,3 +76,18 @@ const downloadAllQR = () => {
     img.src = url;
   });
 };
+
+const printQR = (tableNo: number) => {
+  // 개별 QR 프린트
+  const prtOption = 'left=0,top=0,width=500,height=500,toolbar=0,scrollbars=0,status=0';
+  const newWindow = window.open('', '', prtOption);
+  if (newWindow) {
+    const printContent = document.getElementById(`qrDiv${tableNo}`);
+
+    newWindow.document.write(printContent!.innerHTML);
+    newWindow.document.close();
+    newWindow.focus();
+    newWindow.print();
+    newWindow.close();
+  }
+};
