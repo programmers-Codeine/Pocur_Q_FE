@@ -1,12 +1,12 @@
 import { Print } from '@/assets/icons';
+import QRCode from 'react-qr-code';
 
 interface Props {
   tableNo: number;
+  qrUrl: string;
 }
 
-export default function QRCard({ tableNo }: Props) {
-  // TODO print 기능 추가 필요
-  // TODO url을 통해 QR 구현 추가 필요
+export default function QRCard({ tableNo, qrUrl }: Props) {
   return (
     <div className="max-w-1/6 flex min-h-[240px] min-w-[240px] flex-col gap-2 rounded-lg border border-d900 px-4 py-2">
       <div className="flex justify-between">
@@ -18,8 +18,8 @@ export default function QRCard({ tableNo }: Props) {
           <Print />
         </button>
       </div>
-      <div className="w-11/12 flex-1 self-center bg-d200">
-        <img src="" alt="qr 이미지" />
+      <div className="w-11/12 flex-1 self-center bg-d200" id={`qrDiv${tableNo}`}>
+        <QRCode value={qrUrl} className="qr h-full w-full border-none" />
       </div>
     </div>
   );
