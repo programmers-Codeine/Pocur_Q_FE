@@ -4,6 +4,7 @@ import Tabs from './Table/Tabs';
 import Table from './Table/Table';
 import Tab from './Table/Tab';
 import QRCard from './Table/QRCard';
+import { downloadAllQR, printAllQR } from '@/utils/QR';
 
 const tableList = [
   {
@@ -48,7 +49,7 @@ const tableList = [
 ];
 
 export default function TablePage() {
-  const [currentTab, setCurrentTab] = useState('table');
+  const [currentTab, setCurrentTab] = useState('qr');
 
   const handleAddTable = () => {};
   const handleTabChange = (id: string) => {
@@ -88,8 +89,20 @@ export default function TablePage() {
             ))}
           </div>
           <div className="flex justify-center gap-2 py-[6px]">
-            <Button title="전체 QR 이미지 저장" type="others" />
-            <Button title="전체 QR 프린트" type="others" />
+            <Button
+              title="전체 QR 이미지 저장"
+              type="others"
+              onClick={() => {
+                downloadAllQR();
+              }}
+            />
+            <Button
+              title="전체 QR 프린트"
+              type="others"
+              onClick={() => {
+                printAllQR(tableList);
+              }}
+            />
           </div>
         </>
       )}
