@@ -10,7 +10,7 @@ export default function Tab({
   children,
 }: PropsWithChildren<TabProps>) {
   const leftPosition: { [key: number]: string } = {
-    0: `left-[0px]`,
+    0: 'left-[0px]',
     1: 'left-[130px]',
   }; // 고정된 160px에 대한 값
 
