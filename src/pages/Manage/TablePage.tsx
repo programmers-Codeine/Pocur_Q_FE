@@ -49,7 +49,7 @@ const tableList = [
 ];
 
 export default function TablePage() {
-  const [currentTab, setCurrentTab] = useState('qr');
+  const [currentTab, setCurrentTab] = useState('table');
 
   const handleAddTable = () => {};
   const handleTabChange = (id: string) => {
