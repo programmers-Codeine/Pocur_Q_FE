@@ -1,3 +1,5 @@
+import { Table } from '@/pages/Manage/Table/Table.types';
+
 const downloadQR = (tableNo: number) => {
   // 개별 QR 다운로드
   const svg = document.querySelector(`#qrDiv${tableNo} svg`) as SVGSVGElement;
@@ -91,3 +93,24 @@ const printQR = (tableNo: number) => {
     newWindow.close();
   }
 };
+
+const printAllQR = (tableList: Table[]) => {
+  // 전체 QR 프린트
+  const prtOption = 'left=0,top=0,width=1000,height=1000,toolbar=0,scrollbars=0,status=0';
+  const newWindow = window.open('', '', prtOption);
+  if (newWindow) {
+    let printContent = '<div style="display:flex; gap:20px; flex-wrap:wrap">';
+    tableList.forEach(({ tableNo }) => {
+      const qrCnt = document.querySelector(`#qrDiv${tableNo}`);
+      printContent += `<div style='display:flex; flex-direction:column'><div>${tableNo}번</div>${qrCnt?.innerHTML}</div>`;
+    });
+    printContent += '</div>';
+    newWindow.document.write(printContent);
+    newWindow.document.close();
+    newWindow.focus();
+    newWindow.print();
+    newWindow.close();
+  }
+};
+
+export { downloadQR, downloadAllQR, printQR, printAllQR };
