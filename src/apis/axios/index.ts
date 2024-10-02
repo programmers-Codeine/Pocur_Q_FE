@@ -1,19 +1,15 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-const DEFAULT_TIMEOUT = 30000;
+const DEFAULT_TIMEOUT = 30_000;
 
-export const createClient = (config?: AxiosRequestConfig) => {
-  const axiosInstance = axios.create({
-    baseURL: process.env.VITE_SERVER_URL,
-    timeout: DEFAULT_TIMEOUT,
-    headers: {
-      'content-type': 'application/json',
-    },
-    withCredentials: true,
-    ...config,
-  });
+const config: AxiosRequestConfig = {};
 
-  return axiosInstance;
-};
-
-export const axiosClient = createClient();
+export const axiosClient = axios.create({
+  baseURL: process.env.VITE_SERVER_URL,
+  timeout: DEFAULT_TIMEOUT,
+  headers: {
+    'content-type': 'application/json',
+  },
+  withCredentials: true,
+  ...config,
+});
