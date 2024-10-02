@@ -1,6 +1,6 @@
 import { TableProps } from './Table.types';
 
-export default function Table({ table }: TableProps) {
+export default function Table({ table, onModalOpen }: TableProps) {
   const { tableNo, orderList, totalPrice, newOrderNo } = table;
 
   return (

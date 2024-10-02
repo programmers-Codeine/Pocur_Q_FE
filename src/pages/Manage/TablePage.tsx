@@ -4,14 +4,25 @@ import Tabs from './Table/Tabs';
 import Table from './Table/Table';
 import Tab from './Table/Tab';
 import QRCard from './Table/QRCard';
+import { Table as TTable } from './Table/Table.types';
 
-const tableList = [
+const tableList: TTable[] = [
   {
     tableNo: 1,
     orderList: [
-      { menuName: '돼지수육', menuQuantity: 1 },
-      { menuName: '소주', menuQuantity: 2 },
-      { menuName: '탕수육', menuQuantity: 1 },
+      {
+        menuName: '돼지수육',
+        menuQuantity: 1,
+        menuOptions: [{ optionName: '고기 추가', optionQuantity: 2, optionPrice: 500 }],
+        price: 10000,
+      },
+      { menuName: '소주', menuQuantity: 2, menuOptions: [], price: 5000 },
+      {
+        menuName: '탕수육',
+        menuQuantity: 1,
+        menuOptions: [{ optionName: '소스 추가', optionQuantity: 2, optionPrice: 500 }],
+        price: 12000,
+},
     ],
     totalPrice: 0,
     newOrderNo: 1,
