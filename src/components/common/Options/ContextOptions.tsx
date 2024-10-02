@@ -30,7 +30,7 @@ export default function ContextOptions({
 
   return (
     <div
-      className={clsx('absolute m-2 rounded-lg border border-d400 bg-d10')}
+      className={clsx('absolute m-2 cursor-pointer rounded-lg border border-d400 bg-d10')}
       style={{ top: position.y, left: position.x }}
       onClick={() => closeMenu()}
     >
