@@ -14,7 +14,7 @@ export default function Table({ table, onModalOpen }: TableProps) {
         </div>
       )}
       <div className="text-xl font-bold">{tableNo}번</div>
-      <ol className="flex-1 px-2 py-1">
+      <ol className="flex-1 overflow-y-hidden px-2 py-1">
         {orderList.map(({ menuName, menuQuantity }) => (
           <li key={menuName}>
             {menuName}*{menuQuantity}
