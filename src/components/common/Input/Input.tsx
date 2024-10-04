@@ -8,7 +8,7 @@ export default function Input({
   value,
   handleInputChange,
   label,
-  iconUrl,
+  children,
   onClickIcon,
   subText,
 }: InputProps) {
@@ -19,18 +19,21 @@ export default function Input({
           {label}
         </label>
       )}
-      <div className="relative mt-2 mb-1">
+      <div className="relative mb-1 mt-2">
         <input
-          className="w-full px-4 py-2 rounded-lg text-base placeholder:text-d200 border border-d50"
+          className="w-full rounded-lg border border-d50 px-4 py-2 text-base placeholder:text-d200"
           type={type}
           id={id}
           value={value}
           placeholder={placeholder}
           onChange={handleInputChange}
         />
-        {iconUrl && (
-          <div className="absolute flex items-center justify-center right-4 top-0 h-full cursor-pointer">
-            <img className="w-5 h-5" src={iconUrl} alt="input icon image" onClick={onClickIcon} />
+        {children && (
+          <div
+            className="absolute right-4 top-0 flex h-full cursor-pointer items-center justify-center"
+            onClick={onClickIcon}
+          >
+            {children}
           </div>
         )}
       </div>

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Tabs from './Table/Tabs';
 import Table from './Table/Table';
 import Tab from './Table/Tab';
+import QRCard from './Table/QRCard';
 
 const tableList = [
   {
@@ -54,7 +55,7 @@ export default function TablePage() {
       {currentTab === 'table' ? (
         <div className="flex h-full flex-wrap content-start gap-5 overflow-y-scroll p-10">
           {tableList.map(table => (
-            <Table table={table} />
+            <Table table={table} key={table.tableNo} />
           ))}
           <div
             className="max-w-1/6 relative flex max-h-[170px] min-h-[155px] min-w-[240px] cursor-pointer flex-col items-center justify-center rounded-lg border border-d900 p-4 text-2xl font-bold text-d200 hover:text-d900"
@@ -66,7 +67,9 @@ export default function TablePage() {
       ) : (
         <>
           <div className="flex h-full flex-wrap content-start gap-5 overflow-y-scroll p-10">
-            QR list
+            {tableList.map(({ tableNo }) => (
+              <QRCard tableNo={tableNo} key={tableNo} />
+            ))}
           </div>
           <div className="flex justify-center gap-2 py-[6px]">
             <Button title="전체 QR 이미지 저장" type="others" />
