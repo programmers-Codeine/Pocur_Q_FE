@@ -255,3 +255,4 @@ export default function MenuPage() {
       {isVisible && <ContextOptions options={DEFAULT_OPTIONS} onClick={handleCategory} />}
     </div>
   );
+}
