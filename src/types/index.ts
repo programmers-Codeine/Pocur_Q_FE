@@ -31,3 +31,39 @@ export type InputMenuFormTypes = {
   options: AddOptionsTypes[] | null;
   optionsInput: AddOptionsTypes[];
 };
+
+type DesignThemeTypes = {
+  all: {
+    background: string;
+    largeText: string;
+    smallText: string;
+    box: string;
+    boxOutline: string;
+    icon: string;
+  };
+  button: {
+    normal: {
+      background: string;
+      textAndIcon: string;
+      outline: string;
+    };
+    active: {
+      background: string;
+      textAndIcon: string;
+      outline: string;
+    };
+  };
+  addOption: {
+    label: {
+      hot: string;
+      new: string;
+      soldOut: string;
+    };
+  };
+};
+
+export type InputDesignFormTypes = {
+  designName: string;
+  designImage: string;
+  theme: DesignThemeTypes;
+};
