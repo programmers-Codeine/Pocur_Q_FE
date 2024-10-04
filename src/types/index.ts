@@ -16,6 +16,6 @@ export type InputMenuFormTypes = {
   menuCategory: number;
   price: string;
   origin: string;
-  options: { id: number; optionName: string; price: string }[] | null;
-  optionsInput: { id: number; optionName: string; price: string }[];
+  options: AddOptionsTypes[] | null;
+  optionsInput: AddOptionsTypes[];
 };

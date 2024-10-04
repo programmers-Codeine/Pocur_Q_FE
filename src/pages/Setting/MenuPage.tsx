@@ -9,20 +9,8 @@ import {
   MainMenuBox,
   ManageMenuBox,
 } from '@/components/MenuBox';
-
-const DEFAULT_OPTIONS = [{ id: 3, name: '삭제하기' }];
-
-type inputMenuFormTypes = {
-  category: string;
-  search: string;
-  menuName: string;
-  description: string;
-  menuCategory: number;
-  price: string;
-  origin: string;
-  options: { id: number; optionName: string; price: string }[] | null;
-  optionsInput: { id: number; optionName: string; price: string }[];
-};
+import { DEFAULT_OPTIONS } from '@/constants/options';
+import { InputMenuFormTypes } from '@/types';
 
 export default function MenuPage() {
   const { openMenu, isVisible, parentId } = useContextMenuStore();
@@ -37,8 +25,8 @@ export default function MenuPage() {
     saveMenu,
     deleteMenu,
   } = useMenuStore();
-  
-  const [inputMenuForm, setInputMenuForm] = useState<inputMenuFormTypes>({
+
+  const [inputMenuForm, setInputMenuForm] = useState<InputMenuFormTypes>({
     category: '',
     search: '',
     menuName: '',
@@ -220,7 +208,6 @@ export default function MenuPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      {isVisible && <ContextOptions options={DEFAULT_OPTIONS} onClick={handleCategory} />}
       <div className="flex h-[180px] w-full gap-3">
         <CategoryBox
           category={inputMenuForm.category}
@@ -265,6 +252,7 @@ export default function MenuPage() {
           )}
         </div>
       </div>
+      {isVisible && <ContextOptions options={DEFAULT_OPTIONS} onClick={handleCategory} />}
     </div>
   );
 }
