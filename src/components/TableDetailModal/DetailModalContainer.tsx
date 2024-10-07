@@ -7,7 +7,7 @@ export default function DetailModalContainer({
   onClose,
   children,
 }: PropsWithChildren<ModalProps>) {
-  const modalElement = document.getElementById('table');
+  const modalElement = document.getElementById('tableModal');
 
   if (!open || !modalElement) return null;
 

@@ -95,7 +95,7 @@ export default function TablePage() {
 
   return (
     <>
-      <div className="relative flex h-full flex-col" id="table">
+      <div className="relative flex h-full flex-col" id="tableModal">
         <Tabs>
           <Tab id="table" index={0} currentTab={currentTab} handleTabChange={handleTabChange}>
             테이블
