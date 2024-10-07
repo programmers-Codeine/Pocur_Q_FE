@@ -1,301 +1,266 @@
-import Input from '@/components/common/Input/Input';
+import { ChangeEvent, MouseEvent, useState } from 'react';
+import useContextMenuStore from '@/stores/useContextMenuStore';
+import ContextOptions from '@/components/common/Options/ContextOptions';
+import useMenuStore from '@/stores/useMenuStore';
 import {
-  Plus,
-  Search,
-  Exclamation,
-  Save,
-  PencilQuestion,
-  NoImage,
-  Edit,
-  Trash,
-  ToggleOn,
-  ToggleOff,
-  Modify,
-} from '@/assets/icons';
-import { categoryData, easyFastToolData } from '@/stores/menuData';
-import ItemButton from '@/components/common/Button/ItemButton';
-
-const IS_EXIST_MENU = true;
+  AddOptionsBox,
+  CategoryBox,
+  FastToolBox,
+  MainMenuBox,
+  ManageMenuBox,
+} from '@/components/MenuBox';
+import { DEFAULT_OPTIONS } from '@/constants/options';
+import { InputMenuFormTypes } from '@/types';
 
 export default function MenuPage() {
-  const handleAddCategory = () => {};
+  const { openMenu, isVisible, parentId } = useContextMenuStore();
+  const {
+    menus,
+    currentId,
+    step,
+    addCategory,
+    deleteCategory,
+    setCurrentId,
+    setStep,
+    saveMenu,
+    deleteMenu,
+    toggleMenu,
+    toggleTool,
+  } = useMenuStore();
 
-  const handleAddMenu = () => {};
-  const handleSearchMenu = () => {};
-  const handleDeleteMenu = () => {};
+  const [inputMenuForm, setInputMenuForm] = useState<InputMenuFormTypes>({
+    category: '',
+    search: '',
+    menuName: '',
+    description: '',
+    menuCategory: 1,
+    price: '',
+    origin: '',
+    options: null,
+    optionsInput: [{ id: 1, optionName: '', price: '' }],
+  });
 
-  const handleToggleMenu = () => {};
-  const handleModifyMenu = () => {};
+  const onSelectCategory = (e: ChangeEvent<HTMLSelectElement>) => {
+    setInputMenuForm(prev => ({
+      ...prev,
+      menuCategory: Number(e.target.value),
+    }));
+  };
 
-  const handleSaveMenu = () => {};
-  const handleAddMenuImage = () => {};
-  const handleEditOptions = () => {};
+  const onSetInputOption = (e: ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    const [field, optionId] = id.split('-');
 
-  const handleAddOptions = () => {};
-  const handleDeleteOptions = () => {};
-  const handleSaveOptions = () => {};
+    setInputMenuForm(prevForm => ({
+      ...prevForm,
+      optionsInput: prevForm.optionsInput
+        ? prevForm.optionsInput.map(optionInput =>
+            optionInput.id === Number(optionId) ? { ...optionInput, [field]: value } : optionInput
+          )
+        : [],
+    }));
+  };
+
+  const onSetInputMenuForm = (e: ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setInputMenuForm(prev => ({
+      ...prev,
+      [id]: value,
+    }));
+  };
+
+  const onCategory = (id: number) => {
+    // TODO: 매직넘버 상수화 필요
+    if (id === 1) {
+      addCategory(inputMenuForm.category);
+      setInputMenuForm(prev => ({
+        ...prev,
+        category: '',
+      }));
+    } else if (id === 3) {
+      // TODO: 카테고리가 1개 이하일때 경고
+      deleteCategory(parentId);
+    }
+  };
+
+  const onOpenCategoryOptions = (e: MouseEvent, id: number) => {
+    const { clientX: x, clientY: y } = e;
+    openMenu(id, x, y);
+  };
+
+  const onAddMenu = () => {
+    setStep(2);
+  };
+  const onSearchMenu = () => {};
+  const onDeleteMenu = (menuId?: number) => {
+    if (menuId) deleteMenu(menuId);
+    setInputMenuForm({
+      category: '',
+      search: '',
+      menuName: '',
+      description: '',
+      menuCategory: 1,
+      price: '',
+      origin: '',
+      options: null,
+      optionsInput: [{ id: 1, optionName: '', price: '' }],
+    });
+
+    setStep(1);
+  };
+
+  const onSetMenu = (menuId: number) => {
+    const menu = menus.find(menu => menu.id === menuId);
+    if (menu) {
+      const addOptions = menu.addOptions
+        ? menu.addOptions.map(option => ({
+            id: option.id,
+            optionName: option.optionName,
+            price: option.price.toString(),
+          }))
+        : null;
+
+      const addOptionsInput = addOptions ? addOptions : [{ id: 1, optionName: '', price: '' }];
+
+      setInputMenuForm(prev => ({
+        ...prev,
+        menuName: menu.title,
+        description: menu.description,
+        menuCategory: menu.category,
+        price: menu.price.toString(),
+        origin: menu.origin,
+        options: addOptions,
+        optionsInput: addOptionsInput,
+      }));
+      setStep(2);
+      setCurrentId(menuId);
+    }
+  };
+
+  const onSaveMenu = () => {
+    const { menuCategory, menuName, description, price, origin, options } = inputMenuForm;
+    if (menuCategory && menuName && description && price && origin) {
+      const addOptions = options?.map(({ optionName, price }, idx) => ({
+        id: idx + 1,
+        optionName,
+        price: Number(price),
+      }));
+
+      const menuData = {
+        id: currentId === 0 ? Math.max(...menus.map(menu => menu.id)) + 1 : currentId,
+        title: menuName,
+        description,
+        category: Number(menuCategory),
+        price: Number(price),
+        origin,
+        addOptions: addOptions?.length ? addOptions : null,
+      };
+      saveMenu(menuData);
+      setInputMenuForm({
+        category: '',
+        search: '',
+        menuName: '',
+        description: '',
+        menuCategory: 1,
+        price: '',
+        origin: '',
+        options: null,
+        optionsInput: [{ id: 1, optionName: '', price: '' }],
+      });
+      setStep(1);
+    }
+  };
+  const onAddMenuImage = () => {};
+
+  const onEditOptions = () => {
+    setStep(3);
+  };
+
+  const onAddOptions = () => {
+    // TODO: 최대갯수 제한 (ex:10)
+    setInputMenuForm(prev => {
+      const newId = prev.optionsInput.length
+        ? prev.optionsInput[prev.optionsInput.length - 1].id + 1
+        : 1;
+      return {
+        ...prev,
+        optionsInput: [...(prev.optionsInput || []), { id: newId, optionName: '', price: '' }],
+      };
+    });
+  };
+
+  const onDeleteOptions = (optionId: number) => {
+    // TODO: api 연결
+    setInputMenuForm(prev => ({
+      ...prev,
+      optionsInput: prev.optionsInput.filter(optionInput => optionInput.id !== optionId) || [], // id가 다른 옵션들만 남기기
+    }));
+  };
+
+  const onSaveOptions = () => {
+    // TODO: api 연결
+    // TODO: 옵션이름, 가격이 들어가있지 않은 경우
+    setInputMenuForm(prev => ({
+      ...prev,
+      options: prev.optionsInput,
+    }));
+    setStep(2);
+  };
+
+  const onToggleMenu = (menuId: number) => {
+    toggleMenu(menuId);
+  };
+  const onToggleTool = (toolId: number) => {
+    toggleTool(toolId);
+  };
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex h-[180px] w-full gap-3">
-        <div className="flex h-fit min-w-[620px] flex-col gap-3 rounded-lg border border-d50 px-3 py-4">
-          <div className="flex min-h-[54px] items-center justify-between gap-3 px-3">
-            <p className="text-2xl font-bold">카테고리 추가하기</p>
-            <div>
-              <Input
-                id="category"
-                type="text"
-                placeholder="카테고리 이름"
-                value=""
-                handleInputChange={handleAddCategory}
-              >
-                <Plus width="16" height="16" />
-              </Input>
-            </div>
-          </div>
-          <div className="flex flex-wrap gap-3 px-3">
-            {categoryData.map(item => (
-              <ItemButton key={item.id} title={item.title} state="normal" />
-            ))}
-          </div>
-        </div>
-        <div className="flex h-fit w-full flex-col gap-3 rounded-lg border border-d50 px-3 py-4">
-          <div className="flex min-h-[54px] items-center gap-1 px-3 text-2xl font-bold">
-            <span>빠르고 쉬운 도구</span>
-            <span className="text-b500">Beta</span>
-          </div>
-          <div className="flex flex-wrap gap-3 px-3">
-            {easyFastToolData.map(item => (
-              <ItemButton key={item.id} title={item.title} state="normal" />
-            ))}
-          </div>
-        </div>
+        <CategoryBox
+          category={inputMenuForm.category}
+          onCategory={onCategory}
+          onSetInputMenuForm={onSetInputMenuForm}
+          onOpenCategoryOptions={onOpenCategoryOptions}
+        />
+        <FastToolBox onToggleTool={onToggleTool} />
       </div>
       <div className="flex w-full gap-3">
-        <div className="flex h-fit min-w-[620px] flex-col gap-3 rounded-lg border border-d50 px-3 py-4">
-          <div className="mx-3 flex min-h-[54px] items-center justify-between gap-3 border-b border-d50 pb-3">
-            <p className="text-2xl font-bold">메뉴 추가하기</p>
-            <Plus width="24" onClick={handleAddMenu} className="cursor-pointer" />
-          </div>
-          <div className="mx-3 border-b border-d50 pb-3">
-            <Input
-              id="category"
-              type="text"
-              placeholder="카테고리 이름"
-              value=""
-              handleInputChange={handleSearchMenu}
-            >
-              <Search width="16" height="16" className="stroke-d50" />
-            </Input>
-          </div>
-          {IS_EXIST_MENU ? (
-            <div className="flex flex-col gap-4 px-4 pt-1">
-              <div className="flex gap-3 border-b border-d50 pb-4">
-                <NoImage width="48" height="48" />
-                <div className="flex w-full flex-col">
-                  <div className="flex w-full justify-between">
-                    <span className="text-xl">짜장면</span>
-                    <div className="flex gap-2">
-                      <ToggleOn
-                        width="20"
-                        height="20"
-                        className="cursor-pointer"
-                        onClick={handleToggleMenu}
-                      />
-                      <Modify
-                        width="20"
-                        height="20"
-                        className="cursor-pointer"
-                        onClick={handleModifyMenu}
-                      />
-                      <Trash
-                        width="20"
-                        height="20"
-                        className="cursor-pointer"
-                        onClick={handleDeleteMenu}
-                      />
-                    </div>
-                  </div>
-                  <span className="text-d200">
-                    메인메뉴/6000/돼지고기: 국내산/저렴한 가격, 기본메뉴/추가 옵션 곱빼기 +...
-                  </span>
-                </div>
-              </div>
-              <div className="flex gap-3">
-                <NoImage width="48" height="48" />
-                <div className="flex w-full flex-col">
-                  <div className="flex w-full justify-between">
-                    <span className="text-xl">짜장면</span>
-                    <div className="flex gap-2">
-                      <ToggleOff
-                        width="20"
-                        height="20"
-                        className="cursor-pointer"
-                        onClick={handleToggleMenu}
-                      />
-                      <Modify
-                        width="20"
-                        height="20"
-                        className="cursor-pointer"
-                        onClick={handleModifyMenu}
-                      />
-                      <Trash
-                        width="20"
-                        height="20"
-                        className="cursor-pointer"
-                        onClick={handleDeleteMenu}
-                      />
-                    </div>
-                  </div>
-                  <span className="text-d200">
-                    메인메뉴/6000/돼지고기: 국내산/저렴한 가격, 기본메뉴/추가 옵션 곱빼기 +...
-                  </span>
-                </div>
-              </div>
-            </div>
+        <MainMenuBox
+          search={inputMenuForm.search}
+          onAddMenu={onAddMenu}
+          onSetInputMenuForm={onSetInputMenuForm}
+          onSearchMenu={onSearchMenu}
+          onToggleMenu={onToggleMenu}
+          onSetMenu={onSetMenu}
+          onDeleteMenu={onDeleteMenu}
+        />
+        <div className="flex w-full gap-3">
+          {step !== 1 && (
+            <ManageMenuBox
+              inputMenuForm={inputMenuForm}
+              onSetInputMenuForm={onSetInputMenuForm}
+              onSaveMenu={onSaveMenu}
+              onSelectCategory={onSelectCategory}
+              onAddMenuImage={onAddMenuImage}
+              onEditOptions={onEditOptions}
+              onDeleteMenu={onDeleteMenu}
+            />
+          )}
+          {step === 3 ? (
+            <AddOptionsBox
+              optionsInput={inputMenuForm.optionsInput}
+              onSaveOptions={onSaveOptions}
+              onSetInputOption={onSetInputOption}
+              onDeleteOptions={onDeleteOptions}
+              onAddOptions={onAddOptions}
+            />
           ) : (
-            <div className="flex items-center justify-center gap-2 font-semibold text-d200">
-              <span>추가한 음식이 없어요.</span>
-              <PencilQuestion width="32" height="32" />
-            </div>
+            <div className="w-[50%]"></div>
           )}
         </div>
-        <div className="flex w-full gap-3">
-          <div className="flex h-fit w-[50%] flex-col rounded-lg border border-d50 px-2 py-4">
-            <div className="mx-3 flex items-center justify-between gap-3 border-b border-d50 pb-3">
-              <input className="bg-d10 text-xl placeholder:text-d200" placeholder="메뉴 이름" />
-              <Save width="20" height="20" onClick={handleSaveMenu} className="cursor-pointer" />
-            </div>
-            <div className="mx-3 flex flex-col border-b border-d50">
-              <div className="my-3 flex flex-col">
-                <div className="flex items-center justify-between">
-                  <span className="text-lg">메뉴 설명</span>
-                  <Exclamation width="16" height="16" />
-                </div>
-                <input
-                  className="bg-d10 placeholder:text-d200"
-                  placeholder="메뉴 설명을 적어주세요."
-                />
-              </div>
-              <div className="my-3 flex flex-col">
-                <div className="flex items-center justify-between">
-                  <span className="text-lg">카테고리</span>
-                  <Exclamation width="16" height="16" />
-                </div>
-                <input
-                  className="bg-d10 placeholder:text-d200"
-                  placeholder="메뉴 설명을 적어주세요."
-                />
-              </div>
-              <div className="my-3 flex flex-col">
-                <div className="flex items-center justify-between">
-                  <span className="text-lg">가격</span>
-                  <Exclamation width="16" height="16" />
-                </div>
-                <input className="bg-d10 placeholder:text-d200" placeholder="가격을 적어주세요." />
-              </div>
-              <div className="my-3 flex flex-col">
-                <div className="flex items-center justify-between">
-                  <span className="text-lg">원산지 표기</span>
-                  <Exclamation width="16" height="16" />
-                </div>
-                <input
-                  className="bg-d10 placeholder:text-d200"
-                  placeholder="ex) 배추: 국내산, 고춧가루: 국내산"
-                />
-              </div>
-              <div className="my-3 flex items-center justify-between">
-                <div className="flex flex-col">
-                  <span className="text-lg">메뉴 사진 추가</span>
-                  <span className="text-d200">사용하지 않음</span>
-                </div>
-                <NoImage
-                  className="cursor-pointer"
-                  width="48"
-                  height="48"
-                  onClick={handleEditOptions}
-                />
-              </div>
-              <div className="my-3 flex flex-col">
-                <div className="flex items-center justify-between">
-                  <span className="text-lg">[추가 옵션]</span>
-                  <Edit
-                    className="cursor-pointer"
-                    width="18"
-                    height="18"
-                    onClick={handleAddMenuImage}
-                  />
-                </div>
-                <div>
-                  <span className="text-d200">사용하지 않음</span>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center justify-center gap-3 pt-2">
-              <p className="text-xl">삭제하기</p>
-              <Plus
-                width="24"
-                height="24"
-                onClick={handleDeleteMenu}
-                className="rotate-45 cursor-pointer"
-              />
-            </div>
-          </div>
-          <div className="flex h-fit w-[50%] flex-col rounded-lg border border-d50 px-2 py-4">
-            <div className="mx-3 flex items-center justify-between gap-3 border-b border-d50 pb-3">
-              <span className="bg-d10 text-xl font-bold">추가 옵션 관리</span>
-              <Save width="20" height="20" onClick={handleSaveOptions} className="cursor-pointer" />
-            </div>
-            <div className="flex flex-col py-2">
-              <div className="flex items-center gap-2 pl-4 pr-2">
-                <div className="w-[60%]">
-                  <Input
-                    id="optionName"
-                    type="text"
-                    placeholder="옵션 이름"
-                    value=""
-                    handleInputChange={handleAddCategory}
-                  />
-                </div>
-                <div className="w-[30%]">
-                  <Input
-                    id="optionPrice"
-                    type="text"
-                    placeholder="가격"
-                    value=""
-                    handleInputChange={handleAddCategory}
-                  />
-                </div>
-                <Trash width="20" height="20" onClick={handleDeleteOptions} />
-              </div>
-              <div className="flex items-center gap-2 pl-4 pr-2">
-                <div className="w-[60%]">
-                  <Input
-                    id="optionName"
-                    type="text"
-                    placeholder="옵션 이름"
-                    value=""
-                    handleInputChange={handleAddCategory}
-                  />
-                </div>
-                <div className="w-[30%]">
-                  <Input
-                    id="optionPrice"
-                    type="text"
-                    placeholder="가격"
-                    value=""
-                    handleInputChange={handleAddCategory}
-                  />
-                </div>
-                <Trash width="20" height="20" onClick={handleDeleteOptions} />
-              </div>
-            </div>
-            <div className="flex items-center justify-center gap-3">
-              <Plus width="24" height="24" onClick={handleAddOptions} className="cursor-pointer" />
-            </div>
-          </div>
-        </div>
       </div>
+      {isVisible && <ContextOptions options={DEFAULT_OPTIONS} onClick={onCategory} />}
     </div>
   );
 }

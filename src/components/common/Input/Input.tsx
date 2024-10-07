@@ -30,7 +30,7 @@ export default function Input({
         />
         {children && (
           <div
-            className="absolute right-4 top-0 flex h-full cursor-pointer items-center justify-center"
+            className="absolute right-4 top-0 flex h-full cursor-pointer items-center justify-center gap-2"
             onClick={onClickIcon}
           >
             {children}
