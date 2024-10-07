@@ -62,77 +62,87 @@ export default function TablePage() {
   // TODO 결제하기 클릭 시 테이블 초기화
 
   return (
-      <div className="relative flex h-full flex-col" id="tableModal">
-        <Tabs>
-          <Tab id="table" index={0} currentTab={currentTab} handleTabChange={handleTabChange}>
-            테이블
-          </Tab>
-          <Tab id="qr" index={1} currentTab={currentTab} handleTabChange={handleTabChange}>
-            QR
-          </Tab>
-        </Tabs>
-        {/* Table과 QR에 대한 부분 Tables, QRCards 컴포넌트로 분리? */}
-        {currentTab === 'table' ? (
-          <div className="flex h-full flex-wrap content-start gap-5 overflow-y-scroll p-10">
-            {tables.map(table => (
-              <Table table={table} key={table.tableNo} />
-            ))}
-            <div
-              className="max-w-1/6 relative flex max-h-[170px] min-h-[155px] min-w-[240px] cursor-pointer flex-col items-center justify-center rounded-lg border border-d900 p-4 text-2xl font-bold text-d200 hover:text-d900"
-              onClick={handleAddTable}
-            >
-              테이블 추가+
-            </div>
+    <div className="relative flex h-full flex-col" id="tableModal">
+      <Tabs>
+        <Tab
+          id="table"
+          leftPosition="left-[0px]"
+          currentTab={currentTab}
+          handleTabChange={handleTabChange}
+        >
+          테이블
+        </Tab>
+        <Tab
+          id="qr"
+          leftPosition="left-[130px]"
+          currentTab={currentTab}
+          handleTabChange={handleTabChange}
+        >
+          QR
+        </Tab>
+      </Tabs>
+      {/* Table과 QR에 대한 부분 Tables, QRCards 컴포넌트로 분리? */}
+      {currentTab === 'table' ? (
+        <div className="flex h-full flex-wrap content-start gap-5 overflow-y-scroll p-10">
+          {tables.map(table => (
+            <Table table={table} key={table.tableNo} onModalOpen={handleDetailModalOpen} />
+          ))}
+          <div
+            className="max-w-1/6 relative flex max-h-[170px] min-h-[155px] min-w-[240px] cursor-pointer flex-col items-center justify-center rounded-lg border border-d900 p-4 text-2xl font-bold text-d200 hover:text-d900"
+            onClick={handleAddTable}
+          >
+            테이블 추가+
           </div>
-        ) : (
-          <>
-            <div
-              className="flex h-full flex-wrap content-start gap-5 overflow-y-scroll p-10"
-              id="qrDiv"
-            >
-              {tableList.map(({ tableNo, url }) => (
-                <QRCard tableNo={tableNo} key={tableNo} qrUrl={url} />
-                ))}
-            </div>
-            <div className="flex justify-center gap-2 py-[6px]">
-              <Button
-                title="전체 QR 이미지 저장"
-                type="others"
-                onClick={() => {
-                  downloadAllQR();
-                }}
-              />
-              <Button
-                title="전체 QR 프린트"
-                type="others"
-                onClick={() => {
-                  printAllQR(tableList);
-                }}
-              />
-            </div>
-          </>
-        )}
-        {warnModalData && (
-          <WarnModalContainer open={openWarnModal}>
-            <ModalTitle>{warnModalData.title}</ModalTitle>
-            <ModalContent>{warnModalData.desc}</ModalContent>
-            <div className="mt-3 flex gap-2">
-              <ModalButton onClick={handleWarnModalClose} type="warn">
-                {warnModalData.yesText}
-              </ModalButton>
-              <ModalButton onClick={handleWarnModalClose}>{warnModalData.noText}</ModalButton>
-            </div>
-          </WarnModalContainer>
-        )}
-        {currentTable && (
-          <DetailModalContainer open={openDetailModal}>
-            <DetailModal
-              currentTable={currentTable}
-              onCloseModal={handleDetailModalClose}
-              onInitTable={handleTableInit}
+        </div>
+      ) : (
+        <>
+          <div
+            className="flex h-full flex-wrap content-start gap-5 overflow-y-scroll p-10"
+            id="qrDiv"
+          >
+            {tables.map(({ tableNo, url }) => (
+              <QRCard tableNo={tableNo} key={tableNo} qrUrl={url} />
+            ))}
+          </div>
+          <div className="flex justify-center gap-2 py-[6px]">
+            <Button
+              title="전체 QR 이미지 저장"
+              type="others"
+              onClick={() => {
+                downloadAllQR();
+              }}
             />
-          </DetailModalContainer>
-        )}
-      </div>
+            <Button
+              title="전체 QR 프린트"
+              type="others"
+              onClick={() => {
+                printAllQR(tables);
+              }}
+            />
+          </div>
+        </>
+      )}
+      {warnModalData && (
+        <WarnModalContainer open={openWarnModal}>
+          <ModalTitle>{warnModalData.title}</ModalTitle>
+          <ModalContent>{warnModalData.desc}</ModalContent>
+          <div className="mt-3 flex gap-2">
+            <ModalButton onClick={handleWarnModalClose} type="warn">
+              {warnModalData.yesText}
+            </ModalButton>
+            <ModalButton onClick={handleWarnModalClose}>{warnModalData.noText}</ModalButton>
+          </div>
+        </WarnModalContainer>
+      )}
+      {currentTable && (
+        <DetailModalContainer open={openDetailModal}>
+          <DetailModal
+            currentTable={currentTable}
+            onCloseModal={handleDetailModalClose}
+            onInitTable={handleTableInit}
+          />
+        </DetailModalContainer>
+      )}
+    </div>
   );
 }
