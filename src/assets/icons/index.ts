@@ -1,4 +1,4 @@
-import Print from '@/assets/icons/print.svg';
+import Print from './print.svg';
 import Plus from './plus.svg';
 import Search from './search.svg';
 import Exclamation from './exclamation.svg';

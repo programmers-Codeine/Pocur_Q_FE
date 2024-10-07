@@ -59,10 +59,20 @@ export default function TablePage() {
   return (
     <div className="flex h-full flex-col">
       <Tabs>
-        <Tab id="table" index={0} currentTab={currentTab} handleTabChange={handleTabChange}>
+        <Tab
+          id="table"
+          leftPosition="left-[0px]"
+          currentTab={currentTab}
+          handleTabChange={handleTabChange}
+        >
           테이블
         </Tab>
-        <Tab id="qr" index={1} currentTab={currentTab} handleTabChange={handleTabChange}>
+        <Tab
+          id="qr"
+          leftPosition="left-[130px]"
+          currentTab={currentTab}
+          handleTabChange={handleTabChange}
+        >
           QR
         </Tab>
       </Tabs>
