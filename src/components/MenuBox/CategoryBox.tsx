@@ -6,9 +6,9 @@ import { CategoryBoxProps } from './MenuBox.types';
 
 export default function CategoryBox({
   category,
-  handleCategory,
-  handleSetInputMenuForm,
-  handleOpenCategoryOptions,
+  onCategory,
+  onSetInputMenuForm,
+  onOpenCategoryOptions,
 }: CategoryBoxProps) {
   const { categories } = useMenuStore();
 
@@ -22,8 +22,8 @@ export default function CategoryBox({
             type="text"
             placeholder="카테고리 이름"
             value={category}
-            handleInputChange={handleSetInputMenuForm}
-            onClickIcon={() => handleCategory(1)}
+            handleInputChange={onSetInputMenuForm}
+            onClickIcon={() => onCategory(1)}
           >
             <Plus width="16" height="16" />
           </Input>
@@ -35,7 +35,7 @@ export default function CategoryBox({
             key={id}
             title={title}
             state="normal"
-            onContextMenu={e => handleOpenCategoryOptions(e, id)}
+            onContextMenu={e => onOpenCategoryOptions(e, id)}
           />
         ))}
       </div>
