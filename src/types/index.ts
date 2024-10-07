@@ -67,3 +67,4 @@ export type InputDesignFormTypes = {
   designImage: string;
   theme: DesignThemeTypes;
 };
+
