@@ -15,6 +15,7 @@ import Logout from './logout.svg';
 import Setting from './setting.svg';
 import CircleArrow from './circleArrow.svg';
 import Info from './Info.svg';
+import Label from './label.svg';
 
 export {
   Avatar,
@@ -34,4 +35,5 @@ export {
   ToggleOff,
   Modify,
   Print,
+  Label,
 };
