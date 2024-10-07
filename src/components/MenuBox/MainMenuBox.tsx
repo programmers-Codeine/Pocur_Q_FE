@@ -15,19 +15,21 @@ import { MainMenuBoxProps } from './MenuBox.types';
 
 export default function MainMenuBox({
   search,
-  handleAddMenu,
-  handleSetInputMenuForm,
-  handleSearchMenu,
-  handleToggleMenu,
-  handleSetMenu,
-  handleDeleteMenu,
+  onAddMenu,
+  onSetInputMenuForm,
+  onSearchMenu,
+  onToggleMenu,
+  onSetMenu,
+  onDeleteMenu,
 }: MainMenuBoxProps) {
-  const { categories, menus, toggleMenu } = useMenuStore();
+  
+  const { categories, menus, selectedMenu } = useMenuStore();
+  
   return (
     <div className="flex h-fit min-w-[620px] flex-col gap-3 rounded-lg border border-d50 px-3 py-4">
       <div className="mx-3 flex min-h-[54px] items-center justify-between gap-3 border-b border-d50 pb-3">
         <p className="text-2xl font-bold">메뉴 추가하기</p>
-        <Plus width="24" onClick={handleAddMenu} className="cursor-pointer" />
+        <Plus width="24" onClick={onAddMenu} className="cursor-pointer" />
       </div>
       <div className="mx-3 border-b border-d50 pb-3">
         <Input
@@ -35,8 +37,8 @@ export default function MainMenuBox({
           type="text"
           placeholder="메뉴 이름 검색"
           value={search}
-          handleInputChange={handleSetInputMenuForm}
-          onClickIcon={handleSearchMenu}
+          handleInputChange={onSetInputMenuForm}
+          onClickIcon={onSearchMenu}
         >
           <Search width="16" height="16" className="stroke-d50" />
         </Input>
@@ -68,32 +70,32 @@ export default function MainMenuBox({
                   <div className="flex w-full justify-between">
                     <span className="text-xl">{menu.title}</span>
                     <div className="flex gap-2">
-                      {toggleMenu.includes(menu.id) ? (
+                      {selectedMenu.includes(menu.id) ? (
                         <ToggleOn
                           width="20"
                           height="20"
                           className="cursor-pointer"
-                          onClick={() => handleToggleMenu(menu.id)}
+                          onClick={() => onToggleMenu(menu.id)}
                         />
                       ) : (
                         <ToggleOff
                           width="20"
                           height="20"
                           className="cursor-pointer"
-                          onClick={() => handleToggleMenu(menu.id)}
+                          onClick={() => onToggleMenu(menu.id)}
                         />
                       )}
                       <Modify
                         width="20"
                         height="20"
                         className="cursor-pointer"
-                        onClick={() => handleSetMenu(menu.id)}
+                        onClick={() => onSetMenu(menu.id)}
                       />
                       <Trash
                         width="20"
                         height="20"
                         className="cursor-pointer"
-                        onClick={() => handleDeleteMenu(menu.id)}
+                        onClick={() => onDeleteMenu(menu.id)}
                       />
                     </div>
                   </div>

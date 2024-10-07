@@ -3,35 +3,39 @@ import { ChangeEvent, MouseEvent } from 'react';
 
 export type CategoryBoxProps = {
   category: string;
-  handleCategory: (id: number) => void;
-  handleSetInputMenuForm: (e: ChangeEvent<HTMLInputElement>) => void;
-  handleOpenCategoryOptions: (e: MouseEvent, id: number) => void;
+  onCategory: (id: number) => void;
+  onSetInputMenuForm: (e: ChangeEvent<HTMLInputElement>) => void;
+  onOpenCategoryOptions: (e: MouseEvent, id: number) => void;
+};
+
+export type FastToolBoxProps = {
+  onToggleTool: (toolId: number) => void;
 };
 
 export type MainMenuBoxProps = {
   search: string;
-  handleAddMenu: () => void;
-  handleSetInputMenuForm: (e: ChangeEvent<HTMLInputElement>) => void;
-  handleSearchMenu: () => void;
-  handleToggleMenu: (menuId: number) => void;
-  handleSetMenu: (menuId: number) => void;
-  handleDeleteMenu: (menuId?: number) => void;
+  onAddMenu: () => void;
+  onSetInputMenuForm: (e: ChangeEvent<HTMLInputElement>) => void;
+  onSearchMenu: () => void;
+  onToggleMenu: (menuId: number) => void;
+  onSetMenu: (menuId: number) => void;
+  onDeleteMenu: (menuId?: number) => void;
 };
 
 export type ManageMenuBoxProps = {
   inputMenuForm: InputMenuFormTypes;
-  handleSetInputMenuForm: (e: ChangeEvent<HTMLInputElement>) => void;
-  handleSaveMenu: () => void;
-  handleSelectCategory: (e: ChangeEvent<HTMLSelectElement>) => void;
-  handleAddMenuImage: () => void;
-  handleEditOptions: () => void;
-  handleDeleteMenu: (menuId?: number) => void;
+  onSetInputMenuForm: (e: ChangeEvent<HTMLInputElement>) => void;
+  onSaveMenu: () => void;
+  onSelectCategory: (e: ChangeEvent<HTMLSelectElement>) => void;
+  onAddMenuImage: () => void;
+  onEditOptions: () => void;
+  onDeleteMenu: (menuId?: number) => void;
 };
 
 export type AddOptionsBoxProps = {
   optionsInput: AddOptionsTypes[];
-  handleSaveOptions: () => void;
-  handleSetInputOption: (e: ChangeEvent<HTMLInputElement>) => void;
-  handleDeleteOptions: (optionId: number) => void;
-  handleAddOptions: () => void;
+  onSaveOptions: () => void;
+  onSetInputOption: (e: ChangeEvent<HTMLInputElement>) => void;
+  onDeleteOptions: (optionId: number) => void;
+  onAddOptions: () => void;
 };

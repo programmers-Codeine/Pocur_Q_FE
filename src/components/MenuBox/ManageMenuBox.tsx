@@ -4,12 +4,12 @@ import { ManageMenuBoxProps } from './MenuBox.types';
 
 export default function ManageMenuBox({
   inputMenuForm,
-  handleSetInputMenuForm,
-  handleSaveMenu,
-  handleSelectCategory,
-  handleAddMenuImage,
-  handleEditOptions,
-  handleDeleteMenu,
+  onSetInputMenuForm,
+  onSaveMenu,
+  onSelectCategory,
+  onAddMenuImage,
+  onEditOptions,
+  onDeleteMenu,
 }: ManageMenuBoxProps) {
   const { categories } = useMenuStore();
   return (
@@ -21,9 +21,9 @@ export default function ManageMenuBox({
           value={inputMenuForm.menuName}
           className="bg-d10 text-xl placeholder:text-d200"
           placeholder="메뉴 이름"
-          onChange={handleSetInputMenuForm}
+          onChange={onSetInputMenuForm}
         />
-        <Save width="20" height="20" onClick={handleSaveMenu} className="cursor-pointer" />
+        <Save width="20" height="20" onClick={onSaveMenu} className="cursor-pointer" />
       </div>
       <div className="mx-3 flex flex-col border-b border-d50">
         <div className="my-3 flex flex-col">
@@ -37,7 +37,7 @@ export default function ManageMenuBox({
             value={inputMenuForm.description}
             className="bg-d10 placeholder:text-d200"
             placeholder="메뉴 설명을 적어주세요."
-            onChange={handleSetInputMenuForm}
+            onChange={onSetInputMenuForm}
           />
         </div>
         <div className="my-3 flex flex-col">
@@ -46,7 +46,7 @@ export default function ManageMenuBox({
             <Exclamation width="16" height="16" />
           </div>
           <div className="flex w-full items-center">
-            <select className="w-full rounded border bg-d10 p-2" onChange={handleSelectCategory}>
+            <select className="w-full rounded border bg-d10 p-2" onChange={onSelectCategory}>
               {categories.map(({ id, title }) => (
                 <option key={id} value={id}>
                   {title}
@@ -66,7 +66,7 @@ export default function ManageMenuBox({
             value={inputMenuForm.price}
             className="bg-d10 placeholder:text-d200"
             placeholder="가격을 적어주세요."
-            onChange={handleSetInputMenuForm}
+            onChange={onSetInputMenuForm}
           />
         </div>
         <div className="my-3 flex flex-col">
@@ -80,7 +80,7 @@ export default function ManageMenuBox({
             value={inputMenuForm.origin}
             className="bg-d10 placeholder:text-d200"
             placeholder="ex) 배추: 국내산, 고춧가루: 국내산"
-            onChange={handleSetInputMenuForm}
+            onChange={onSetInputMenuForm}
           />
         </div>
         <div className="my-3 flex items-center justify-between">
@@ -88,12 +88,12 @@ export default function ManageMenuBox({
             <span className="text-lg">메뉴 사진 추가</span>
             <span className="text-d200">사용하지 않음</span>
           </div>
-          <NoImage className="cursor-pointer" width="48" height="48" onClick={handleAddMenuImage} />
+          <NoImage className="cursor-pointer" width="48" height="48" onClick={onAddMenuImage} />
         </div>
         <div className="my-3 flex flex-col">
           <div className="flex items-center justify-between">
             <span className="text-lg">[추가 옵션]</span>
-            <Edit className="cursor-pointer" width="18" height="18" onClick={handleEditOptions} />
+            <Edit className="cursor-pointer" width="18" height="18" onClick={onEditOptions} />
           </div>
           <div className="mt-1">
             {inputMenuForm.options ? (
@@ -114,7 +114,7 @@ export default function ManageMenuBox({
         <Plus
           width="24"
           height="24"
-          onClick={() => handleDeleteMenu()}
+          onClick={() => onDeleteMenu()}
           className="rotate-45 cursor-pointer"
         />
       </div>
