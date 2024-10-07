@@ -66,6 +66,51 @@ const useMenuStore = create<MenuState>(set => ({
         },
       ],
     },
+    {
+      id: 2,
+      title: '샘플 2',
+      description: '샘플 2 내용',
+      category: 2,
+      price: 5000,
+      origin: '돼지고기: 국내산, 배추김치: 국내산',
+      addOptions: [
+        {
+          id: 2,
+          optionName: '곱빼기',
+          price: 2000,
+        },
+      ],
+    },
+    {
+      id: 3,
+      title: '샘플 3',
+      description: '샘플 3 내용',
+      category: 3,
+      price: 5000,
+      origin: '돼지고기: 국내산, 배추김치: 국내산',
+      addOptions: [
+        {
+          id: 3,
+          optionName: '곱빼기',
+          price: 3000,
+        },
+      ],
+    },
+    {
+      id: 4,
+      title: '샘플 4',
+      description: '샘플 4 내용',
+      category: 4,
+      price: 5000,
+      origin: '돼지고기: 국내산, 배추김치: 국내산',
+      addOptions: [
+        {
+          id: 4,
+          optionName: '곱빼기',
+          price: 4000,
+        },
+      ],
+    },
   ],
 
   selectedMenu: [1],
