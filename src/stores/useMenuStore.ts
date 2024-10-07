@@ -6,7 +6,7 @@ type AddOption = {
   price: number;
 };
 
-type Menu = {
+export type Menu = {
   id: number;
   title: string;
   description: string;
