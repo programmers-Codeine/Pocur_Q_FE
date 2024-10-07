@@ -4,6 +4,7 @@ import Tabs from './Table/Tabs';
 import Table from './Table/Table';
 import Tab from './Table/Tab';
 import QRCard from './Table/QRCard';
+import useTableStore from '@/stores/useTableStore';
 import DetailModalContainer from '../../components/TableDetailModal/DetailModalContainer';
 import { Table as TTable } from './Table/Table.types';
 import WarnModalContainer from '@/components/common/Modal/WarnModalContainer';
@@ -12,58 +13,6 @@ import ModalButton from '@/components/common/Modal/Button/ModalButton';
 import ModalContent from '@/components/common/Modal/Content/ModalContent';
 import DetailModal from './Table/DeatailModal';
 import { downloadAllQR, printAllQR } from '@/utils/QR';
-
-const tableList: TTable[] = [
-  {
-    tableNo: 1,
-    orderList: [
-      {
-        menuName: '돼지수육',
-        menuQuantity: 1,
-        menuOptions: [{ optionName: '고기 추가', optionQuantity: 2, optionPrice: 500 }],
-        price: 10000,
-      },
-      { menuName: '소주', menuQuantity: 2, menuOptions: [], price: 5000 },
-      {
-        menuName: '탕수육',
-        menuQuantity: 1,
-        menuOptions: [{ optionName: '소스 추가', optionQuantity: 2, optionPrice: 500 }],
-        price: 12000,
-      },
-    ],
-    totalPrice: 0,
-    newOrderNo: 1,
-    url: 'https://naver.com',
-  },
-  {
-    tableNo: 2,
-    orderList: [],
-    totalPrice: 0,
-    newOrderNo: 0,
-    url: 'https://pocurq.shop/admin/manage',
-  },
-  { tableNo: 3, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
-  { tableNo: 4, orderList: [], totalPrice: 0, newOrderNo: 2, url: 'https://pocurq.shop' },
-  { tableNo: 5, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
-  { tableNo: 6, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
-  { tableNo: 7, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
-  { tableNo: 8, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
-  { tableNo: 9, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
-  { tableNo: 10, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
-  {
-    tableNo: 71,
-    orderList: [],
-    totalPrice: 0,
-    newOrderNo: 0,
-    url: 'https://pocurq.shop/admin/manage',
-  },
-  { tableNo: 81, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
-  { tableNo: 91, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
-  { tableNo: 101, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
-  { tableNo: 21, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
-  { tableNo: 231, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
-  { tableNo: 121, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
-];
 
 type WarnModalData = {
   title: string;
@@ -78,7 +27,11 @@ export default function TablePage() {
   const [openWarnModal, setOpenWarnModal] = useState(false);
   const [warnModalData, setWarnModalData] = useState<WarnModalData>();
   const [currentTable, setCurrentTable] = useState<TTable | null>();
+  const { tables, addTable } = useTableStore();
 
+  const handleAddTable = () => {
+    addTable(tables.length + 1);
+  };
   const handleTabChange = (id: string) => {
     setCurrentTab(id);
   };
@@ -109,7 +62,6 @@ export default function TablePage() {
   // TODO 결제하기 클릭 시 테이블 초기화
 
   return (
-    <>
       <div className="relative flex h-full flex-col" id="tableModal">
         <Tabs>
           <Tab id="table" index={0} currentTab={currentTab} handleTabChange={handleTabChange}>
@@ -122,9 +74,9 @@ export default function TablePage() {
         {/* Table과 QR에 대한 부분 Tables, QRCards 컴포넌트로 분리? */}
         {currentTab === 'table' ? (
           <div className="flex h-full flex-wrap content-start gap-5 overflow-y-scroll p-10">
-            {tableList.map(table => (
-              <Table table={table} key={table.tableNo} onModalOpen={handleDetailModalOpen} />
-            )}
+            {tables.map(table => (
+              <Table table={table} key={table.tableNo} />
+            ))}
             <div
               className="max-w-1/6 relative flex max-h-[170px] min-h-[155px] min-w-[240px] cursor-pointer flex-col items-center justify-center rounded-lg border border-d900 p-4 text-2xl font-bold text-d200 hover:text-d900"
               onClick={handleAddTable}
@@ -182,6 +134,5 @@ export default function TablePage() {
           </DetailModalContainer>
         )}
       </div>
-    </>
   );
 }
