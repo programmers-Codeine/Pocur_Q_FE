@@ -24,6 +24,8 @@ export default function MenuPage() {
     setStep,
     saveMenu,
     deleteMenu,
+    toggleMenu,
+    toggleTool,
   } = useMenuStore();
 
   const [inputMenuForm, setInputMenuForm] = useState<InputMenuFormTypes>({
@@ -38,14 +40,14 @@ export default function MenuPage() {
     optionsInput: [{ id: 1, optionName: '', price: '' }],
   });
 
-  const handleSelectCategory = (e: ChangeEvent<HTMLSelectElement>) => {
+  const onSelectCategory = (e: ChangeEvent<HTMLSelectElement>) => {
     setInputMenuForm(prev => ({
       ...prev,
       menuCategory: Number(e.target.value),
     }));
   };
 
-  const handleSetInputOption = (e: ChangeEvent<HTMLInputElement>) => {
+  const onSetInputOption = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     const [field, optionId] = id.split('-');
 
@@ -59,7 +61,7 @@ export default function MenuPage() {
     }));
   };
 
-  const handleSetInputMenuForm = (e: ChangeEvent<HTMLInputElement>) => {
+  const onSetInputMenuForm = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setInputMenuForm(prev => ({
       ...prev,
@@ -67,7 +69,7 @@ export default function MenuPage() {
     }));
   };
 
-  const handleCategory = (id: number) => {
+  const onCategory = (id: number) => {
     // TODO: 매직넘버 상수화 필요
     if (id === 1) {
       addCategory(inputMenuForm.category);
@@ -81,16 +83,16 @@ export default function MenuPage() {
     }
   };
 
-  const handleOpenCategoryOptions = (e: MouseEvent, id: number) => {
+  const onOpenCategoryOptions = (e: MouseEvent, id: number) => {
     const { clientX: x, clientY: y } = e;
     openMenu(id, x, y);
   };
 
-  const handleAddMenu = () => {
+  const onAddMenu = () => {
     setStep(2);
   };
-  const handleSearchMenu = () => {};
-  const handleDeleteMenu = (menuId?: number) => {
+  const onSearchMenu = () => {};
+  const onDeleteMenu = (menuId?: number) => {
     if (menuId) deleteMenu(menuId);
     setInputMenuForm({
       category: '',
@@ -107,8 +109,7 @@ export default function MenuPage() {
     setStep(1);
   };
 
-  const handleToggleMenu = (menuId: number) => {};
-  const handleSetMenu = (menuId: number) => {
+  const onSetMenu = (menuId: number) => {
     const menu = menus.find(menu => menu.id === menuId);
     if (menu) {
       const addOptions = menu.addOptions
@@ -136,7 +137,7 @@ export default function MenuPage() {
     }
   };
 
-  const handleSaveMenu = () => {
+  const onSaveMenu = () => {
     const { menuCategory, menuName, description, price, origin, options } = inputMenuForm;
     if (menuCategory && menuName && description && price && origin) {
       const addOptions = options?.map(({ optionName, price }, idx) => ({
@@ -169,13 +170,13 @@ export default function MenuPage() {
       setStep(1);
     }
   };
-  const handleAddMenuImage = () => {};
+  const onAddMenuImage = () => {};
 
-  const handleEditOptions = () => {
+  const onEditOptions = () => {
     setStep(3);
   };
 
-  const handleAddOptions = () => {
+  const onAddOptions = () => {
     // TODO: 최대갯수 제한 (ex:10)
     setInputMenuForm(prev => {
       const newId = prev.optionsInput.length
@@ -188,7 +189,7 @@ export default function MenuPage() {
     });
   };
 
-  const handleDeleteOptions = (optionId: number) => {
+  const onDeleteOptions = (optionId: number) => {
     // TODO: api 연결
     setInputMenuForm(prev => ({
       ...prev,
@@ -196,7 +197,7 @@ export default function MenuPage() {
     }));
   };
 
-  const handleSaveOptions = () => {
+  const onSaveOptions = () => {
     // TODO: api 연결
     // TODO: 옵션이름, 가격이 들어가있지 않은 경우
     setInputMenuForm(prev => ({
@@ -206,53 +207,60 @@ export default function MenuPage() {
     setStep(2);
   };
 
+  const onToggleMenu = (menuId: number) => {
+    toggleMenu(menuId);
+  };
+  const onToggleTool = (toolId: number) => {
+    toggleTool(toolId);
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex h-[180px] w-full gap-3">
         <CategoryBox
           category={inputMenuForm.category}
-          handleCategory={handleCategory}
-          handleSetInputMenuForm={handleSetInputMenuForm}
-          handleOpenCategoryOptions={handleOpenCategoryOptions}
+          onCategory={onCategory}
+          onSetInputMenuForm={onSetInputMenuForm}
+          onOpenCategoryOptions={onOpenCategoryOptions}
         />
-        <FastToolBox />
+        <FastToolBox onToggleTool={onToggleTool} />
       </div>
       <div className="flex w-full gap-3">
         <MainMenuBox
           search={inputMenuForm.search}
-          handleAddMenu={handleAddMenu}
-          handleSetInputMenuForm={handleSetInputMenuForm}
-          handleSearchMenu={handleSearchMenu}
-          handleToggleMenu={handleToggleMenu}
-          handleSetMenu={handleSetMenu}
-          handleDeleteMenu={handleDeleteMenu}
+          onAddMenu={onAddMenu}
+          onSetInputMenuForm={onSetInputMenuForm}
+          onSearchMenu={onSearchMenu}
+          onToggleMenu={onToggleMenu}
+          onSetMenu={onSetMenu}
+          onDeleteMenu={onDeleteMenu}
         />
         <div className="flex w-full gap-3">
           {step !== 1 && (
             <ManageMenuBox
               inputMenuForm={inputMenuForm}
-              handleSetInputMenuForm={handleSetInputMenuForm}
-              handleSaveMenu={handleSaveMenu}
-              handleSelectCategory={handleSelectCategory}
-              handleAddMenuImage={handleAddMenuImage}
-              handleEditOptions={handleEditOptions}
-              handleDeleteMenu={handleDeleteMenu}
+              onSetInputMenuForm={onSetInputMenuForm}
+              onSaveMenu={onSaveMenu}
+              onSelectCategory={onSelectCategory}
+              onAddMenuImage={onAddMenuImage}
+              onEditOptions={onEditOptions}
+              onDeleteMenu={onDeleteMenu}
             />
           )}
           {step === 3 ? (
             <AddOptionsBox
               optionsInput={inputMenuForm.optionsInput}
-              handleSaveOptions={handleSaveOptions}
-              handleSetInputOption={handleSetInputOption}
-              handleDeleteOptions={handleDeleteOptions}
-              handleAddOptions={handleAddOptions}
+              onSaveOptions={onSaveOptions}
+              onSetInputOption={onSetInputOption}
+              onDeleteOptions={onDeleteOptions}
+              onAddOptions={onAddOptions}
             />
           ) : (
             <div className="w-[50%]"></div>
           )}
         </div>
       </div>
-      {isVisible && <ContextOptions options={DEFAULT_OPTIONS} onClick={handleCategory} />}
+      {isVisible && <ContextOptions options={DEFAULT_OPTIONS} onClick={onCategory} />}
     </div>
   );
 }

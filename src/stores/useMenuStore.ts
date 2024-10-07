@@ -16,11 +16,13 @@ type Menu = {
   image?: string;
   addOptions?: AddOption[] | null;
 };
+
 type MenuState = {
   categories: { id: number; title: string }[];
   menus: Menu[];
 
-  toggleMenu: number[];
+  selectedMenu: number[];
+  selectedTools: number[];
   currentId: number;
   step: number;
   //TODO: 매직넘버
@@ -36,6 +38,9 @@ type MenuState = {
 
   saveMenu: (menu: Menu) => void;
   deleteMenu: (id: number) => void;
+
+  toggleMenu: (id: number) => void;
+  toggleTool: (id: number) => void;
 };
 
 const useMenuStore = create<MenuState>(set => ({
@@ -65,7 +70,8 @@ const useMenuStore = create<MenuState>(set => ({
     },
   ],
 
-  toggleMenu: [1],
+  selectedMenu: [1],
+  selectedTools: [],
   currentId: 0,
   step: 1,
 
@@ -115,9 +121,24 @@ const useMenuStore = create<MenuState>(set => ({
         };
       }
     }),
+
   deleteMenu: (id: number) =>
     set(state => ({
       menus: state.menus.filter(menu => menu.id !== id),
+    })),
+
+  toggleMenu: (id: number) =>
+    set(state => ({
+      selectedMenu: state.selectedMenu.includes(id)
+        ? state.selectedMenu.filter(menuId => menuId !== id)
+        : [...state.selectedMenu, id],
+    })),
+
+  toggleTool: (id: number) =>
+    set(state => ({
+      selectedTools: state.selectedTools.includes(id)
+        ? state.selectedTools.filter(toolId => toolId !== id)
+        : [...state.selectedTools, id],
     })),
 }));
 
