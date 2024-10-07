@@ -4,6 +4,7 @@ import Tabs from './Table/Tabs';
 import Table from './Table/Table';
 import Tab from './Table/Tab';
 import QRCard from './Table/QRCard';
+import { downloadAllQR, printAllQR } from '@/utils/QR';
 
 const tableList = [
   {
@@ -15,23 +16,36 @@ const tableList = [
     ],
     totalPrice: 0,
     newOrderNo: 1,
+    url: 'https://naver.com',
   },
-  { tableNo: 2, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 3, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 4, orderList: [], totalPrice: 0, newOrderNo: 2 },
-  { tableNo: 5, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 6, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 7, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 8, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 9, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 10, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 71, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 81, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 91, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 101, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 21, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 231, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 121, orderList: [], totalPrice: 0, newOrderNo: 0 },
+  {
+    tableNo: 2,
+    orderList: [],
+    totalPrice: 0,
+    newOrderNo: 0,
+    url: 'https://pocurq.shop/admin/manage',
+  },
+  { tableNo: 3, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
+  { tableNo: 4, orderList: [], totalPrice: 0, newOrderNo: 2, url: 'https://pocurq.shop' },
+  { tableNo: 5, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
+  { tableNo: 6, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
+  { tableNo: 7, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
+  { tableNo: 8, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
+  { tableNo: 9, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
+  { tableNo: 10, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
+  {
+    tableNo: 71,
+    orderList: [],
+    totalPrice: 0,
+    newOrderNo: 0,
+    url: 'https://pocurq.shop/admin/manage',
+  },
+  { tableNo: 81, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
+  { tableNo: 91, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
+  { tableNo: 101, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
+  { tableNo: 21, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
+  { tableNo: 231, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
+  { tableNo: 121, orderList: [], totalPrice: 0, newOrderNo: 0, url: 'https://pocurq.shop' },
 ];
 
 export default function TablePage() {
@@ -76,14 +90,29 @@ export default function TablePage() {
         </div>
       ) : (
         <>
-          <div className="flex h-full flex-wrap content-start gap-5 overflow-y-scroll p-10">
-            {tableList.map(({ tableNo }) => (
-              <QRCard tableNo={tableNo} key={tableNo} />
+          <div
+            className="flex h-full flex-wrap content-start gap-5 overflow-y-scroll p-10"
+            id="qrDiv"
+          >
+            {tableList.map(({ tableNo, url }) => (
+              <QRCard tableNo={tableNo} key={tableNo} qrUrl={url} />
             ))}
           </div>
           <div className="flex justify-center gap-2 py-[6px]">
-            <Button title="전체 QR 이미지 저장" type="others" />
-            <Button title="전체 QR 프린트" type="others" />
+            <Button
+              title="전체 QR 이미지 저장"
+              type="others"
+              onClick={() => {
+                downloadAllQR();
+              }}
+            />
+            <Button
+              title="전체 QR 프린트"
+              type="others"
+              onClick={() => {
+                printAllQR(tableList);
+              }}
+            />
           </div>
         </>
       )}

@@ -33,5 +33,5 @@ export {
   ToggleOn,
   ToggleOff,
   Modify,
-  Print
+  Print,
 };
