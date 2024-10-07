@@ -13,19 +13,36 @@ const useTableStore = create<TableState>(set => ({
     {
       tableNo: 1,
       orderList: [
-        { menuName: '돼지수육', menuQuantity: 1 },
-        { menuName: '소주', menuQuantity: 2 },
-        { menuName: '탕수육', menuQuantity: 1 },
+        {
+          menuName: '돼지수육',
+          menuQuantity: 1,
+          menuOptions: [{ optionName: '고기 추가', optionPrice: 500, optionQuantity: 2 }],
+          price: 10000,
+        },
+        { menuName: '소주', menuQuantity: 2, menuOptions: [], price: 10000 },
+        {
+          menuName: '탕수육',
+          menuQuantity: 1,
+          menuOptions: [{ optionName: '소스 추가', optionPrice: 500, optionQuantity: 1 }],
+          price: 10000,
+        },
       ],
       totalPrice: 0,
       newOrderNo: 1,
+      url: 'https://pocurq.shop/',
     },
   ],
   addTable: newTableNo => {
     set(state => ({
       tables: [
         ...state.tables,
-        { tableNo: newTableNo, orderList: [], totalPrice: 0, newOrderNo: 0 },
+        {
+          tableNo: newTableNo,
+          orderList: [],
+          totalPrice: 0,
+          newOrderNo: 0,
+          url: 'https://pocurq.shop/',
+        },
       ],
     }));
   },

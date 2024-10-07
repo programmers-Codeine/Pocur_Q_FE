@@ -16,6 +16,7 @@ export type Table = {
   orderList: Order[];
   totalPrice: number;
   newOrderNo: number;
+  url: string;
 };
 
 export interface TableProps {
