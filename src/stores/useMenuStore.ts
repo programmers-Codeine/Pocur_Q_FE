@@ -20,7 +20,6 @@ type Menu = {
 type MenuState = {
   categories: { id: number; title: string }[];
   menus: Menu[];
-
   selectedMenu: number[];
   selectedTools: number[];
   currentId: number;
@@ -38,7 +37,6 @@ type MenuState = {
 
   saveMenu: (menu: Menu) => void;
   deleteMenu: (id: number) => void;
-
   toggleMenu: (id: number) => void;
   toggleTool: (id: number) => void;
 };

@@ -22,7 +22,9 @@ export default function MainMenuBox({
   onSetMenu,
   onDeleteMenu,
 }: MainMenuBoxProps) {
+  
   const { categories, menus, selectedMenu } = useMenuStore();
+  
   return (
     <div className="flex h-fit min-w-[620px] flex-col gap-3 rounded-lg border border-d50 px-3 py-4">
       <div className="mx-3 flex min-h-[54px] items-center justify-between gap-3 border-b border-d50 pb-3">
