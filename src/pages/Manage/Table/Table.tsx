@@ -3,7 +3,7 @@ import { TableProps } from './Table.types';
 import { Trash } from '@/assets/icons';
 import WarnModalContainer from '@/components/common/Modal/WarnModalContainer';
 import ModalTitle from '@/components/common/Modal/Content/ModalTitle';
-import { useState } from 'react';
+import { MouseEvent, useState } from 'react';
 import ModalContent from '@/components/common/Modal/Content/ModalContent';
 import ModalButton from '@/components/common/Modal/Button/ModalButton';
 
@@ -19,8 +19,9 @@ export default function Table({ table, onModalOpen }: TableProps) {
   const handleDeleteTable = () => {
     deleteTable(tableNo);
   };
-  const handleOpenWarnModal = () => {
+  const handleOpenWarnModal = (e: MouseEvent<HTMLDivElement>) => {
     setOpenWarnModal(true);
+    e.stopPropagation();
   };
   const handleCloseWarnModal = () => {
     setOpenWarnModal(false);
@@ -31,31 +32,33 @@ export default function Table({ table, onModalOpen }: TableProps) {
   };
 
   return (
-    <div
-      className="max-w-1/6 relative flex max-h-[170px] min-h-[155px] min-w-[240px] cursor-pointer flex-col rounded-lg border border-d900 p-4 text-d900"
-      onClick={handleModalOpen}
-    >
-      {newOrderNo !== 0 && (
-        <div className="absolute -right-3 -top-3 flex h-7 w-7 items-center justify-center rounded-full bg-b300 font-bold text-d10">
-          {newOrderNo}
-        </div>
-      )}
-      <div className="relative text-xl font-bold">
-        {tableNo}번
-        {tableNo > defaultTableCount && (
-          <div className="absolute right-1 top-1 hover:text-b300" onClick={handleOpenWarnModal}>
-            <Trash width={20} height={20} />
+    <>
+      <div
+        className="max-w-1/6 relative flex max-h-[170px] min-h-[155px] min-w-[240px] cursor-pointer flex-col rounded-lg border border-d900 p-4 text-d900"
+        onClick={handleModalOpen}
+      >
+        {newOrderNo !== 0 && (
+          <div className="absolute -right-3 -top-3 flex h-7 w-7 items-center justify-center rounded-full bg-b300 font-bold text-d10">
+            {newOrderNo}
           </div>
         )}
+        <div className="relative text-xl font-bold">
+          {tableNo}번
+          {tableNo > defaultTableCount && (
+            <div className="absolute right-1 top-1 hover:text-b300" onClick={handleOpenWarnModal}>
+              <Trash width={20} height={20} />
+            </div>
+          )}
+        </div>
+        <ol className="flex-1 px-2 py-1">
+          {orderList.map(({ menuName, menuQuantity }) => (
+            <li key={menuName}>
+              {menuName}*{menuQuantity}
+            </li>
+          ))}
+        </ol>
+        <div className="w-full text-right text-xl font-bold">{totalPrice}원</div>
       </div>
-      <ol className="flex-1 px-2 py-1">
-        {orderList.map(({ menuName, menuQuantity }) => (
-          <li key={menuName}>
-            {menuName}*{menuQuantity}
-          </li>
-        ))}
-      </ol>
-      <div className="w-full text-right text-xl font-bold">{totalPrice}원</div>
       <WarnModalContainer open={openWarnModal}>
         <ModalTitle>{tableNo}번 테이블을 삭제하겠습니까?</ModalTitle>
         <ModalContent>테이블에 있던 정보가 모두 사라집니다.</ModalContent>
@@ -66,6 +69,6 @@ export default function Table({ table, onModalOpen }: TableProps) {
           <ModalButton onClick={handleCloseWarnModal}>아니오</ModalButton>
         </div>
       </WarnModalContainer>
-    </div>
+    </>
   );
 }
