@@ -4,40 +4,15 @@ import Tabs from './Table/Tabs';
 import Table from './Table/Table';
 import Tab from './Table/Tab';
 import QRCard from './Table/QRCard';
-
-const tableList = [
-  {
-    tableNo: 1,
-    orderList: [
-      { menuName: '돼지수육', menuQuantity: 1 },
-      { menuName: '소주', menuQuantity: 2 },
-      { menuName: '탕수육', menuQuantity: 1 },
-    ],
-    totalPrice: 0,
-    newOrderNo: 1,
-  },
-  { tableNo: 2, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 3, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 4, orderList: [], totalPrice: 0, newOrderNo: 2 },
-  { tableNo: 5, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 6, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 7, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 8, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 9, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 10, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 71, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 81, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 91, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 101, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 21, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 231, orderList: [], totalPrice: 0, newOrderNo: 0 },
-  { tableNo: 121, orderList: [], totalPrice: 0, newOrderNo: 0 },
-];
+import useTableStore from '@/stores/useTableStore';
 
 export default function TablePage() {
   const [currentTab, setCurrentTab] = useState('table');
+  const { tables, addTable } = useTableStore();
 
-  const handleAddTable = () => {};
+  const handleAddTable = () => {
+    addTable(tables.length + 1);
+  };
   const handleTabChange = (id: string) => {
     setCurrentTab(id);
   };
@@ -54,7 +29,7 @@ export default function TablePage() {
       </Tabs>
       {currentTab === 'table' ? (
         <div className="flex h-full flex-wrap content-start gap-5 overflow-y-scroll p-10">
-          {tableList.map(table => (
+          {tables.map(table => (
             <Table table={table} key={table.tableNo} />
           ))}
           <div
@@ -67,7 +42,7 @@ export default function TablePage() {
       ) : (
         <>
           <div className="flex h-full flex-wrap content-start gap-5 overflow-y-scroll p-10">
-            {tableList.map(({ tableNo }) => (
+            {tables.map(({ tableNo }) => (
               <QRCard tableNo={tableNo} key={tableNo} />
             ))}
           </div>
