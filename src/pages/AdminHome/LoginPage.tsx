@@ -12,6 +12,7 @@ export default function LoginPage() {
     email: '',
     password: '',
   });
+  const [subText, setSubText] = useState({ text: '', warn: true });
   const navigate = useNavigate();
   const { setLoginFirst } = useUserStore();
 
@@ -34,6 +35,7 @@ export default function LoginPage() {
         }
       })
       .catch(err => {
+        setSubText(prev => ({ ...prev, text: '이메일/비밀번호를 확인해주세요.' }));
         console.log(err);
       });
   };
@@ -53,6 +55,7 @@ export default function LoginPage() {
             placeholder={placeholder}
             value={loginForm[id as keyof UserLoginFormTypes]}
             handleInputChange={e => handleInputChange(id, e.target.value)}
+            subText={subText}
           />
         </div>
       ))}
