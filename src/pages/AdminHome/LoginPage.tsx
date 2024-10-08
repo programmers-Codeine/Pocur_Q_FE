@@ -5,6 +5,7 @@ import Input from '@/components/common/Input/Input';
 import { loginInputList } from '@/pages/AdminHome/formFieldsData';
 import { UserLoginFormTypes } from './AdminHome.types';
 import { login } from '@/apis/user.api';
+import useUserStore from '@/stores/useUserStore';
 
 export default function LoginPage() {
   const [loginForm, setLoginForm] = useState<UserLoginFormTypes>({
@@ -12,6 +13,7 @@ export default function LoginPage() {
     password: '',
   });
   const navigate = useNavigate();
+  const { setLoginFirst } = useUserStore();
 
   const handleNavigate = (src: string) => {
     // TODO: 로그인 버튼을 통한 접속에 대한 처리가 필요함.
@@ -24,8 +26,10 @@ export default function LoginPage() {
     login(loginForm)
       .then((res: { message: string; isFirstLogin: boolean }) => {
         if (res.isFirstLogin) {
+          setLoginFirst(true);
           navigate('/admin/manage');
         } else {
+          setLoginFirst(false);
           navigate('/admin/manage/table');
         }
       })
