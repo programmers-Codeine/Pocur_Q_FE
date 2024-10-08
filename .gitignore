@@ -27,3 +27,6 @@ dist-ssr
 # env files
 *.env
 *storybook.log
+
+# ssl files
+*.pem
