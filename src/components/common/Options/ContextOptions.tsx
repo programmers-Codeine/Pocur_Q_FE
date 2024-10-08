@@ -4,16 +4,7 @@ import { useEffect } from 'react';
 import { Fragment } from 'react/jsx-runtime';
 import { ContextOptionsProps } from './ContextOptions.types';
 
-const DEFAULT_OPTIONS = [
-  { id: 1, name: '적용하기' },
-  { id: 2, name: '수정하기' },
-  { id: 3, name: '삭제하기' },
-];
-
-export default function ContextOptions({
-  options = DEFAULT_OPTIONS,
-  onClick,
-}: ContextOptionsProps) {
+export default function ContextOptions({ options, onClick }: ContextOptionsProps) {
   const { isVisible, position, closeMenu } = useContextMenuStore();
 
   useEffect(() => {
