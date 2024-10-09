@@ -11,6 +11,7 @@ type TableState = {
 const useTableStore = create<TableState>(set => ({
   tables: [
     {
+      id: '',
       tableNo: 1,
       orderList: [
         {
@@ -37,6 +38,7 @@ const useTableStore = create<TableState>(set => ({
       tables: [
         ...state.tables,
         {
+          id: '',
           tableNo: newTableNo,
           orderList: [],
           totalPrice: 0,

@@ -12,6 +12,7 @@ export type Order = {
 };
 
 export type Table = {
+  id: string;
   tableNo: number;
   orderList: Order[];
   totalPrice: number;
