@@ -6,14 +6,13 @@ import ModalTitle from '@/components/common/Modal/Content/ModalTitle';
 import { MouseEvent, useState } from 'react';
 import ModalContent from '@/components/common/Modal/Content/ModalContent';
 import ModalButton from '@/components/common/Modal/Button/ModalButton';
+import useRestaurantStore from '@/stores/useRestaurantStore';
 
 export default function Table({ table, onModalOpen }: TableProps) {
   const { tableNo, orderList, totalPrice, newOrderNo } = table;
   const { deleteTable } = useTableStore();
   const [openWarnModal, setOpenWarnModal] = useState(false);
-  // TODO 서버에서 받아오기
-  // 서버 요청을 통해 받아올 기본 테이블 수 임시 변수
-  const defaultTableCount = 1;
+  const { restaurant } = useRestaurantStore();
 
   // TODO 서버 요청 구현 필요
   const handleDeleteTable = () => {
@@ -44,7 +43,7 @@ export default function Table({ table, onModalOpen }: TableProps) {
         )}
         <div className="relative text-xl font-bold">
           {tableNo}번
-          {tableNo > defaultTableCount && (
+          {tableNo > (restaurant?.defaultTableCount ?? 0) && (
             <div className="absolute right-1 top-1 hover:text-b300" onClick={handleOpenWarnModal}>
               <Trash width={20} height={20} />
             </div>
