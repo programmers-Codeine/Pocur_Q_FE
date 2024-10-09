@@ -67,3 +67,16 @@ export type InputDesignFormTypes = {
   designImage: string;
   theme: DesignThemeTypes;
 };
+
+export type InputEtcFormTypes = {
+  tableCount: number;
+  shopName: string;
+  shopLogo: string;
+  comment: {
+    introduce: string;
+    success: string;
+  };
+  tools: {
+    prepayment: boolean;
+  };
+};
