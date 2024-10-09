@@ -24,7 +24,7 @@ export default function DesignCard({
 
   return (
     <div
-      className={`flex h-[280px] w-[320px] flex-col gap-4 p-4 ${className.getState()[0]} rounded-lg border`}
+      className={`flex h-[280px] w-[320px] flex-col gap-4 p-4 ${className.getState()[0]} cursor-pointer rounded-lg border`}
       onContextMenu={onContextMenu}
       onClick={onClick}
     >

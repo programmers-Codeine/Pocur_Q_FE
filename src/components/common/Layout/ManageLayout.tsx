@@ -1,8 +1,9 @@
 import { Outlet } from 'react-router-dom';
-import { useState } from 'react';
 import FirstPage from '@/pages/Manage/Table/FirstPage';
+import useUserStore from '@/stores/useUserStore';
 
 export default function ManageLayout() {
+  const { loginFirst } = useUserStore();
   // TODO 첫 사용자라면, 가게 생성 작성
   // TODO 첫 사용자가 아니라면, /table 로 이동
   // TODO 사용자가 아니라면 / 로 이동
@@ -13,9 +14,7 @@ export default function ManageLayout() {
   */
   // TODO: 사용자가 리로드했을 때 => 로컬 스토리지
 
-  const [isFirstTime, setIsFirstTime] = useState(true);
-
-  if (isFirstTime) return <FirstPage setIsFirstTime={setIsFirstTime} />;
+  if (loginFirst) return <FirstPage />;
 
   return <Outlet />;
 }
