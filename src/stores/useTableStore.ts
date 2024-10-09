@@ -1,4 +1,4 @@
-import { getAllTables } from '@/apis/restaurants.api';
+import { getAllTables } from '@/apis/restaurantTables.api';
 import { Table } from '@/pages/Manage/Table/Table.types';
 import { create } from 'zustand';
 
