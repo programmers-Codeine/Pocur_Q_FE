@@ -34,9 +34,8 @@ export default function LoginPage() {
           navigate('/admin/manage/table');
         }
       })
-      .catch(err => {
+      .catch(() => {
         setSubText(prev => ({ ...prev, text: '이메일/비밀번호를 확인해주세요.' }));
-        console.log(err);
       });
   };
 
