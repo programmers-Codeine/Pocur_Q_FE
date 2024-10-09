@@ -1,9 +1,11 @@
+import { getAllTables } from '@/apis/restaurants.api';
 import { Table } from '@/pages/Manage/Table/Table.types';
 import { create } from 'zustand';
 
 type TableState = {
   tables: Table[];
 
+  fetchTables: () => void;
   addTable: (tableNo: number) => void;
   deleteTable: (tableNo: number) => void;
 };
@@ -33,6 +35,25 @@ const useTableStore = create<TableState>(set => ({
       url: 'https://pocurq.shop/',
     },
   ],
+  fetchTables: () => {
+    getAllTables()
+      .then(data => {
+        // TODO mapping 하기 vs order 추가를 따로하기
+        const newTables: Table[] = data.map(({ id, table_num }) => ({
+          id,
+          tableNo: table_num,
+          orderList: [],
+          totalPrice: 0,
+          newOrderNo: 0,
+          url: '',
+        }));
+
+        set(() => ({
+          tables: newTables,
+        }));
+      })
+      .catch(err => console.log(err));
+  },
   addTable: newTableNo => {
     set(state => ({
       tables: [

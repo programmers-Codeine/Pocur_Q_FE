@@ -1,5 +1,5 @@
 import Button from '@/components/common/Button/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Tabs from './Table/Tabs';
 import Table from './Table/Table';
 import Tab from './Table/Tab';
@@ -27,7 +27,11 @@ export default function TablePage() {
   const [openWarnModal, setOpenWarnModal] = useState(false);
   const [warnModalData, setWarnModalData] = useState<WarnModalData>();
   const [currentTable, setCurrentTable] = useState<TTable | null>();
-  const { tables, addTable } = useTableStore();
+  const { tables, fetchTables, addTable } = useTableStore();
+
+  useEffect(() => {
+    fetchTables();
+  }, []);
 
   const handleAddTable = () => {
     addTable(tables.length + 1);
