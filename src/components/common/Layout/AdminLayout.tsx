@@ -14,6 +14,12 @@ export default function AdminLayout() {
     if (target === 'logout') return navigate('/'); // TODO: logout 로직 구현
     navigate(`/admin/${target}/${src}`);
   };
+
+  const handleSaveSetting = () => {
+    // TODO: 가게 이동에 대한 모달 띄우기
+    navigate('/admin/manage/table');
+  };
+
   return (
     <div className="flex h-screen w-screen gap-1.5 bg-d900 p-2">
       <aside className="flex w-[25%] flex-col justify-between rounded-l-[30px] bg-d10 p-8">
@@ -55,7 +61,10 @@ export default function AdminLayout() {
         </div>
 
         {/* TODO: 가게마감 핸들러 작성 필요 */}
-        {sub && main === 'manage' && <Button title="가게마감" type="menu" state="normal"></Button>}
+        {sub && main === 'manage' && <Button title="가게마감" type="menu" state="normal" />}
+        {sub && main === 'setting' && (
+          <Button title="테이블로 이동" type="menu" state="normal" onClick={handleSaveSetting} />
+        )}
       </aside>
       <main className="w-[75%] rounded-r-[30px] bg-d10">
         <Outlet />
