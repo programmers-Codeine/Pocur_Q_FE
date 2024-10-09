@@ -30,25 +30,7 @@ export interface InputField {
   label: string;
   type: string;
   placeholder: string;
-};
-
-export type AddOptionsTypes = {
-  id: number;
-  optionName: string;
-  price: string;
-};
-
-export type InputMenuFormTypes = {
-  category: string;
-  search: string;
-  menuName: string;
-  description: string;
-  menuCategory: number;
-  price: string;
-  origin: string;
-  options: AddOptionsTypes[] | null;
-  optionsInput: AddOptionsTypes[];
-};
+}
 
 type DesignThemeTypes = {
   all: {
@@ -84,4 +66,17 @@ export type InputDesignFormTypes = {
   designName: string;
   designImage: string;
   theme: DesignThemeTypes;
+};
+
+export type InputEtcFormTypes = {
+  tableCount: number;
+  shopName: string;
+  shopLogo: string;
+  comment: {
+    introduce: string;
+    success: string;
+  };
+  tools: {
+    prepayment: boolean;
+  };
 };

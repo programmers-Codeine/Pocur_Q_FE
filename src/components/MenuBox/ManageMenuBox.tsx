@@ -14,12 +14,13 @@ export default function ManageMenuBox({
   const { categories } = useMenuStore();
   return (
     <div className="flex h-fit w-[50%] flex-col rounded-lg border border-d50 px-2 py-4">
-      <div className="mx-3 flex items-center justify-between gap-3 border-b border-d50 pb-3">
+      <div className="mx-3 flex items-center justify-between border-b border-d50 pb-3">
         <input
           id="menuName"
           type="text"
           value={inputMenuForm.menuName}
           className="bg-d10 text-xl placeholder:text-d200"
+          size={10}
           placeholder="메뉴 이름"
           onChange={onSetInputMenuForm}
         />
