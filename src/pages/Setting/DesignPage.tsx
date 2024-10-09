@@ -1,26 +1,12 @@
-import clsx from 'clsx';
-import DesignCard from '@/components/common/Card/DesignCard';
 import useContextMenuStore from '@/stores/useContextMenuStore';
 import ContextOptions from '@/components/common/Options/ContextOptions';
 import useDesignStore from '@/stores/useDesignStore';
 import { ChangeEvent, MouseEvent, useState } from 'react';
-import Input from '@/components/common/Input/Input';
 import { InputDesignFormTypes } from '@/types';
-import Button from '@/components/common/Button/Button';
-import { NoImage } from '@/assets/icons';
-
-const DEFAULT_OPTIONS = [
-  { id: 1, name: '적용하기' },
-  { id: 2, name: '수정하기' },
-  { id: 3, name: '삭제하기' },
-];
-
-const NAVIGATION_DESIGN = [
-  { id: 2, name: '소개/로딩/결제' },
-  { id: 3, name: '메뉴판' },
-  { id: 4, name: '메뉴상세' },
-  { id: 5, name: '장바구니 및 결제' },
-];
+import useColorPaletteStore from '@/stores/useColorPaletteStore';
+import { DesignHomeBox, DesignInputBox, DesignPreviewBox } from '@/components/DesignBox';
+import ColorPalettePicker from '@/components/ColorPalettePicker/ColorPalettePicker';
+import { DESIGN_BOX_OPTIONS } from '@/constants/options';
 
 export default function DesignPage() {
   const [inputDesignForm, setInputDesignForm] = useState<InputDesignFormTypes>({
@@ -28,37 +14,47 @@ export default function DesignPage() {
     designImage: '',
     theme: {
       all: {
-        background: '',
-        largeText: '',
-        smallText: '',
-        box: '',
-        boxOutline: '',
-        icon: '',
+        background: '#ffffff',
+        largeText: '#ffffff',
+        smallText: '#ffffff',
+        box: '#ffffff',
+        boxOutline: '#ffffff',
+        icon: '#ffffff',
       },
       button: {
         normal: {
-          background: '',
-          textAndIcon: '',
-          outline: '',
+          background: '#ffffff',
+          textAndIcon: '#ffffff',
+          outline: '#ffffff',
         },
         active: {
-          background: '',
-          textAndIcon: '',
-          outline: '',
+          background: '#ffffff',
+          textAndIcon: '#ffffff',
+          outline: '#ffffff',
         },
       },
       addOption: {
         label: {
-          hot: '',
-          new: '',
-          soldOut: '',
+          hot: '#ffffff',
+          new: '#ffffff',
+          soldOut: '#ffffff',
         },
       },
     },
   });
 
   const { openMenu, isVisible, parentId } = useContextMenuStore();
-  const { designs, selected, setSelect, navigation, navigate, deleteDesign } = useDesignStore();
+  const { isPaletteVisible, currentId } = useColorPaletteStore();
+  const {
+    designInfos,
+    currentDesignId,
+    setSelect,
+    navigation,
+    navigate,
+    deleteDesign,
+    addDesign,
+    updateDesign,
+  } = useDesignStore();
 
   const handleSetInputDesignForm = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -77,6 +73,11 @@ export default function DesignPage() {
     if (id === 1) {
       setSelect(parentId);
     } else if (id === 2) {
+      const foundDesignInfo = designInfos.find(designInfo => designInfo.id === parentId);
+      if (foundDesignInfo) {
+        navigate(2, 'update', foundDesignInfo.id);
+        setInputDesignForm(foundDesignInfo.form);
+      }
     } else if (id === 3) {
       if (parentId === 1) {
         //TODO: default Design can't delete.
@@ -88,176 +89,97 @@ export default function DesignPage() {
   };
 
   const handleNavigate = (page: number) => {
-    navigate(page);
+    if (page === 1) {
+      // TODO: 저장되지 않는다 모달 생성 후 기본폼으로 상태 변경
+      handleReset('all');
+      navigate(page, 'home');
+    } else {
+      navigate(page);
+    }
+  };
+
+  const handleSaveDesign = (use: 'create' | 'update') => {
+    // TODO: 디자인 이름 설정했는지 체크
+    if (inputDesignForm.designName === '') return;
+    if (use === 'create') addDesign(inputDesignForm);
+    else if (use === 'update') updateDesign(inputDesignForm, currentDesignId);
+    handleNavigate(1);
+  };
+
+  const handleChangeColor = (color: string) => {
+    const keys = currentId.split('-');
+    const newDesignForm = { ...inputDesignForm };
+
+    let currentLevel: any = newDesignForm.theme;
+
+    for (let i = 0; i < keys.length - 1; i++) {
+      if (currentLevel[keys[i] as keyof typeof currentLevel]) {
+        currentLevel = currentLevel[keys[i] as keyof typeof currentLevel];
+      }
+    }
+
+    currentLevel[keys[keys.length - 1] as keyof typeof currentLevel] = color;
+
+    setInputDesignForm(newDesignForm);
+  };
+
+  const handleReset = (reset: 'all' | 'color') => {
+    const defaultTheme = {
+      all: {
+        background: '#ffffff',
+        largeText: '#ffffff',
+        smallText: '#ffffff',
+        box: '#ffffff',
+        boxOutline: '#ffffff',
+        icon: '#ffffff',
+      },
+      button: {
+        normal: {
+          background: '#ffffff',
+          textAndIcon: '#ffffff',
+          outline: '#ffffff',
+        },
+        active: {
+          background: '#ffffff',
+          textAndIcon: '#ffffff',
+          outline: '#ffffff',
+        },
+      },
+      addOption: {
+        label: {
+          hot: '#ffffff',
+          new: '#ffffff',
+          soldOut: '#ffffff',
+        },
+      },
+    };
+    setInputDesignForm(prev => ({
+      ...prev,
+      theme: defaultTheme,
+      ...(reset === 'all' && { designName: '', designImage: '' }),
+    }));
   };
 
   return (
     <>
       {navigation === 1 && (
-        <div className="flex gap-4">
-          {designs.map(({ id, title, edit }) => (
-            <DesignCard
-              key={id}
-              title={title}
-              edit={id === selected ? '적용 중' : edit}
-              state={id === selected ? 'active' : 'normal'}
-              onContextMenu={e => handleOpenDesignOptions(e, id)}
-            />
-          ))}
-          <DesignCard state="none" onClick={() => handleNavigate(2)} />
-        </div>
+        <DesignHomeBox onOpenDesignOptions={handleOpenDesignOptions} onNavigate={handleNavigate} />
       )}
 
       {navigation >= 2 && (
         <div className="flex h-full">
-          <div className="flex h-full w-[50%] flex-col justify-between">
-            <div className="flex flex-col gap-4 overflow-scroll">
-              <div>
-                <Input
-                  id="designName"
-                  type="text"
-                  placeholder="디자인 이름을 적어주세요."
-                  value={inputDesignForm.designName}
-                  handleInputChange={handleSetInputDesignForm}
-                  label="디자인 이름"
-                />
-              </div>
-              <div>
-                <label className="text-em font-semibold">디자인 이미지 설정</label>
-                <div className="my-2 flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed py-4">
-                  <NoImage />
-                  <p className="text-d200">이미지 업로드</p>
-                </div>
-              </div>
-              <p className="text-xl font-semibold">테마 설정</p>
-
-              <div className="flex items-center gap-3 border-b-2 border-d50 px-2 pb-4 pt-2">
-                <div className="min-w-[100px]">
-                  <p className="text-lg font-bold">전체</p>
-                </div>
-                <div className="flex flex-wrap gap-3">
-                  <div className="flex w-[160px] items-center justify-between rounded-lg border border-d50 bg-d30 px-4 py-2">
-                    <p className="min-w-[100px]">배경</p>
-                    <div className="h-4 w-4 border border-d10" />
-                  </div>
-                  <div className="flex w-[160px] items-center justify-between rounded-lg border border-d50 bg-d30 px-4 py-2">
-                    <p className="min-w-[100px]">큰 텍스트</p>
-                    <div className="h-4 w-4 border border-d10" />
-                  </div>
-                  <div className="flex w-[160px] items-center justify-between rounded-lg border border-d50 bg-d30 px-4 py-2">
-                    <p className="min-w-[100px]">작은 텍스트</p>
-                    <div className="h-4 w-4 border border-d10" />
-                  </div>
-                  <div className="flex w-[160px] items-center justify-between rounded-lg border border-d50 bg-d30 px-4 py-2">
-                    <p className="min-w-[100px]">박스</p>
-                    <div className="h-4 w-4 border border-d10" />
-                  </div>
-                  <div className="flex w-[160px] items-center justify-between rounded-lg border border-d50 bg-d30 px-4 py-2">
-                    <p className="min-w-[100px]">박스 테두리</p>
-                    <div className="h-4 w-4 border border-d10" />
-                  </div>
-                  <div className="flex w-[160px] items-center justify-between rounded-lg border border-d50 bg-d30 px-4 py-2">
-                    <p className="min-w-[100px]">아이콘</p>
-                    <div className="h-4 w-4 border border-d10" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-3 border-b-2 border-d50 px-2 pb-4 pt-2">
-                <div className="flex items-center gap-3">
-                  <div className="min-w-[100px]">
-                    <p className="text-lg font-bold">버튼</p>
-                  </div>
-                  <div className="flex flex-wrap gap-3">
-                    <div className="flex w-[160px] items-center justify-between rounded-lg border border-d50 bg-d30 px-4 py-2">
-                      <p className="min-w-[100px]">배경</p>
-                      <div className="h-4 w-4 border border-d10" />
-                    </div>
-                    <div className="flex w-[160px] items-center justify-between rounded-lg border border-d50 bg-d30 px-4 py-2">
-                      <p className="min-w-[100px]">텍스트/아이콘</p>
-                      <div className="h-4 w-4 border border-d10" />
-                    </div>
-                    <div className="flex w-[160px] items-center justify-between rounded-lg border border-d50 bg-d30 px-4 py-2">
-                      <p className="min-w-[100px]">테두리</p>
-                      <div className="h-4 w-4 border border-d10" />
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="min-w-[100px]">
-                    <p className="text-lg font-bold">버튼 활성화</p>
-                  </div>
-                  <div className="flex flex-wrap gap-3">
-                    <div className="flex w-[160px] items-center justify-between rounded-lg border border-d50 bg-d30 px-4 py-2">
-                      <p className="min-w-[100px]">배경</p>
-                      <div className="h-4 w-4 border border-d10" />
-                    </div>
-                    <div className="flex w-[160px] items-center justify-between rounded-lg border border-d50 bg-d30 px-4 py-2">
-                      <p className="min-w-[100px]">텍스트/아이콘</p>
-                      <div className="h-4 w-4 border border-d10" />
-                    </div>
-                    <div className="flex w-[160px] items-center justify-between rounded-lg border border-d50 bg-d30 px-4 py-2">
-                      <p className="min-w-[100px]">테두리</p>
-                      <div className="h-4 w-4 border border-d10" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 border-b-2 border-d50 px-2 pb-4 pt-2">
-                <div className="min-w-[100px]">
-                  <p className="text-lg font-bold">추가 옵션</p>
-                </div>
-                <div className="flex flex-wrap gap-3">
-                  <div className="flex w-[160px] items-center justify-between rounded-lg border border-d50 bg-d30 px-4 py-2">
-                    <p className="min-w-[100px]">라벨[HOT]</p>
-                    <div className="h-4 w-4 border border-d10" />
-                  </div>
-                  <div className="flex w-[160px] items-center justify-between rounded-lg border border-d50 bg-d30 px-4 py-2">
-                    <p className="min-w-[100px]">라벨[NEW]</p>
-                    <div className="h-4 w-4 border border-d10" />
-                  </div>
-                  <div className="flex w-[160px] items-center justify-between rounded-lg border border-d50 bg-d30 px-4 py-2">
-                    <p className="min-w-[100px]">라벨[품절]</p>
-                    <div className="h-4 w-4 border border-d10" />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center justify-center">
-              <Button title="생성하기" type="others" />
-            </div>
-          </div>
-          <div className="flex h-full w-[50%] flex-col items-center gap-1">
-            <div className="flex min-h-[36px] gap-2">
-              {NAVIGATION_DESIGN.map(({ id, name }) => (
-                <div
-                  className={clsx(
-                    'h-fit cursor-pointer px-2 py-1',
-                    id === navigation
-                      ? 'rounded-lg bg-b300 font-semibold text-d10'
-                      : 'hover:border-b-4'
-                  )}
-                  key={id}
-                  onClick={() => handleNavigate(id)}
-                >
-                  <p>{name}</p>
-                </div>
-              ))}
-            </div>
-            <div className="bg-deviceFrame relative aspect-[412/912] w-[50%] bg-contain bg-center bg-no-repeat">
-              <div className="absolute inset-0 px-[2%] py-[15%]">
-                {/* TODO: navigation에 따른 디자인적 요소 보여주기 */}
-                {navigation === 2 && <div>소개/로딩/결제</div>}
-                {navigation === 3 && <div>메뉴판</div>}
-                {navigation === 4 && <div>메뉴상세</div>}
-                {navigation === 5 && <div>장바구니 및 결제</div>}
-              </div>
-            </div>
-          </div>
+          <DesignInputBox
+            inputDesignForm={inputDesignForm}
+            onSetInputDesignForm={handleSetInputDesignForm}
+            onReset={handleReset}
+            onNavigate={handleNavigate}
+            onSaveDesign={handleSaveDesign}
+          />
+          <DesignPreviewBox onNavigate={handleNavigate} />
+          {isPaletteVisible && <ColorPalettePicker changeColor={handleChangeColor} />}
         </div>
       )}
-      {isVisible && <ContextOptions options={DEFAULT_OPTIONS} onClick={handleDesignCards} />}
+      {isVisible && <ContextOptions options={DESIGN_BOX_OPTIONS} onClick={handleDesignCards} />}
     </>
   );
 }

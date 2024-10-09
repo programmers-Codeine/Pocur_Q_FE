@@ -9,7 +9,7 @@ import {
   MainMenuBox,
   ManageMenuBox,
 } from '@/components/MenuBox';
-import { DEFAULT_OPTIONS } from '@/constants/options';
+import { MENU_CATEGORY_OPTIONS } from '@/constants/options';
 import { InputMenuFormTypes } from '@/types';
 
 export default function MenuPage() {
@@ -260,7 +260,7 @@ export default function MenuPage() {
           )}
         </div>
       </div>
-      {isVisible && <ContextOptions options={DEFAULT_OPTIONS} onClick={onCategory} />}
+      {isVisible && <ContextOptions options={MENU_CATEGORY_OPTIONS} onClick={onCategory} />}
     </div>
   );
 }

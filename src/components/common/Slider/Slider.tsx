@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { SliderProps } from './Slider.types';
 
 export default function Slider({
@@ -8,17 +9,23 @@ export default function Slider({
   max,
   step,
   value,
+  use = 'default',
   handleSliderChange,
 }: SliderProps) {
   return (
     <>
       <div className="flex items-center justify-between">
-        <label className="text-3xl font-bold text-d900" htmlFor={id}>
+        <label
+          className={clsx(
+            use === 'default' ? 'text-3xl font-bold text-d900' : 'text-em font-semibold'
+          )}
+          htmlFor={id}
+        >
           {label}
         </label>
         <div className="text-xl text-d900">{value}</div>
       </div>
-      <div className="relative w-full">
+      <div className="relative w-full px-2">
         <input
           id={id}
           type="range"

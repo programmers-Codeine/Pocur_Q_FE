@@ -16,6 +16,8 @@ import Setting from './setting.svg';
 import CircleArrow from './circleArrow.svg';
 import Info from './Info.svg';
 import Label from './label.svg';
+import Reset from './reset.svg';
+import Check from './check.svg';
 
 export {
   Avatar,
@@ -36,4 +38,6 @@ export {
   Modify,
   Print,
   Label,
+  Reset,
+  Check,
 };
