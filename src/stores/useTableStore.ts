@@ -1,5 +1,5 @@
 import { getAllOrders } from '@/apis/orders.api';
-import { getAllTables } from '@/apis/restaurantTables.api';
+import { addTable, getAllTables } from '@/apis/restaurantTables.api';
 import { getAllUrls } from '@/apis/urls.api';
 import { Order, Table } from '@/pages/Manage/Table/Table.types';
 import { create } from 'zustand';
@@ -8,7 +8,7 @@ type TableState = {
   tables: Table[];
 
   fetchTables: () => void;
-  addTable: (tableNo: number) => void;
+  addTable: () => void;
   deleteTable: (tableNo: number) => void;
 };
 
@@ -75,13 +75,15 @@ const useTableStore = create<TableState>()(set => ({
       // TODO 에러 처리
     }
   },
-  addTable: newTableNo => {
+  addTable: async () => {
+    const { id, table_num } = await addTable();
+
     set(state => ({
       tables: [
         ...state.tables,
         {
-          id: '',
-          tableNo: newTableNo,
+          id,
+          tableNo: table_num,
           orderList: [],
           totalPrice: 0,
           newOrderNo: 0,

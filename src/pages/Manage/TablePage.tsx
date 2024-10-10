@@ -34,7 +34,7 @@ export default function TablePage() {
   }, []);
 
   const handleAddTable = () => {
-    addTable(tables.length + 1);
+    addTable();
   };
   const handleTabChange = (id: string) => {
     setCurrentTab(id);
