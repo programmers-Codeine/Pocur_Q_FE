@@ -1,6 +1,7 @@
+import { getAllOrders } from '@/apis/orders.api';
 import { getAllTables } from '@/apis/restaurantTables.api';
 import { getAllUrls } from '@/apis/urls.api';
-import { Table } from '@/pages/Manage/Table/Table.types';
+import { Order, Table } from '@/pages/Manage/Table/Table.types';
 import { create } from 'zustand';
 
 type TableState = {
@@ -40,17 +41,30 @@ const useTableStore = create<TableState>()(set => ({
     try {
       const tables = await getAllTables();
       const urls = await getAllUrls();
+      const orders = await getAllOrders();
       const newTables: Table[] = [];
+
+      // TODO 데이터 mapping 하기 vs order 추가를 따로하기
 
       // TODO urls.sort() vs urls.find() 어떤게 더 효율적인가?
       tables.forEach(({ id, table_num }) => {
+        const newOrderList: Order[] = [...orders]
+          .filter(order => order.tableNum === table_num)
+          .map(order => ({
+            menuName: order.menu.menuName,
+            menuQuantity: order.count,
+            menuOptions: order.options.map(option => ({ ...option, optionQuantity: 1 })),
+            price: order.menu.price,
+          }));
+        const newUrl = urls.find(url => url.url.includes(`table_num=${table_num}`))?.url ?? '';
+
         newTables.push({
           id,
           tableNo: table_num,
-          orderList: [],
+          orderList: newOrderList,
           totalPrice: 0,
           newOrderNo: 0,
-          url: urls.find(url => url.url.includes(`table_num=${table_num}`))?.url ?? '',
+          url: newUrl,
         });
       });
 
@@ -58,36 +72,8 @@ const useTableStore = create<TableState>()(set => ({
         tables: newTables,
       }));
     } catch (error) {
-      console.log(error);
+      // TODO 에러 처리
     }
-    // getAllTables()
-    //   .then(data => {
-    //     // TODO mapping 하기 vs order 추가를 따로하기
-    //     const newTables: Table[] = data.map(({ id, table_num }) => ({
-    //       id,
-    //       tableNo: table_num,
-    //       orderList: [],
-    //       totalPrice: 0,
-    //       newOrderNo: 0,
-    //       url: '',
-    //     }));
-
-    //     set(() => ({
-    //       tables: newTables,
-    //     }));
-    //   })
-    //   .catch(() => {
-    //     // TODO 에러 처리
-    //   });
-
-    // getAllUrls().then(data =>
-    //   set(state => ({
-    //     tables: state.tables.map(table => ({
-    //       ...table,
-    //       url: table.id === data.id ? data.url : '',
-    //     })),
-    //   }))
-    // );
   },
   addTable: newTableNo => {
     set(state => ({
