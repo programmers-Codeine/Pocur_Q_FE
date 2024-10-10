@@ -52,7 +52,9 @@ const useTableStore = create<TableState>(set => ({
           tables: newTables,
         }));
       })
-      .catch(err => console.log(err));
+      .catch(() => {
+        // TODO 에러 처리
+      });
   },
   addTable: newTableNo => {
     set(state => ({
