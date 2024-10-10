@@ -77,6 +77,8 @@ const useTableStore = create<TableState>()(set => ({
   },
   addTable: async () => {
     const { id, table_num } = await addTable();
+    const urls = await getAllUrls();
+    const newUrl = urls.find(url => url.url.includes(`table_num=${table_num}`))?.url ?? '';
 
     set(state => ({
       tables: [
@@ -87,7 +89,7 @@ const useTableStore = create<TableState>()(set => ({
           orderList: [],
           totalPrice: 0,
           newOrderNo: 0,
-          url: 'https://pocurq.shop/',
+          url: newUrl,
         },
       ],
     }));
