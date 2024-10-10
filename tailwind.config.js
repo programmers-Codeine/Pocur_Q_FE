@@ -32,6 +32,9 @@ export default {
     backgroundImage: {
       deviceFrame: "url('/src/assets/images/device_frame.png')",
     },
+    screens: {
+      customer: '430px',
+    },
   },
   plugins: [],
 };
