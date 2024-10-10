@@ -2,7 +2,6 @@ import { create } from 'zustand';
 
 export type Restaurant = {
   id: string;
-  user_id: string;
   name: string;
   defaultTableCount: number;
   totalTableCount: number;
