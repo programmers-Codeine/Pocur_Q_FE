@@ -9,4 +9,12 @@ export const ROUTE_SETTING = 'setting';
 export const ROUTE_MENU = 'menu';
 export const ROUTE_DESIGN = 'design';
 export const ROUTE_ETC = 'etc';
+
 export const ROUTE_CUSTOMER = 'customer';
+export const ROUTE_CUSTOMER_HOME = 'home';
+export const ROUTE_CUSTOMER_MENU = 'menu';
+export const ROUTE_CUSTOMER_DETAIL_MENU = 'detail-menu'
+export const ROUTE_CUSTOMER_FAST_TOOL = 'fast-tool'
+export const ROUTE_CUSTOMER_CART = 'cart'
+export const ROUTE_CUSTOMER_ORDER = 'order'
+export const ROUTE_CUSTOMER_ORDER_SUCCESS = 'order-success'
