@@ -18,6 +18,10 @@ import Info from './Info.svg';
 import Label from './label.svg';
 import Reset from './reset.svg';
 import Check from './check.svg';
+import Bell from './bell.svg';
+import Basket from './basket.svg';
+import OrderList from './orderList.svg';
+import List from './list.svg';
 
 export {
   Avatar,
@@ -40,4 +44,8 @@ export {
   Label,
   Reset,
   Check,
+  Bell,
+  Basket,
+  OrderList,
+  List,
 };
