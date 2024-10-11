@@ -1,14 +1,21 @@
 import ModalTitle from '@/components/common/Modal/Content/ModalTitle';
 import { Table } from './Table.types';
 import { Plus, Trash } from '@/assets/icons';
+import { MouseEvent } from 'react';
 
 interface Props {
   currentTable: Table;
   onCloseModal: () => void;
   onInitTable: () => void;
+  onContextMenu: (e: MouseEvent<HTMLTableRowElement>, id: number) => void;
 }
 
-export default function DetailModal({ currentTable, onCloseModal, onInitTable }: Props) {
+export default function DetailModal({
+  currentTable,
+  onCloseModal,
+  onInitTable,
+  onContextMenu,
+}: Props) {
   return (
     <>
       <ModalTitle>
@@ -42,7 +49,7 @@ export default function DetailModal({ currentTable, onCloseModal, onInitTable }:
             </tr>
           </thead>
           <tbody>
-            {currentTable?.orderList.map(({ menuName, menuQuantity, menuOptions, price }) => {
+            {currentTable?.orderList.map(({ menuName, menuQuantity, menuOptions, price }, i) => {
               // 옵션 가격 합
               const totalOptionPrice = menuOptions.reduce(
                 (a, c) => a + c.optionPrice * c.optionQuantity,
@@ -52,7 +59,11 @@ export default function DetailModal({ currentTable, onCloseModal, onInitTable }:
               const menuPrice = price * menuQuantity + totalOptionPrice;
 
               return (
-                <tr key={menuName} className="text-center">
+                <tr
+                  key={i + 1}
+                  className="text-center hover:bg-d30"
+                  onContextMenu={e => onContextMenu(e, i + 1)}
+                >
                   <td className="text-start">{menuName}</td>
                   <td>{menuQuantity}</td>
                   <td colSpan={2}>

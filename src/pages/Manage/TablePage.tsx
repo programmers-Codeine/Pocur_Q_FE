@@ -1,5 +1,5 @@
 import Button from '@/components/common/Button/Button';
-import { useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import Tabs from './Table/Tabs';
 import Table from './Table/Table';
 import Tab from './Table/Tab';
@@ -13,6 +13,9 @@ import ModalButton from '@/components/common/Modal/Button/ModalButton';
 import ModalContent from '@/components/common/Modal/Content/ModalContent';
 import DetailModal from './Table/DeatailModal';
 import { downloadAllQR, printAllQR } from '@/utils/QR';
+import useContextMenuStore from '@/stores/useContextMenuStore';
+import ContextOptions from '@/components/common/Options/ContextOptions';
+import { TABLE_ORDER_OPTIONS } from '@/constants/options';
 
 type WarnModalData = {
   title: string;
@@ -28,6 +31,7 @@ export default function TablePage() {
   const [warnModalData, setWarnModalData] = useState<WarnModalData>();
   const [currentTable, setCurrentTable] = useState<TTable | null>();
   const { tables, fetchTables, addTable } = useTableStore();
+  const { openMenu, isVisible } = useContextMenuStore();
 
   useEffect(() => {
     fetchTables();
@@ -64,6 +68,22 @@ export default function TablePage() {
   };
   // TODO 테이블 초기화 시 동작 구현
   // TODO 결제하기 클릭 시 테이블 초기화
+  const handleOpenTableOrderOptions = (e: MouseEvent, id: number) => {
+    const { clientX, clientY } = e;
+    // TODO 기존 clientX, clientY를 사용하는 경우 오차가 발생하기 때문에 오차를 줄였지만, 추가 수정이 필요함
+    openMenu(
+      id,
+      clientX - e.currentTarget.clientWidth * 0.4,
+      clientY - e.currentTarget.clientHeight * 0.3
+    );
+  };
+  const handleClickTableOrderOption = (id: number) => {
+    if (id === 1) {
+      // TODO 주문 목록 수정 로직
+    } else {
+      // TODO 주문 취소 로직
+    }
+  };
 
   return (
     <div className="relative flex h-full flex-col" id="tableModal">
@@ -144,8 +164,12 @@ export default function TablePage() {
             currentTable={currentTable}
             onCloseModal={handleDetailModalClose}
             onInitTable={handleTableInit}
+            onContextMenu={handleOpenTableOrderOptions}
           />
         </DetailModalContainer>
+      )}
+      {isVisible && (
+        <ContextOptions options={TABLE_ORDER_OPTIONS} onClick={handleClickTableOrderOption} />
       )}
     </div>
   );
