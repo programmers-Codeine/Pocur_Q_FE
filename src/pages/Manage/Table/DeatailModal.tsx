@@ -49,18 +49,11 @@ export default function DetailModal({
             </tr>
           </thead>
           <tbody>
-            {currentTable?.orderList.map(({ menuName, menuQuantity, menuOptions, price }, i) => {
-              // 옵션 가격 합
-              const totalOptionPrice = menuOptions.reduce(
-                (a, c) => a + c.optionPrice * c.optionQuantity,
-                0
-              );
-              // 총 메뉴 가격 합
-              const menuPrice = price * menuQuantity + totalOptionPrice;
-
-              return (
+            {currentTable?.orderList.map(
+              ({ id, menuName, menuQuantity, menuOptions, totalPrice }, i) => (
                 <tr
                   key={i + 1}
+                  id={id}
                   className="text-center hover:bg-d30"
                   onContextMenu={e => onContextMenu(e, i + 1)}
                 >
@@ -73,10 +66,10 @@ export default function DetailModal({
                       </div>
                     ))}
                   </td>
-                  <td className="text-end">{menuPrice.toLocaleString()}원</td>
+                  <td className="text-end">{totalPrice.toLocaleString()}원</td>
                 </tr>
-              );
-            })}
+              )
+            )}
           </tbody>
         </table>
       </div>

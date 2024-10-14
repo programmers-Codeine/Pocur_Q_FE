@@ -18,30 +18,7 @@ type TableState = {
 };
 
 const useTableStore = create<TableState>()(set => ({
-  tables: [
-    {
-      id: '',
-      tableNo: 1,
-      orderList: [
-        {
-          menuName: '돼지수육',
-          menuQuantity: 1,
-          menuOptions: [{ optionName: '고기 추가', optionPrice: 500, optionQuantity: 2 }],
-          price: 10000,
-        },
-        { menuName: '소주', menuQuantity: 2, menuOptions: [], price: 10000 },
-        {
-          menuName: '탕수육',
-          menuQuantity: 1,
-          menuOptions: [{ optionName: '소스 추가', optionPrice: 500, optionQuantity: 1 }],
-          price: 10000,
-        },
-      ],
-      totalPrice: 0,
-      newOrderNo: 1,
-      url: 'https://pocurq.shop/',
-    },
-  ],
+  tables: [],
   fetchTables: async () => {
     try {
       const tables = await getAllTables();
@@ -61,6 +38,7 @@ const useTableStore = create<TableState>()(set => ({
             menuQuantity: order.count,
             menuOptions: order.options.map(option => ({ ...option, optionQuantity: 1 })),
             price: order.menu.price,
+            totalPrice: order.totalPrice,
           }));
         const newUrl = urls.find(url => url.url.includes(`table_num=${table_num}`))?.url ?? '';
 
@@ -68,7 +46,7 @@ const useTableStore = create<TableState>()(set => ({
           id,
           tableNo: table_num,
           orderList: newOrderList,
-          totalPrice: 0,
+          totalPrice: newOrderList.reduce((a, order) => a + order.totalPrice, 0),
           newOrderNo: 0,
           url: newUrl,
         });
@@ -103,7 +81,7 @@ const useTableStore = create<TableState>()(set => ({
   deleteTable: delTableNo => {
     deleteTable(delTableNo)
       .then(() => {
-    set(state => ({ tables: state.tables.filter(({ tableNo }) => tableNo !== delTableNo) }));
+        set(state => ({ tables: state.tables.filter(({ tableNo }) => tableNo !== delTableNo) }));
       })
       .catch(() => {
         // TODO 에러 처리

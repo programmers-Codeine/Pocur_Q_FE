@@ -56,7 +56,7 @@ export default function Table({ table, onModalOpen }: TableProps) {
             </li>
           ))}
         </ol>
-        <div className="w-full text-right text-xl font-bold">{totalPrice}원</div>
+        <div className="w-full text-right text-xl font-bold">{totalPrice.toLocaleString()}원</div>
       </div>
       <WarnModalContainer open={openWarnModal}>
         <ModalTitle>{tableNo}번 테이블을 삭제하겠습니까?</ModalTitle>
