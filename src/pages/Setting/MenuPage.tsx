@@ -10,7 +10,7 @@ import {
   ManageMenuBox,
 } from '@/components/MenuBox';
 import { MENU_CATEGORY_OPTIONS } from '@/constants/options';
-import { InputMenuFormTypes, SetOptionsData } from '@/types';
+import { InputMenuFormTypes, SetMenuData, SetOptionsData } from '@/types';
 import {
   addCategories,
   addMenu,
@@ -69,7 +69,9 @@ export default function MenuPage() {
     });
 
     getMenu().then(menuData => {
-      const activeMenuIds = menuData.filter(menu => menu.isActive).map(menu => menu.id);
+      const activeMenuIds = menuData
+        .filter((menu: SetMenuData) => menu.isActive)
+        .map((menu: SetMenuData) => menu.id);
       setSelectedMenu(activeMenuIds);
       setMenu(menuData);
     });
