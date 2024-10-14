@@ -1,4 +1,4 @@
-import { deleteOrderById, getAllOrders } from '@/apis/orders.api';
+import { deleteAllOrder, deleteOrderById, getAllOrders } from '@/apis/orders.api';
 import { addTable, deleteTable, getAllTables } from '@/apis/restaurantTables.api';
 import { getAllUrls } from '@/apis/urls.api';
 import { Order, Table } from '@/pages/Manage/Table/Table.types';
@@ -10,6 +10,7 @@ type TableState = {
   fetchTables: () => void;
   addTable: () => void;
   deleteTable: (tableNo: number) => void;
+  resetTable: (tableNo: number) => void;
 
   selectedOrderId: string;
 
@@ -82,6 +83,22 @@ const useTableStore = create<TableState>()(set => ({
     deleteTable(delTableNo)
       .then(() => {
         set(state => ({ tables: state.tables.filter(({ tableNo }) => tableNo !== delTableNo) }));
+      })
+      .catch(() => {
+        // TODO 에러 처리
+      });
+  },
+  resetTable: resetTableNo => {
+    deleteAllOrder(resetTableNo)
+      .then(() => {
+        set(state => ({
+          tables: state.tables.map(table => {
+            if (table.tableNo === resetTableNo) {
+              return { ...table, orderList: [] };
+            }
+            return table;
+          }),
+        }));
       })
       .catch(() => {
         // TODO 에러 처리

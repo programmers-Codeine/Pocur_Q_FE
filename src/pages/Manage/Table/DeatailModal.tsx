@@ -6,14 +6,14 @@ import { MouseEvent } from 'react';
 interface Props {
   currentTable: Table;
   onCloseModal: () => void;
-  onInitTable: () => void;
+  onOpenInitModal: () => void;
   onContextMenu: (e: MouseEvent<HTMLTableRowElement>, id: number) => void;
 }
 
 export default function DetailModal({
   currentTable,
   onCloseModal,
-  onInitTable,
+  onOpenInitModal,
   onContextMenu,
 }: Props) {
   return (
@@ -33,7 +33,7 @@ export default function DetailModal({
         <span className="text-xl font-semibold">주문 목록</span>
         <button
           className="rounded-lg border border-d900 bg-b300 p-1 text-d10"
-          onClick={onInitTable}
+          onClick={onOpenInitModal}
         >
           <Trash width={20} height={20} />
         </button>

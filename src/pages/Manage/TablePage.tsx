@@ -24,13 +24,22 @@ type WarnModalData = {
   noText: string;
 };
 
+// TODO 함수명 통일하기
 export default function TablePage() {
   const [currentTab, setCurrentTab] = useState('table');
   const [openDetailModal, setOpenDetailModal] = useState(false);
   const [openWarnModal, setOpenWarnModal] = useState(false);
   const [warnModalData, setWarnModalData] = useState<WarnModalData>();
   const [currentTable, setCurrentTable] = useState<TTable | null>();
-  const { tables, fetchTables, addTable, deleteOrder, selectedOrderId, setSelectedOrderId } =
+  const {
+    tables,
+    fetchTables,
+    addTable,
+    resetTable,
+    deleteOrder,
+    selectedOrderId,
+    setSelectedOrderId,
+  } = useTableStore();
     useTableStore();
   const { openMenu, isVisible } = useContextMenuStore();
 
@@ -58,7 +67,7 @@ export default function TablePage() {
   const handleWarnModalClose = () => {
     setOpenWarnModal(false);
   };
-  const handleTableInit = () => {
+  const handleOpenInitModal = () => {
     setWarnModalData({
       title: '테이블을 초기화하시겠습니까?',
       desc: '해당 테이블의 정보가 모두 삭제됩니다.',
@@ -68,6 +77,24 @@ export default function TablePage() {
     handleWarnModalOpen();
   };
   // TODO 테이블 초기화 시 동작 구현
+  const handleInitTable = () => {
+    if (currentTable) {
+      resetTable(currentTable.tableNo);
+      setCurrentTable(prev => {
+        if (prev) {
+          return {
+            ...prev,
+            orderList: [],
+            totalPrice: 0,
+          };
+        }
+        return prev;
+      });
+    } else {
+      // TODO 에러 처리
+    }
+    handleWarnModalClose();
+  };
   // TODO 결제하기 클릭 시 테이블 초기화
   const handleOpenTableOrderOptions = (e: MouseEvent, id: number) => {
     const { clientX, clientY } = e;
@@ -166,7 +193,7 @@ export default function TablePage() {
           <ModalTitle>{warnModalData.title}</ModalTitle>
           <ModalContent>{warnModalData.desc}</ModalContent>
           <div className="mt-3 flex gap-2">
-            <ModalButton onClick={handleWarnModalClose} type="warn">
+            <ModalButton onClick={handleInitTable} type="warn">
               {warnModalData.yesText}
             </ModalButton>
             <ModalButton onClick={handleWarnModalClose}>{warnModalData.noText}</ModalButton>
@@ -178,7 +205,7 @@ export default function TablePage() {
           <DetailModal
             currentTable={currentTable}
             onCloseModal={handleDetailModalClose}
-            onInitTable={handleTableInit}
+            onOpenInitModal={handleOpenInitModal}
             onContextMenu={handleOpenTableOrderOptions}
           />
         </DetailModalContainer>
