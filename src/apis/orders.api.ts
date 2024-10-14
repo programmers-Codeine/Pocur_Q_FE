@@ -43,3 +43,8 @@ export const getAllOrders = async () => {
   return response.data;
 };
 
+export const deleteOrderById = async (orderId: string) => {
+  const response = await axiosClient.delete(`/orders/${orderId}`);
+
+  return response.status;
+};

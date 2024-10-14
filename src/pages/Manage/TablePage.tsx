@@ -30,7 +30,8 @@ export default function TablePage() {
   const [openWarnModal, setOpenWarnModal] = useState(false);
   const [warnModalData, setWarnModalData] = useState<WarnModalData>();
   const [currentTable, setCurrentTable] = useState<TTable | null>();
-  const { tables, fetchTables, addTable } = useTableStore();
+  const { tables, fetchTables, addTable, deleteOrder, selectedOrderId, setSelectedOrderId } =
+    useTableStore();
   const { openMenu, isVisible } = useContextMenuStore();
 
   useEffect(() => {
@@ -70,6 +71,8 @@ export default function TablePage() {
   // TODO 결제하기 클릭 시 테이블 초기화
   const handleOpenTableOrderOptions = (e: MouseEvent, id: number) => {
     const { clientX, clientY } = e;
+
+    setSelectedOrderId(e.currentTarget.id);
     // TODO 기존 clientX, clientY를 사용하는 경우 오차가 발생하기 때문에 오차를 줄였지만, 추가 수정이 필요함
     openMenu(
       id,
@@ -81,7 +84,19 @@ export default function TablePage() {
     if (id === 1) {
       // TODO 주문 목록 수정 로직
     } else {
-      // TODO 주문 취소 로직
+      // 주문 취소 로직
+      deleteOrder(selectedOrderId);
+      setCurrentTable(prev => {
+        if (prev) {
+          const newOrderList = prev.orderList.filter(({ id }) => id !== selectedOrderId);
+          return {
+            ...prev,
+            orderList: newOrderList,
+            totalPrice: newOrderList.reduce((a, order) => a + order.totalPrice, 0),
+          };
+        }
+        return prev;
+      });
     }
   };
 

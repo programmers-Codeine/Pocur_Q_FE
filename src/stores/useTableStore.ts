@@ -1,5 +1,5 @@
-import { getAllOrders } from '@/apis/orders.api';
-import { addTable, getAllTables } from '@/apis/restaurantTables.api';
+import { deleteOrderById, getAllOrders } from '@/apis/orders.api';
+import { addTable, deleteTable, getAllTables } from '@/apis/restaurantTables.api';
 import { getAllUrls } from '@/apis/urls.api';
 import { Order, Table } from '@/pages/Manage/Table/Table.types';
 import { create } from 'zustand';
@@ -10,6 +10,11 @@ type TableState = {
   fetchTables: () => void;
   addTable: () => void;
   deleteTable: (tableNo: number) => void;
+
+  selectedOrderId: string;
+
+  setSelectedOrderId: (orderId: string) => void;
+  deleteOrder: (orderId: string) => void;
 };
 
 const useTableStore = create<TableState>()(set => ({
@@ -51,6 +56,7 @@ const useTableStore = create<TableState>()(set => ({
         const newOrderList: Order[] = [...orders]
           .filter(order => order.tableNum === table_num)
           .map(order => ({
+            id: order.id,
             menuName: order.menu.menuName,
             menuQuantity: order.count,
             menuOptions: order.options.map(option => ({ ...option, optionQuantity: 1 })),
@@ -103,6 +109,23 @@ const useTableStore = create<TableState>()(set => ({
         // TODO 에러 처리
       });
   },
+  selectedOrderId: '',
+  setSelectedOrderId: selectedOrderId => {
+    set(() => ({ selectedOrderId }));
+  },
+  deleteOrder: delOrderId => {
+    deleteOrderById(delOrderId)
+      .then(() => {
+        set(state => ({
+          tables: state.tables.map(table => ({
+            ...table,
+            orderList: table.orderList.filter(order => order.id !== delOrderId),
+          })),
+        }));
+      })
+      .catch(() => {
+        // TODO 에러 처리
+      });
   },
 }));
 
