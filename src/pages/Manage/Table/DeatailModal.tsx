@@ -14,7 +14,7 @@ export default function DetailModal({ currentTable, onCloseModal, onInitTable }:
       <ModalTitle>
         <div className="relative text-3xl font-bold">
           <Plus
-            className="absolute right-0 top-0 rotate-45 cursor-pointer"
+            className="absolute right-0 top-0 rotate-45 cursor-pointer fill-d900"
             width={25}
             height={25}
             onClick={onCloseModal}
