@@ -1,6 +1,6 @@
 import { NoImage } from '@/assets/icons';
 import MenuOption from '@/components/customer/MenuOption';
-import type { Menu } from '@/stores/useMenuStore';
+import { Menu } from '@/stores/useCustomerStore';
 import clsx from 'clsx';
 
 interface CustomerMenuCardProps {
@@ -13,7 +13,7 @@ export default function CustomerMenuCard({ menu, onOpenMenuDetail }: CustomerMen
     <div
       className={clsx(
         'flex items-center gap-1 text-d900',
-        menu.hot | menu.new | menu.soldOut && 'pt-5'
+        (menu.hot || menu.new || menu.soldOut) && 'pt-5'
       )}
       onClick={onOpenMenuDetail}
     >
