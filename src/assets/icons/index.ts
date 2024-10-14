@@ -22,6 +22,9 @@ import Bell from './bell.svg';
 import Basket from './basket.svg';
 import OrderList from './orderList.svg';
 import List from './list.svg';
+import Arrow from './arrow.svg';
+import SquareMinus from './square-minus.svg';
+import SquarePlus from './square-plus.svg';
 
 export {
   Avatar,
@@ -48,4 +51,7 @@ export {
   Basket,
   OrderList,
   List,
+  Arrow,
+  SquareMinus,
+  SquarePlus,
 };
