@@ -25,6 +25,8 @@ import List from './list.svg';
 import Arrow from './arrow.svg';
 import SquareMinus from './square-minus.svg';
 import SquarePlus from './square-plus.svg';
+import Card from './card.svg';
+import Option from './option.svg';
 
 export {
   Avatar,
@@ -54,4 +56,6 @@ export {
   Arrow,
   SquareMinus,
   SquarePlus,
+  Card,
+  Option,
 };
