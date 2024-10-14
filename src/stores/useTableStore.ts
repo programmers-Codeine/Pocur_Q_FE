@@ -95,7 +95,14 @@ const useTableStore = create<TableState>()(set => ({
     }));
   },
   deleteTable: delTableNo => {
+    deleteTable(delTableNo)
+      .then(() => {
     set(state => ({ tables: state.tables.filter(({ tableNo }) => tableNo !== delTableNo) }));
+      })
+      .catch(() => {
+        // TODO 에러 처리
+      });
+  },
   },
 }));
 

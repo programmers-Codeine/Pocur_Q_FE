@@ -24,3 +24,10 @@ export const addTable = async () => {
 
   return response.data;
 };
+
+export const deleteTable = async (tableNum: number) => {
+  // TODO 필요없는 response data 정리해서 back에 알려주기
+  const response = await axiosClient.delete(`/restaurantTables/${tableNum}`);
+
+  return response.status;
+};
