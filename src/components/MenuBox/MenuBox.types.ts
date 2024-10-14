@@ -2,14 +2,15 @@ import { AddOptionsTypes, InputMenuFormTypes } from '@/types';
 import { ChangeEvent, MouseEvent } from 'react';
 
 export type CategoryBoxProps = {
+  message: string;
   category: string;
   onCategory: (id: number) => void;
   onSetInputMenuForm: (e: ChangeEvent<HTMLInputElement>) => void;
-  onOpenCategoryOptions: (e: MouseEvent, id: number) => void;
+  onOpenCategoryOptions: (e: MouseEvent, id: string) => void;
 };
 
 export type FastToolBoxProps = {
-  onToggleTool: (toolId: number) => void;
+  onToggleTool: (toolId: string) => void;
 };
 
 export type MainMenuBoxProps = {
@@ -17,25 +18,26 @@ export type MainMenuBoxProps = {
   onAddMenu: () => void;
   onSetInputMenuForm: (e: ChangeEvent<HTMLInputElement>) => void;
   onSearchMenu: () => void;
-  onToggleMenu: (menuId: number) => void;
-  onSetMenu: (menuId: number) => void;
-  onDeleteMenu: (menuId?: number) => void;
+  onToggleMenu: (menuId: string) => void;
+  onSetMenu: (menuId: string) => void;
+  onCancelMenu: (menuId?: string) => void;
 };
 
 export type ManageMenuBoxProps = {
+  warn: boolean;
   inputMenuForm: InputMenuFormTypes;
   onSetInputMenuForm: (e: ChangeEvent<HTMLInputElement>) => void;
   onSaveMenu: () => void;
   onSelectCategory: (e: ChangeEvent<HTMLSelectElement>) => void;
-  onAddMenuImage: () => void;
+  onAddMenuImage: (imgUrl: string) => void;
   onEditOptions: () => void;
-  onDeleteMenu: (menuId?: number) => void;
+  onCancelMenu: (menuId?: string) => void;
 };
 
 export type AddOptionsBoxProps = {
   optionsInput: AddOptionsTypes[];
   onSaveOptions: () => void;
   onSetInputOption: (e: ChangeEvent<HTMLInputElement>) => void;
-  onDeleteOptions: (optionId: number) => void;
+  onDeleteOptions: (optionId: string) => void;
   onAddOptions: () => void;
 };
