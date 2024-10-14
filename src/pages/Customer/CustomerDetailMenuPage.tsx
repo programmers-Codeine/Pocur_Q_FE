@@ -37,7 +37,7 @@ export default function CustomerDetailMenuPage() {
       {/* 헤더 */}
       <NavHeader>{title}</NavHeader>
       {/* 메뉴 설명 */}
-      <div className="flex flex-col border-y border-d50 px-2 py-6">
+      <div className="flex flex-col border-b border-d50 px-2 py-6">
         <div className="mb-4 flex h-40 w-[80%] items-center justify-center self-center bg-d30">
           <NoImage />
         </div>
