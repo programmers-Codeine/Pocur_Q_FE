@@ -3,10 +3,10 @@ import Input from '@/components/common/Input/Input';
 import { useState } from 'react';
 import { CircleArrow } from '@/assets/icons';
 import clsx from 'clsx';
-import { FirstPageProps } from './FirstPage.types';
 import Slider from '@/components/common/Slider/Slider';
+import { createRestaurant } from '@/apis/restaurants.api';
 
-export default function FirstPage({ setIsFirstTime }: FirstPageProps) {
+export default function FirstPage() {
   const [defaultTableNum, setDefaultTableNum] = useState(0);
   const [shopName, setShopName] = useState('');
   const navigate = useNavigate();
@@ -19,11 +19,12 @@ export default function FirstPage({ setIsFirstTime }: FirstPageProps) {
   };
   const handleCreateShop = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    // TODO API 요청
-    console.log('submit', `{defaultTableNum:${defaultTableNum}, shopName:${shopName}}`);
-    // 성공 시 첫 입장 처리 및 화면 이동
-    setIsFirstTime(false);
-    navigate('/admin/manage/table');
+    createRestaurant({ name: shopName, defaultTableCount: defaultTableNum })
+      .then(() => {
+        // 성공 시 첫 입장 처리 및 화면 이동
+        navigate('/admin/manage/table');
+      })
+      .catch(() => {});
   };
 
   return (

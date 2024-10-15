@@ -18,12 +18,13 @@ jobs:
           node-version: 20.10.0
           cache: npm
       - run: npm ci
-      
+
       - name: Set Environment Variables
         run: |
-          echo "VITE_TEST_DATA=${{ secrets.VITE_TEST_DATA }}" >> $GITHUB_ENV
-          
-      - run: npm run build
+          touch ./.env.production
+          echo "VITE_SERVER_URL=${{ secrets.VITE_SERVER_URL }}" >> ./.env.production
+
+      - run: NODE_ENV=development npm run build
 
       - name: deploy to s3
         uses: jakejarvis/s3-sync-action@master
@@ -35,3 +36,13 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
           SOURCE_DIR: ${{ secrets.SOURCE_DIR }}
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}

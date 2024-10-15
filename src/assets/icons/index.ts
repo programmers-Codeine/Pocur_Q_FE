@@ -1,4 +1,4 @@
-import Print from '@/assets/icons/print.svg';
+import Print from './print.svg';
 import Plus from './plus.svg';
 import Search from './search.svg';
 import Exclamation from './exclamation.svg';
@@ -15,6 +15,18 @@ import Logout from './logout.svg';
 import Setting from './setting.svg';
 import CircleArrow from './circleArrow.svg';
 import Info from './Info.svg';
+import Label from './label.svg';
+import Reset from './reset.svg';
+import Check from './check.svg';
+import Bell from './bell.svg';
+import Basket from './basket.svg';
+import OrderList from './orderList.svg';
+import List from './list.svg';
+import Arrow from './arrow.svg';
+import SquareMinus from './square-minus.svg';
+import SquarePlus from './square-plus.svg';
+import Card from './card.svg';
+import Option from './option.svg';
 
 export {
   Avatar,
@@ -33,5 +45,17 @@ export {
   ToggleOn,
   ToggleOff,
   Modify,
-  Print
+  Print,
+  Label,
+  Reset,
+  Check,
+  Bell,
+  Basket,
+  OrderList,
+  List,
+  Arrow,
+  SquareMinus,
+  SquarePlus,
+  Card,
+  Option,
 };

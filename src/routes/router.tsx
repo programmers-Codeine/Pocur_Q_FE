@@ -16,6 +16,13 @@ import {
   ROUTE_DESIGN,
   ROUTE_ETC,
   ROUTE_CUSTOMER,
+  ROUTE_CUSTOMER_HOME,
+  ROUTE_CUSTOMER_MENU,
+  ROUTE_CUSTOMER_DETAIL_MENU,
+  ROUTE_CUSTOMER_FAST_TOOL,
+  ROUTE_CUSTOMER_CART,
+  ROUTE_CUSTOMER_ORDER,
+  ROUTE_CUSTOMER_ORDER_SUCCESS,
 } from '@/constants/routing';
 import {
   AdminHomeLayout,
@@ -24,6 +31,15 @@ import {
   SettingLayout,
   CustomerLayout,
 } from '@/components/common/Layout';
+import {
+  CustomerCartPage,
+  CustomerDetailMenuPage,
+  CustomerFastToolPage,
+  CustomerHomePage,
+  CustomerMenuPage,
+  CustomerOrderPage,
+  CustomerOrderSuccessPage,
+} from '@/pages/Customer';
 
 export const router = createBrowserRouter([
   {
@@ -62,5 +78,14 @@ export const router = createBrowserRouter([
   {
     path: `/${ROUTE_CUSTOMER}`,
     element: <CustomerLayout />,
+    children: [
+      { path: ROUTE_CUSTOMER_HOME, element: <CustomerHomePage /> },
+      { path: ROUTE_CUSTOMER_MENU, element: <CustomerMenuPage /> },
+      { path: ROUTE_CUSTOMER_DETAIL_MENU, element: <CustomerDetailMenuPage /> },
+      { path: ROUTE_CUSTOMER_FAST_TOOL, element: <CustomerFastToolPage /> },
+      { path: ROUTE_CUSTOMER_CART, element: <CustomerCartPage /> },
+      { path: ROUTE_CUSTOMER_ORDER, element: <CustomerOrderPage /> },
+      { path: ROUTE_CUSTOMER_ORDER_SUCCESS, element: <CustomerOrderSuccessPage /> },
+    ],
   },
 ]);

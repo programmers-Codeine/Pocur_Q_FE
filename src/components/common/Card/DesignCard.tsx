@@ -1,3 +1,4 @@
+import { PencilQuestion } from '@/assets/icons';
 import { DesignCardProps } from './DesignCard.types';
 
 export default function DesignCard({
@@ -6,6 +7,7 @@ export default function DesignCard({
   image,
   state = 'normal',
   onContextMenu,
+  onClick,
 }: DesignCardProps) {
   const className = {
     getState: () => {
@@ -15,24 +17,33 @@ export default function DesignCard({
         case 'active':
           return ['border-d900 bg-d900 hover:border-d700 hover:bg-d700', 'text-d10 hover:text-d10'];
         default:
-          return ['', ''];
+          return ['border-d900 bg-d10 hover:bg-d30', ''];
       }
     },
   };
 
   return (
     <div
-      className={`flex flex-col w-[320px] h-[280px] p-4 gap-4 
-    ${className.getState()[0]} border rounded-lg`}
+      className={`flex h-[280px] w-[320px] flex-col gap-4 p-4 ${className.getState()[0]} cursor-pointer rounded-lg border`}
       onContextMenu={onContextMenu}
+      onClick={onClick}
     >
-      <div className="bg-d10 w-full h-full border flex justify-center items-center">
-        <img src={image} alt="design preview" />
-      </div>
-      <div className={className.getState()[1]}>
-        <p className="text-2xl font-bold">{title}</p>
-        <p className="text-base">{edit}</p>
-      </div>
+      {state === 'none' ? (
+        <div className="flex h-full w-full items-center justify-center gap-2">
+          <span className="text-2xl font-bold text-d200">디자인 추가하러 가기</span>
+          <PencilQuestion width="24" height="24" />
+        </div>
+      ) : (
+        <>
+          <div className="flex h-full w-full items-center justify-center border bg-d10">
+            <img src={image} alt="design preview" />
+          </div>
+          <div className={className.getState()[1]}>
+            <p className="text-2xl font-bold">{title}</p>
+            <p className="text-base">{edit}</p>
+          </div>
+        </>
+      )}
     </div>
   );
 }

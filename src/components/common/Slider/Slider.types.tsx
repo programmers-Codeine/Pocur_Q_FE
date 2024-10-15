@@ -6,5 +6,6 @@ export interface SliderProps {
   max: number;
   step?: number;
   value: number;
+  use?: 'default' | 'smallLabel';
   handleSliderChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
