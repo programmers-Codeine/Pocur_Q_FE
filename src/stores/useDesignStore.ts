@@ -20,7 +20,7 @@ type DesignState = {
   deleteDesign: (id: string) => void;
 
   addDesign: (design: DesignTypes) => void;
-  updateDesign: (design: DesignTypes, id: string) => void;
+  // updateDesign: (design: DesignTypes, id: string) => void;
 };
 
 const useDesignStore = create<DesignState>(set => ({
@@ -53,7 +53,7 @@ const useDesignStore = create<DesignState>(set => ({
       designs: [...state.designs, design],
     })),
 
-  updateDesign: (design: DesignTypes, id: string) => set(state => ({})),
+  // updateDesign: (design: DesignTypes, id: string) => set(state => ({})),
 }));
 
 export default useDesignStore;

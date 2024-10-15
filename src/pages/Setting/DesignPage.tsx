@@ -52,17 +52,8 @@ export default function DesignPage() {
 
   const { openMenu, isVisible, parentId } = useContextMenuStore();
   const { isPaletteVisible, currentId } = useColorPaletteStore();
-  const {
-    designs,
-    currentDesignId,
-    setSelect,
-    navigation,
-    navigate,
-    setDesign,
-    deleteDesign,
-    addDesign,
-    updateDesign,
-  } = useDesignStore();
+  const { designs, setSelect, navigation, navigate, setDesign, deleteDesign, addDesign } =
+    useDesignStore();
 
   useEffect(() => {
     getAllDesignPreset().then(designPresets => {
@@ -197,8 +188,9 @@ export default function DesignPage() {
         console.log(data);
         addDesign({ id: data.id, title: data.name, image: '' });
       });
-    } else if (use === 'update') updateDesign(inputDesignForm, currentDesignId);
-    handleNavigate(1);
+    } else if (use === 'update')
+      // updateDesign(inputDesignForm, currentDesignId);
+      handleNavigate(1);
   };
 
   const handleChangeColor = (color: string) => {
