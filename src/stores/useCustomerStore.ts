@@ -132,7 +132,7 @@ const useCustomerStore = create<CustomerState>(set => ({
   ],
   selectedMenu: null,
   selectMenu: selectedMenu => {
-    set(state => ({ selectedMenu }));
+    set(() => ({ selectedMenu }));
   },
   cart: [],
   addCartItem: () => {},

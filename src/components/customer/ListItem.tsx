@@ -6,13 +6,13 @@ import { useState } from 'react';
 interface ListItemProps {
   item?: TListItem; // 타입 재정의 후 사용예정
   variant: 'order' | 'cart';
-  onRemoveCartItem?: () => {};
-  onReduceMenuQuantity?: () => {};
-  onIncreaseMenuQuantity?: () => {};
+  onRemoveCartItem?: () => void;
+  onReduceMenuQuantity?: () => void;
+  onIncreaseMenuQuantity?: () => void;
 }
 
 export default function ListItem({ variant }: ListItemProps) {
-  const [menuQuantity, setMenuQuantity] = useState(1);
+  const [menuQuantity] = useState(1);
 
   return (
     <div className="flex w-full flex-col gap-1 rounded-lg border border-d80 px-4 py-2">
