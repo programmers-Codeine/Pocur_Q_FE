@@ -22,7 +22,13 @@ export default function CustomerCartPage() {
       {/* 주문 목록 */}
       <div className="flex flex-1 flex-col items-center gap-2 p-2">
         {[0, 1].map(el => (
-          <ListItem key={el} variant="cart" />
+          <ListItem
+            key={el}
+            variant="cart"
+            onReduceMenuQuantity={handleReduceMenuQuantity}
+            onIncreaseMenuQuantity={handleIncreaseMenuQuantity}
+            onRemoveCartItem={handleRemoveCartItem}
+          />
         ))}
       </div>
       {/* 총 금액 */}

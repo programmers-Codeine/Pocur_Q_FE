@@ -6,9 +6,9 @@ import { useState } from 'react';
 interface ListItemProps {
   item?: TListItem; // 타입 재정의 후 사용예정
   variant: 'order' | 'cart';
-  onRemoveCartItem?: () => {};
-  onReduceMenuQuantity?: () => {};
-  onIncreaseMenuQuantity?: () => {};
+  onRemoveCartItem?: () => void;
+  onReduceMenuQuantity?: () => void;
+  onIncreaseMenuQuantity?: () => void;
 }
 
 export default function ListItem({ variant }: ListItemProps) {
