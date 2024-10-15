@@ -1,5 +1,5 @@
 export type UserType = {
-  id: string | null;
+  id: string | string | null;
 };
 
 export type UserFormTypes = {
@@ -28,8 +28,8 @@ export type InputMenuFormTypes = {
   menuCategory: string;
   price: string;
   origin: string;
+  options: AddOptionsTypes[] | string | null;
   image: string;
-  options: AddOptionsTypes[] | null;
   optionsInput: AddOptionsTypes[];
 };
 
@@ -81,6 +81,63 @@ export type InputEtcFormTypes = {
     prepayment: boolean;
   };
 };
+
+export type SetDesignPresetData = {
+  id: string;
+  name: string;
+};
+
+export type SetDesignData = {
+  id?: string;
+  name: string;
+  background: string | null;
+  bigText: string | null;
+  smallText: string | null;
+  box: string | null;
+  boxBorder: string | null;
+  icon: string | null;
+  buttonBackground: string | null;
+  buttonText: string | null;
+  buttonBorder: string | null;
+  buttonActiveBackground: string | null;
+  buttonActiveText: string | null;
+  buttonActiveBorder: string | null;
+  labelHot: string | null;
+  labelNew: string | null;
+  labelSoloOut: string | null;
+};
+
+// designName: '',
+//     designImage: '',
+//     theme: {
+//       all: {
+//         background: '#ffffff',
+//         largeText: '#ffffff',
+//         smallText: '#ffffff',
+//         box: '#ffffff',
+//         boxOutline: '#ffffff',
+//         icon: '#ffffff',
+//       },
+//       button: {
+//         normal: {
+//           background: '#ffffff',
+//           textAndIcon: '#ffffff',
+//           outline: '#ffffff',
+//         },
+//         active: {
+//           background: '#ffffff',
+//           textAndIcon: '#ffffff',
+//           outline: '#ffffff',
+//         },
+//       },
+//       addOption: {
+//         label: {
+//           hot: '#ffffff',
+//           new: '#ffffff',
+//           soldOut: '#ffffff',
+//         },
+//       },
+//     },
 
 export type SetMenuData = {
   id?: string;
