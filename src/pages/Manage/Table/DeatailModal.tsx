@@ -1,14 +1,21 @@
 import ModalTitle from '@/components/common/Modal/Content/ModalTitle';
 import { Table } from './Table.types';
 import { Plus, Trash } from '@/assets/icons';
+import { MouseEvent } from 'react';
 
 interface Props {
   currentTable: Table;
   onCloseModal: () => void;
-  onInitTable: () => void;
+  onOpenInitModal: () => void;
+  onContextMenu: (e: MouseEvent<HTMLTableRowElement>, id: number) => void;
 }
 
-export default function DetailModal({ currentTable, onCloseModal, onInitTable }: Props) {
+export default function DetailModal({
+  currentTable,
+  onCloseModal,
+  onOpenInitModal,
+  onContextMenu,
+}: Props) {
   return (
     <>
       <ModalTitle>
@@ -26,7 +33,7 @@ export default function DetailModal({ currentTable, onCloseModal, onInitTable }:
         <span className="text-xl font-semibold">주문 목록</span>
         <button
           className="rounded-lg border border-d900 bg-b300 p-1 text-d10"
-          onClick={onInitTable}
+          onClick={onOpenInitModal}
         >
           <Trash width={20} height={20} />
         </button>
@@ -42,17 +49,14 @@ export default function DetailModal({ currentTable, onCloseModal, onInitTable }:
             </tr>
           </thead>
           <tbody>
-            {currentTable?.orderList.map(({ menuName, menuQuantity, menuOptions, price }) => {
-              // 옵션 가격 합
-              const totalOptionPrice = menuOptions.reduce(
-                (a, c) => a + c.optionPrice * c.optionQuantity,
-                0
-              );
-              // 총 메뉴 가격 합
-              const menuPrice = price * menuQuantity + totalOptionPrice;
-
-              return (
-                <tr key={menuName} className="text-center">
+            {currentTable?.orderList.map(
+              ({ id, menuName, menuQuantity, menuOptions, totalPrice }, i) => (
+                <tr
+                  key={i + 1}
+                  id={id}
+                  className="text-center hover:bg-d30"
+                  onContextMenu={e => onContextMenu(e, i + 1)}
+                >
                   <td className="text-start">{menuName}</td>
                   <td>{menuQuantity}</td>
                   <td colSpan={2}>
@@ -62,10 +66,10 @@ export default function DetailModal({ currentTable, onCloseModal, onInitTable }:
                       </div>
                     ))}
                   </td>
-                  <td className="text-end">{menuPrice.toLocaleString()}원</td>
+                  <td className="text-end">{totalPrice.toLocaleString()}원</td>
                 </tr>
-              );
-            })}
+              )
+            )}
           </tbody>
         </table>
       </div>
