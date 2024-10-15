@@ -12,7 +12,7 @@ interface ListItemProps {
 }
 
 export default function ListItem({ variant }: ListItemProps) {
-  const [menuQuantity, setMenuQuantity] = useState(1);
+  const [menuQuantity] = useState(1);
 
   return (
     <div className="flex w-full flex-col gap-1 rounded-lg border border-d80 px-4 py-2">

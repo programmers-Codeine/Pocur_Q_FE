@@ -122,10 +122,10 @@ export default function RegisterPage() {
     if (checkList.every(check => check === true)) {
       // TODO: 회원가입 로직
       register(registerForm)
-        .then(res => {
+        .then(() => {
           navigate('/login');
         })
-        .catch(err => {});
+        .catch(() => {});
     }
     // TODO: /join api 전달 및 첫 /login으로 리다이렉트
   };

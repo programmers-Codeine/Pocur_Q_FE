@@ -7,7 +7,7 @@ import { useState } from 'react';
 // TODO 컴포넌트 분리
 export default function CustomerDetailMenuPage() {
   const [menuQuantity, setMenuQuantity] = useState(1);
-  const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
+  const [selectedOptions] = useState<number[]>([]);
   const { selectedMenu } = useCustomerMenuStore();
 
   if (!selectedMenu) {
@@ -25,7 +25,7 @@ export default function CustomerDetailMenuPage() {
     // TODO 수량 조절 로직
     setMenuQuantity(prev => prev + 1);
   };
-  const handleSelectOption = (index: number) => {
+  const handleSelectOption = () => {
     // TODO 옵션 선택 로직
   };
   const handleAddCart = () => {
@@ -50,13 +50,13 @@ export default function CustomerDetailMenuPage() {
         <ul className="w-full text-base font-bold text-d200">
           {options
             ?.map(option => ({ ...option, isChecked: false })) // 해당 부분 API 연결 시 해당 부분으로 이동
-            .map(({ id, optionName, optionPrice, isChecked }, idx) => (
+            .map(({ id, optionName, optionPrice, isChecked }) => (
               <li key={id} className="flex justify-between py-2">
                 <input
                   type="checkbox"
                   className="w-4"
                   checked={isChecked}
-                  onChange={() => handleSelectOption(idx)}
+                  onChange={() => handleSelectOption()}
                 />
                 <div>{optionName}</div>
                 <div>+{optionPrice.toLocaleString()}원</div>
