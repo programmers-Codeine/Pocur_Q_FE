@@ -1,17 +1,30 @@
 import useMenuStore from '@/stores/useMenuStore';
 import { Save, Exclamation, NoImage, Edit, Plus } from '@/assets/icons';
 import { ManageMenuBoxProps } from './MenuBox.types';
+import { ChangeEvent } from 'react';
+import clsx from 'clsx';
+import { setMenuImage } from '@/apis/setting/menu.api';
 
 export default function ManageMenuBox({
+  warn,
   inputMenuForm,
   onSetInputMenuForm,
   onSaveMenu,
   onSelectCategory,
   onAddMenuImage,
   onEditOptions,
-  onDeleteMenu,
+  onCancelMenu,
 }: ManageMenuBoxProps) {
   const { categories } = useMenuStore();
+
+  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] as File;
+
+    setMenuImage(file).then(res => {
+      onAddMenuImage(res.data.imageUrl);
+    });
+  };
+
   return (
     <div className="flex h-fit w-[50%] flex-col rounded-lg border border-d50 px-2 py-4">
       <div className="mx-3 flex items-center justify-between border-b border-d50 pb-3">
@@ -19,7 +32,10 @@ export default function ManageMenuBox({
           id="menuName"
           type="text"
           value={inputMenuForm.menuName}
-          className="bg-d10 text-xl placeholder:text-d200"
+          className={clsx(
+            'bg-d10 text-xl',
+            warn ? 'placeholder:text-highlightRed' : 'placeholder:text-d200'
+          )}
           size={10}
           placeholder="메뉴 이름"
           onChange={onSetInputMenuForm}
@@ -36,7 +52,10 @@ export default function ManageMenuBox({
             id="description"
             type="text"
             value={inputMenuForm.description}
-            className="bg-d10 placeholder:text-d200"
+            className={clsx(
+              'bg-d10',
+              warn ? 'placeholder:text-highlightRed' : 'placeholder:text-d200'
+            )}
             placeholder="메뉴 설명을 적어주세요."
             onChange={onSetInputMenuForm}
           />
@@ -47,7 +66,11 @@ export default function ManageMenuBox({
             <Exclamation width="16" height="16" />
           </div>
           <div className="flex w-full items-center">
-            <select className="w-full rounded border bg-d10 p-2" onChange={onSelectCategory}>
+            <select
+              className="w-full rounded border bg-d10 p-2"
+              onChange={onSelectCategory}
+              value={inputMenuForm.menuCategory}
+            >
               {categories.map(({ id, title }) => (
                 <option key={id} value={id}>
                   {title}
@@ -65,7 +88,10 @@ export default function ManageMenuBox({
             id="price"
             type="text"
             value={inputMenuForm.price}
-            className="bg-d10 placeholder:text-d200"
+            className={clsx(
+              'bg-d10',
+              warn ? 'placeholder:text-highlightRed' : 'placeholder:text-d200'
+            )}
             placeholder="가격을 적어주세요."
             onChange={onSetInputMenuForm}
           />
@@ -79,7 +105,10 @@ export default function ManageMenuBox({
             id="origin"
             type="text"
             value={inputMenuForm.origin}
-            className="bg-d10 placeholder:text-d200"
+            className={clsx(
+              'bg-d10',
+              warn ? 'placeholder:text-highlightRed' : 'placeholder:text-d200'
+            )}
             placeholder="ex) 배추: 국내산, 고춧가루: 국내산"
             onChange={onSetInputMenuForm}
           />
@@ -87,9 +116,35 @@ export default function ManageMenuBox({
         <div className="my-3 flex items-center justify-between">
           <div className="flex flex-col">
             <span className="text-lg">메뉴 사진 추가</span>
-            <span className="text-d200">사용하지 않음</span>
+            {inputMenuForm.image ? <></> : <span className="text-d200">사용하지 않음</span>}
           </div>
-          <NoImage className="cursor-pointer" width="48" height="48" onClick={onAddMenuImage} />
+          {inputMenuForm.image ? (
+            <label htmlFor="menuImageUpload" className="cursor-pointer">
+              <img
+                src={inputMenuForm.image}
+                alt="Menu Preview"
+                className="h-12 w-12 object-cover"
+              />
+              <input
+                id="menuImageUpload"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageUpload}
+              />
+            </label>
+          ) : (
+            <label htmlFor="menuImageUpload" className="cursor-pointer">
+              <NoImage width="48" height="48" />
+              <input
+                id="menuImageUpload"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageUpload}
+              />
+            </label>
+          )}
         </div>
         <div className="my-3 flex flex-col">
           <div className="flex items-center justify-between">
@@ -115,8 +170,8 @@ export default function ManageMenuBox({
         <Plus
           width="24"
           height="24"
-          onClick={() => onDeleteMenu()}
-          className="rotate-45 cursor-pointer"
+          onClick={() => onCancelMenu()}
+          className="rotate-45 cursor-pointer fill-d900"
         />
       </div>
     </div>

@@ -15,7 +15,7 @@ export interface InputField {
 }
 
 export type AddOptionsTypes = {
-  id: number;
+  id: string;
   optionName: string;
   price: string;
 };
@@ -25,10 +25,11 @@ export type InputMenuFormTypes = {
   search: string;
   menuName: string;
   description: string;
-  menuCategory: number;
+  menuCategory: string;
   price: string;
   origin: string;
   options: AddOptionsTypes[] | string | null;
+  image: string;
   optionsInput: AddOptionsTypes[];
 };
 
@@ -137,3 +138,21 @@ export type SetDesignData = {
 //         },
 //       },
 //     },
+
+export type SetMenuData = {
+  id?: string;
+  categoryId: string;
+  menuName: string;
+  price: number;
+  menuDetail: string;
+  menuImg: string;
+  origin: string | null;
+  options?: SetOptionsData[];
+  isActive?: boolean;
+};
+
+export type SetOptionsData = {
+  id?: string;
+  optionName: string;
+  optionPrice: number;
+};

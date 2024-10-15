@@ -18,6 +18,15 @@ import Info from './Info.svg';
 import Label from './label.svg';
 import Reset from './reset.svg';
 import Check from './check.svg';
+import Bell from './bell.svg';
+import Basket from './basket.svg';
+import OrderList from './orderList.svg';
+import List from './list.svg';
+import Arrow from './arrow.svg';
+import SquareMinus from './square-minus.svg';
+import SquarePlus from './square-plus.svg';
+import Card from './card.svg';
+import Option from './option.svg';
 
 export {
   Avatar,
@@ -40,4 +49,13 @@ export {
   Label,
   Reset,
   Check,
+  Bell,
+  Basket,
+  OrderList,
+  List,
+  Arrow,
+  SquareMinus,
+  SquarePlus,
+  Card,
+  Option,
 };

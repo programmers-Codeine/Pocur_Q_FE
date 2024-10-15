@@ -20,7 +20,7 @@ export default function AddOptionsBox({
           <div key={id} className="flex items-center gap-2 pl-4 pr-2">
             <div className="w-[60%]">
               <Input
-                id={`optionName-${id}`}
+                id={`optionName_${id}`}
                 type="text"
                 placeholder="옵션 이름"
                 value={optionName}
@@ -29,7 +29,7 @@ export default function AddOptionsBox({
             </div>
             <div className="w-[30%]">
               <Input
-                id={`price-${id}`}
+                id={`price_${id}`}
                 type="text"
                 placeholder="가격"
                 value={price}
@@ -46,7 +46,7 @@ export default function AddOptionsBox({
         ))}
       </div>
       <div className="flex items-center justify-center gap-3">
-        <Plus width="24" height="24" onClick={onAddOptions} className="cursor-pointer" />
+        <Plus width="24" height="24" onClick={onAddOptions} className="cursor-pointer fill-d900" />
       </div>
     </div>
   );

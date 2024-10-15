@@ -21,7 +21,7 @@ export default function ContextOptions({ options, onClick }: ContextOptionsProps
 
   return (
     <div
-      className={clsx('absolute m-2 cursor-pointer rounded-lg border border-d400 bg-d10')}
+      className={clsx('absolute z-50 m-2 cursor-pointer rounded-lg border border-d400 bg-d10')}
       style={{ top: position.y, left: position.x }}
       onClick={() => closeMenu()}
     >

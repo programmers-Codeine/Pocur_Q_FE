@@ -1,16 +1,22 @@
 import { create } from 'zustand';
+import { SetMenuData } from '@/types';
 
 type AddOption = {
-  id: number;
+  id: string;
   optionName: string;
   price: number;
 };
 
+type Category = {
+  id: string;
+  title: string;
+};
+
 export type Menu = {
-  id: number;
+  id: string;
   title: string;
   description: string;
-  category: number;
+  category: string;
   price: number;
   origin: string;
   image?: string;
@@ -18,120 +24,81 @@ export type Menu = {
 };
 
 type MenuState = {
-  categories: { id: number; title: string }[];
+  categories: Category[];
   menus: Menu[];
-  selectedMenu: number[];
-  selectedTools: number[];
-  currentId: number;
+  selectedMenu: string[];
+  selectedTools: string[];
+  currentId: string;
   step: number;
   //TODO: 매직넘버
   // 1: 카테고리 선택 및 메뉴 선택
   // 2: 메뉴 입력
   // 3: 추가 옵션 수정
 
-  addCategory: (title: string) => void;
-  deleteCategory: (id: number) => void;
+  setCategories: (data: { id: string; categoryName: string }[]) => void;
+  addCategory: (id: string, title: string) => void;
+  deleteCategory: (id: string) => void;
 
-  setCurrentId: (next: number) => void;
+  setCurrentId: (next: string) => void;
   setStep: (next: number) => void;
+  setSelectedMenu: (ids: string[]) => void;
 
+  setMenu: (data: SetMenuData[]) => void;
   saveMenu: (menu: Menu) => void;
-  deleteMenu: (id: number) => void;
-  toggleMenu: (id: number) => void;
-  toggleTool: (id: number) => void;
+  cancelMenu: (id: string) => void;
+  toggleMenu: (id: string) => void;
+  toggleTool: (id: string) => void;
 };
 
 const useMenuStore = create<MenuState>(set => ({
-  categories: [
-    { id: 1, title: '메인메뉴' },
-    { id: 2, title: '한정메뉴' },
-    { id: 3, title: '사이드메뉴' },
-    { id: 4, title: '주류' },
-    { id: 5, title: '기타' },
-  ],
+  categories: [],
+  menus: [],
 
-  menus: [
-    {
-      id: 1,
-      title: '샘플 1',
-      description: '샘플 1 내용',
-      category: 1,
-      price: 5000,
-      origin: '돼지고기: 국내산, 배추김치: 국내산',
-      addOptions: [
-        {
-          id: 1,
-          optionName: '곱빼기',
-          price: 1000,
-        },
-      ],
-    },
-    {
-      id: 2,
-      title: '샘플 2',
-      description: '샘플 2 내용',
-      category: 2,
-      price: 5000,
-      origin: '돼지고기: 국내산, 배추김치: 국내산',
-      addOptions: [
-        {
-          id: 2,
-          optionName: '곱빼기',
-          price: 2000,
-        },
-      ],
-    },
-    {
-      id: 3,
-      title: '샘플 3',
-      description: '샘플 3 내용',
-      category: 3,
-      price: 5000,
-      origin: '돼지고기: 국내산, 배추김치: 국내산',
-      addOptions: [
-        {
-          id: 3,
-          optionName: '곱빼기',
-          price: 3000,
-        },
-      ],
-    },
-    {
-      id: 4,
-      title: '샘플 4',
-      description: '샘플 4 내용',
-      category: 4,
-      price: 5000,
-      origin: '돼지고기: 국내산, 배추김치: 국내산',
-      addOptions: [
-        {
-          id: 4,
-          optionName: '곱빼기',
-          price: 4000,
-        },
-      ],
-    },
-  ],
-
-  selectedMenu: [1],
+  selectedMenu: [],
   selectedTools: [],
-  currentId: 0,
+  currentId: '',
   step: 1,
 
-  addCategory: (title: string) =>
-    set(state => ({
-      categories: [
-        ...state.categories,
-        { id: Math.max(...state.categories.map(c => c.id)) + 1, title }, // 새로운 id를 생성하여 추가
-      ],
+  setCategories: data =>
+    set(() => ({
+      categories: data.map(item => ({
+        id: item.id,
+        title: item.categoryName,
+      })),
     })),
 
-  deleteCategory: (id: number) =>
+  setMenu: data =>
+    set(() => ({
+      menus: data.map(item => ({
+        id: item.id as string,
+        title: item.menuName,
+        description: item.menuDetail,
+        category: item.categoryId,
+        price: item.price,
+        image: item.menuImg,
+        origin: item.origin || '',
+        addOptions:
+          item.options?.map(option => ({
+            id: option.id as string,
+            optionName: option.optionName,
+            price: option.optionPrice,
+          })) || [],
+      })),
+    })),
+
+  setSelectedMenu: (ids: string[]) => set(() => ({ selectedMenu: ids })),
+
+  addCategory: (id: string, title: string) =>
+    set(state => ({
+      categories: [...state.categories, { id, title }],
+    })),
+
+  deleteCategory: (id: string) =>
     set(state => ({
       categories: state.categories.filter(category => category.id !== id),
     })),
 
-  setCurrentId: (next: number) =>
+  setCurrentId: (next: string) =>
     set(() => ({
       currentId: next,
     })),
@@ -150,34 +117,29 @@ const useMenuStore = create<MenuState>(set => ({
 
         return {
           menus: updatedMenus,
-          currentId: 0,
+          currentId: '',
         };
       } else {
         return {
-          menus: [
-            ...state.menus,
-            {
-              ...menu,
-            },
-          ],
-          currentId: 0,
+          menus: [...state.menus, menu],
+          currentId: '',
         };
       }
     }),
 
-  deleteMenu: (id: number) =>
+  cancelMenu: (id: string) =>
     set(state => ({
       menus: state.menus.filter(menu => menu.id !== id),
     })),
 
-  toggleMenu: (id: number) =>
+  toggleMenu: (id: string) =>
     set(state => ({
       selectedMenu: state.selectedMenu.includes(id)
         ? state.selectedMenu.filter(menuId => menuId !== id)
         : [...state.selectedMenu, id],
     })),
 
-  toggleTool: (id: number) =>
+  toggleTool: (id: string) =>
     set(state => ({
       selectedTools: state.selectedTools.includes(id)
         ? state.selectedTools.filter(toolId => toolId !== id)

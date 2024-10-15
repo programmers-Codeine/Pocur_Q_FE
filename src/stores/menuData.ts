@@ -9,7 +9,7 @@ export const categoryData = [
 ];
 
 export const easyFastToolData = [
-  { id: 1, title: '직원호출' },
-  { id: 2, title: '영수증' },
-  { id: 3, title: '자리이동' },
+  { id: '1', title: '직원호출' },
+  { id: '2', title: '영수증' },
+  { id: '3', title: '자리이동' },
 ];
