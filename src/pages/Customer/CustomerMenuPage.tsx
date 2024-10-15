@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 export default function CustomerMenuPage() {
   const navigate = useNavigate();
   const { categories, menus } = useMenuStore();
-  const [selectedCategory, setselectedCategory] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState(0);
 
   const handleChangeCategory = () => {
     // TODO 카테고리 변경
