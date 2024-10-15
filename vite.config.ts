@@ -25,13 +25,11 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
+  base: '/',
   // server: {
   //   https: {
   //     key: fs.readFileSync(path.resolve(dirName, 'key.pem')),
   //     cert: fs.readFileSync(path.resolve(dirName, 'cert.pem')),
   //   },
   // },
-  define: {
-    'process.env': process.env,
-  },
 });
