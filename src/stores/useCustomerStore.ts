@@ -20,6 +20,13 @@ export type Menu = {
   options?: Option[];
 };
 
+// TODO menu 관리자 작업 후 타입 재정의 필요
+export type ListItem = {
+  id: string;
+  menu: Menu;
+  quantity: number;
+};
+
 type CustomerState = {
   categories: { id: number; title: string }[];
   selectedCategory: number;
@@ -31,9 +38,12 @@ type CustomerState = {
 
   selectMenu: (menu: Menu) => void;
 
-  cart: number[];
+  cart: ListItem[];
   addCartItem: () => void;
+  changeCartItem: () => void;
   deleteCartItem: () => void;
+
+  orders: ListItem[];
 };
 
 const useCustomerStore = create<CustomerState>(set => ({
@@ -126,7 +136,9 @@ const useCustomerStore = create<CustomerState>(set => ({
   },
   cart: [],
   addCartItem: () => {},
+  changeCartItem: () => {},
   deleteCartItem: () => {},
+  orders: [],
 }));
 
 export default useCustomerStore;

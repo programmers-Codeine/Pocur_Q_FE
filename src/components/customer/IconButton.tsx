@@ -16,9 +16,9 @@ export default function IconButton({
   return (
     <button
       className={clsx(
-        'flex items-center gap-2 rounded-lg bg-b300 p-3 text-d10',
-        sizeVariant === 'normal' && 'text-base font-semibold',
-        sizeVariant === 'small' && 'text-xs font-medium'
+        'flex items-center rounded-lg bg-b300 text-d10',
+        sizeVariant === 'normal' && 'gap-2 p-3 text-base font-semibold',
+        sizeVariant === 'small' && 'gap-1 p-2 text-xs font-medium'
       )}
       onClick={onClick}
     >
