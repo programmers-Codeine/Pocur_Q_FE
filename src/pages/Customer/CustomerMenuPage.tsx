@@ -8,20 +8,19 @@ import {
   ROUTE_CUSTOMER_FAST_TOOL,
   ROUTE_CUSTOMER_ORDER,
 } from '@/constants/routing';
-import useMenuStore from '@/stores/useMenuStore';
-import { useState } from 'react';
+import useCustomerStore, { Menu } from '@/stores/useCustomerStore';
 import { useNavigate } from 'react-router-dom';
 
 export default function CustomerMenuPage() {
   const navigate = useNavigate();
-  const { categories, menus } = useMenuStore();
-  const [selectedCategory, setSelectedCategory] = useState(0);
+  const { categories, menus, selectedCategory, selectMenu } = useCustomerStore();
 
   const handleChangeCategory = () => {
     // TODO 카테고리 변경
   };
-  const handleOpenMenuDetail = () => {
+  const handleOpenMenuDetail = (menu: Menu) => {
     // TODO 메뉴 상세 화면 열기
+    selectMenu(menu);
     navigate(`/${ROUTE_CUSTOMER}/${ROUTE_CUSTOMER_DETAIL_MENU}`);
   };
 
@@ -96,7 +95,11 @@ export default function CustomerMenuPage() {
           // 실시간 메뉴에서 액티브인 경우만 소비자 화면에 출력
           // .filter(({ isActive }) => isActive === true)
           .map(menu => (
-            <CustomerMenuCard key={menu.id} menu={menu} onOpenMenuDetail={handleOpenMenuDetail} />
+            <CustomerMenuCard
+              key={menu.id}
+              menu={menu}
+              onOpenMenuDetail={() => handleOpenMenuDetail(menu)}
+            />
           ))}
       </div>
     </div>
