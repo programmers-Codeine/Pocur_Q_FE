@@ -85,11 +85,13 @@ export type InputEtcFormTypes = {
 export type SetDesignPresetData = {
   id: string;
   name: string;
+  designImage: string;
 };
 
 export type SetDesignData = {
   id?: string;
   name: string;
+  designImage: string | null;
   background: string | null;
   bigText: string | null;
   smallText: string | null;
@@ -104,7 +106,7 @@ export type SetDesignData = {
   buttonActiveBorder: string | null;
   labelHot: string | null;
   labelNew: string | null;
-  labelSoloOut: string | null;
+  labelSoldOut: string | null;
 };
 
 // designName: '',
