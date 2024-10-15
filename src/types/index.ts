@@ -28,7 +28,7 @@ export type InputMenuFormTypes = {
   menuCategory: string;
   price: string;
   origin: string;
-  options: AddOptionsTypes[] | string | null;
+  options: AddOptionsTypes[] | null;
   image: string;
   optionsInput: AddOptionsTypes[];
 };
