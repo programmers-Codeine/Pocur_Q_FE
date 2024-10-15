@@ -11,7 +11,7 @@ export type ButtonProps = {
 
 export type ItemButtonProps = {
   title: string;
-  state: 'normal' | 'active';
+  state: 'normal' | 'active' | 'select';
   onClick?: (e: MouseEvent<HTMLDivElement>) => void;
   onContextMenu?: (e: MouseEvent<HTMLDivElement>) => void;
 };
