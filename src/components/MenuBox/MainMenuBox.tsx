@@ -20,16 +20,15 @@ export default function MainMenuBox({
   onSearchMenu,
   onToggleMenu,
   onSetMenu,
-  onDeleteMenu,
+  onCancelMenu,
 }: MainMenuBoxProps) {
-  
   const { categories, menus, selectedMenu } = useMenuStore();
-  
+
   return (
     <div className="flex h-fit min-w-[620px] flex-col gap-3 rounded-lg border border-d50 px-3 py-4">
       <div className="mx-3 flex min-h-[54px] items-center justify-between gap-3 border-b border-d50 pb-3">
         <p className="text-2xl font-bold">메뉴 추가하기</p>
-        <Plus width="24" onClick={onAddMenu} className="cursor-pointer" />
+        <Plus width="24" onClick={onAddMenu} className="cursor-pointer fill-d900" />
       </div>
       <div className="mx-3 border-b border-d50 pb-3">
         <Input
@@ -65,7 +64,11 @@ export default function MainMenuBox({
                   idx !== menus.length - 1 && 'border-b border-d50 pb-4'
                 )}
               >
-                {menu.image ? <img /> : <NoImage width="48" height="48" />}
+                {menu.image ? (
+                  <img src={menu.image} alt="Menu Preview" className="h-12 w-12 object-cover" />
+                ) : (
+                  <NoImage width="48" height="48" />
+                )}
                 <div className="flex w-full flex-col">
                   <div className="flex w-full justify-between">
                     <span className="text-xl">{menu.title}</span>
@@ -95,7 +98,7 @@ export default function MainMenuBox({
                         width="20"
                         height="20"
                         className="cursor-pointer"
-                        onClick={() => onDeleteMenu(menu.id)}
+                        onClick={() => onCancelMenu(menu.id)}
                       />
                     </div>
                   </div>

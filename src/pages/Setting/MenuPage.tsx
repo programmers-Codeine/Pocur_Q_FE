@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEvent, useState } from 'react';
+import { ChangeEvent, MouseEvent, useState, useEffect } from 'react';
 import useContextMenuStore from '@/stores/useContextMenuStore';
 import ContextOptions from '@/components/common/Options/ContextOptions';
 import useMenuStore from '@/stores/useMenuStore';
@@ -10,7 +10,18 @@ import {
   ManageMenuBox,
 } from '@/components/MenuBox';
 import { MENU_CATEGORY_OPTIONS } from '@/constants/options';
-import { InputMenuFormTypes } from '@/types';
+import { InputMenuFormTypes, SetMenuData, SetOptionsData } from '@/types';
+import {
+  addCategories,
+  addMenu,
+  deleteCategories,
+  getCategories,
+  getMenu,
+  deleteMenu,
+  applyMenu,
+  addMenuOptionsForm,
+} from '@/apis/setting/menu.api';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function MenuPage() {
   const { openMenu, isVisible, parentId } = useContextMenuStore();
@@ -18,12 +29,17 @@ export default function MenuPage() {
     menus,
     currentId,
     step,
+    categories,
+    selectedMenu,
+    setCategories,
     addCategory,
     deleteCategory,
     setCurrentId,
+    setSelectedMenu,
     setStep,
+    setMenu,
     saveMenu,
-    deleteMenu,
+    cancelMenu,
     toggleMenu,
     toggleTool,
   } = useMenuStore();
@@ -33,35 +49,65 @@ export default function MenuPage() {
     search: '',
     menuName: '',
     description: '',
-    menuCategory: 1,
+    menuCategory: '',
     price: '',
     origin: '',
     options: null,
-    optionsInput: [{ id: 1, optionName: '', price: '' }],
+    image: '',
+    optionsInput: [{ id: '1', optionName: '', price: '' }], // id를 string으로 변환
   });
 
-  const onSelectCategory = (e: ChangeEvent<HTMLSelectElement>) => {
+  const [warnMessage, setWarnMessage] = useState({
+    type: '',
+    message: '',
+  });
+
+  useEffect(() => {
+    getCategories().then(categories => {
+      setCategories(categories);
+      setInputMenuForm(prev => ({ ...prev, menuCategory: categories[0].id }));
+    });
+
+    getMenu().then(menuData => {
+      const activeMenuIds = menuData
+        .filter((menu: SetMenuData) => menu.isActive)
+        .map((menu: SetMenuData) => menu.id);
+      setSelectedMenu(activeMenuIds);
+      setMenu(menuData);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (warnMessage.type) {
+      const messageTimer = setTimeout(() => {
+        setWarnMessage({ type: '', message: '' });
+      }, 3000);
+      return () => clearTimeout(messageTimer);
+    }
+  }, [warnMessage]);
+
+  const handleSelectCategory = (e: ChangeEvent<HTMLSelectElement>) => {
     setInputMenuForm(prev => ({
       ...prev,
-      menuCategory: Number(e.target.value),
+      menuCategory: e.target.value,
     }));
   };
 
-  const onSetInputOption = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleSetInputOption = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    const [field, optionId] = id.split('-');
+    const [field, optionId] = id.split('_');
 
     setInputMenuForm(prevForm => ({
       ...prevForm,
       optionsInput: prevForm.optionsInput
         ? prevForm.optionsInput.map(optionInput =>
-            optionInput.id === Number(optionId) ? { ...optionInput, [field]: value } : optionInput
+            optionInput.id === optionId ? { ...optionInput, [field]: value } : optionInput
           )
         : [],
     }));
   };
 
-  const onSetInputMenuForm = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleSetInputMenuForm = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setInputMenuForm(prev => ({
       ...prev,
@@ -69,47 +115,77 @@ export default function MenuPage() {
     }));
   };
 
-  const onCategory = (id: number) => {
-    // TODO: 매직넘버 상수화 필요
+  const handleCategory = (id: number) => {
     if (id === 1) {
-      addCategory(inputMenuForm.category);
-      setInputMenuForm(prev => ({
-        ...prev,
-        category: '',
-      }));
+      if (!inputMenuForm.category)
+        return setWarnMessage(() => ({
+          type: 'category',
+          message: '카테고리 이름을 입력하지 않았어요.',
+        }));
+      if (categories.length >= 10)
+        return setWarnMessage(() => ({
+          type: 'category',
+          message: '더이상 카테고리를 생성할 수 없어요.',
+        }));
+      if (categories.find(category => category.title === inputMenuForm.category))
+        return setWarnMessage(() => ({
+          type: 'category',
+          message: '동일한 카테고리 이름을 가지고 있어요.',
+        }));
+
+      addCategories(inputMenuForm.category).then(id => {
+        addCategory(id, inputMenuForm.category);
+        setInputMenuForm(prev => ({
+          ...prev,
+          category: '',
+        }));
+      });
     } else if (id === 3) {
-      // TODO: 카테고리가 1개 이하일때 경고
-      deleteCategory(parentId);
+      if (categories.length <= 1)
+        return setWarnMessage(() => ({
+          type: 'category',
+          message: '더이상 카테고리를 삭제할 수 없어요.',
+        }));
+      const isActiveCategory = menus.some(menu => menu.category === parentId);
+      if (isActiveCategory) {
+        // TODO:경고모달
+      } else {
+        deleteCategories(parentId).then(() => deleteCategory(parentId));
+      }
     }
   };
 
-  const onOpenCategoryOptions = (e: MouseEvent, id: number) => {
+  const handleOpenCategoryOptions = (e: MouseEvent, id: string) => {
     const { clientX: x, clientY: y } = e;
     openMenu(id, x, y);
   };
 
-  const onAddMenu = () => {
+  const handleAddMenu = () => {
     setStep(2);
   };
-  const onSearchMenu = () => {};
-  const onDeleteMenu = (menuId?: number) => {
-    if (menuId) deleteMenu(menuId);
+  const handleSearchMenu = () => {};
+  const handleCancelMenu = (menuId?: string) => {
+    if (menuId) {
+      cancelMenu(menuId);
+      deleteMenu(menuId);
+    }
     setInputMenuForm({
       category: '',
       search: '',
       menuName: '',
       description: '',
-      menuCategory: 1,
+      menuCategory: categories[0].id,
       price: '',
       origin: '',
+      image: '',
       options: null,
-      optionsInput: [{ id: 1, optionName: '', price: '' }],
+      optionsInput: [{ id: '1', optionName: '', price: '' }],
     });
 
     setStep(1);
   };
 
-  const onSetMenu = (menuId: number) => {
+  const handleSetMenu = (menuId: string) => {
     const menu = menus.find(menu => menu.id === menuId);
     if (menu) {
       const addOptions = menu.addOptions
@@ -120,7 +196,7 @@ export default function MenuPage() {
           }))
         : null;
 
-      const addOptionsInput = addOptions ? addOptions : [{ id: 1, optionName: '', price: '' }];
+      const addOptionsInput = addOptions ? addOptions : [{ id: '1', optionName: '', price: '' }];
 
       setInputMenuForm(prev => ({
         ...prev,
@@ -130,6 +206,7 @@ export default function MenuPage() {
         price: menu.price.toString(),
         origin: menu.origin,
         options: addOptions,
+        image: menu.image || '',
         optionsInput: addOptionsInput,
       }));
       setStep(2);
@@ -137,80 +214,185 @@ export default function MenuPage() {
     }
   };
 
-  const onSaveMenu = () => {
-    const { menuCategory, menuName, description, price, origin, options } = inputMenuForm;
+  const handleSaveMenu = () => {
+    const { menuCategory, menuName, description, price, origin, options, image } = inputMenuForm;
     if (menuCategory && menuName && description && price && origin) {
       const addOptions = options?.map(({ optionName, price }, idx) => ({
-        id: idx + 1,
+        id: String(idx + 1),
         optionName,
         price: Number(price),
       }));
 
       const menuData = {
-        id: currentId === 0 ? Math.max(...menus.map(menu => menu.id)) + 1 : currentId,
+        id: currentId,
         title: menuName,
         description,
-        category: Number(menuCategory),
+        category: menuCategory,
         price: Number(price),
         origin,
+        image,
         addOptions: addOptions?.length ? addOptions : null,
       };
-      saveMenu(menuData);
+
+      if (currentId) {
+        // 옵션 적용해서 생성 혹은 변경
+        applyMenu(
+          {
+            categoryId: menuCategory,
+            menuName: menuName,
+            price: Number(price),
+            menuDetail: description,
+            menuImg: image,
+            origin: origin,
+          },
+          currentId
+        ).then(() => saveMenu(menuData));
+      } else {
+        // 옵션 없이 생성
+        addMenu({
+          categoryId: menuCategory,
+          menuName: menuName,
+          price: Number(price),
+          menuDetail: description,
+          menuImg: image,
+          origin: origin,
+        }).then(id => {
+          const menuData = {
+            id: id,
+            title: menuName,
+            description,
+            category: menuCategory,
+            price: Number(price),
+            origin,
+            image,
+            addOptions: addOptions?.length ? addOptions : null,
+          };
+          saveMenu(menuData);
+        });
+      }
+
       setInputMenuForm({
         category: '',
         search: '',
         menuName: '',
         description: '',
-        menuCategory: 1,
+        menuCategory: categories[0].id,
         price: '',
         origin: '',
+        image: '',
         options: null,
-        optionsInput: [{ id: 1, optionName: '', price: '' }],
+        optionsInput: [{ id: '1', optionName: '', price: '' }],
       });
       setStep(1);
+    } else
+      setWarnMessage(prev => ({
+        ...prev,
+        type: 'menu',
+      }));
+  };
+
+  const handleAddMenuImage = (imageUrl: string) => {
+    setInputMenuForm(prev => ({
+      ...prev,
+      image: imageUrl,
+    }));
+  };
+
+  const handleEditOptions = () => {
+    const { menuCategory, menuName, description, price, origin, image } = inputMenuForm;
+
+    if (menuCategory && menuName && description && price && origin) {
+      if (!currentId)
+        // 임시 세이브
+        addMenu({
+          categoryId: menuCategory,
+          menuName: menuName,
+          price: Number(price),
+          menuDetail: description,
+          menuImg: image,
+          origin: origin,
+        }).then(id => setCurrentId(id));
+      setInputMenuForm(prev => ({
+        ...prev,
+        optionsInput: prev.options || [{ id: uuidv4(), optionName: '', price: '' }],
+      }));
+      setStep(3);
+    } else {
+      setWarnMessage(prev => ({
+        ...prev,
+        type: 'menu',
+      }));
     }
   };
-  const onAddMenuImage = () => {};
 
-  const onEditOptions = () => {
-    setStep(3);
-  };
-
-  const onAddOptions = () => {
-    // TODO: 최대갯수 제한 (ex:10)
+  const handleAddOptions = () => {
     setInputMenuForm(prev => {
-      const newId = prev.optionsInput.length
-        ? prev.optionsInput[prev.optionsInput.length - 1].id + 1
-        : 1;
       return {
         ...prev,
-        optionsInput: [...(prev.optionsInput || []), { id: newId, optionName: '', price: '' }],
+        optionsInput: [...(prev.optionsInput || []), { id: uuidv4(), optionName: '', price: '' }],
       };
     });
   };
 
-  const onDeleteOptions = (optionId: number) => {
-    // TODO: api 연결
+  const handleDeleteOptions = (optionId: string) => {
     setInputMenuForm(prev => ({
       ...prev,
-      optionsInput: prev.optionsInput.filter(optionInput => optionInput.id !== optionId) || [], // id가 다른 옵션들만 남기기
+      optionsInput: prev.optionsInput.filter(optionInput => optionInput.id !== optionId) || [], // id가 다른 옵션들만 남기기 (string 비교)
     }));
   };
 
-  const onSaveOptions = () => {
-    // TODO: api 연결
-    // TODO: 옵션이름, 가격이 들어가있지 않은 경우
-    setInputMenuForm(prev => ({
-      ...prev,
-      options: prev.optionsInput,
-    }));
+  const handleSaveOptions = () => {
+    const validOptions = inputMenuForm.optionsInput
+      .filter(optionInput => optionInput.optionName && optionInput.price) // Ensure both fields are present
+      .map(optionInput => ({
+        optionName: optionInput.optionName,
+        optionPrice: Number(optionInput.price),
+      }));
+
+    addMenuOptionsForm(validOptions, currentId).then(options => {
+      const newOptions = options.map((option: SetOptionsData) => ({
+        id: option.id,
+        optionName: option.optionName,
+        price: option.optionPrice,
+      }));
+      setInputMenuForm(prev => ({
+        ...prev,
+        options: newOptions,
+        optionsInput: [{ id: '1', optionName: '', price: '' }],
+      }));
+    });
     setStep(2);
   };
 
-  const onToggleMenu = (menuId: number) => {
-    toggleMenu(menuId);
+  const handleToggleMenu = (menuId: string) => {
+    const currentMenu = menus.find(menu => menu.id === menuId);
+
+    if (!currentMenu) return;
+
+    // console.log({
+    //   categoryId: currentMenu.category,
+    //   menuName: currentMenu.title,
+    //   price: currentMenu.price,
+    //   menuDetail: currentMenu.description,
+    //   menuImg: currentMenu.image || '',
+    //   origin: currentMenu.origin,
+    //   isActive: !selectedMenu.includes(menuId),
+    // });
+    // TODO: TOGGLE 기능 필요
+    applyMenu(
+      {
+        categoryId: currentMenu.category,
+        menuName: currentMenu.title,
+        price: currentMenu.price,
+        menuDetail: currentMenu.description,
+        menuImg: currentMenu.image || '',
+        origin: currentMenu.origin,
+        isActive: !selectedMenu.includes(menuId),
+      },
+      menuId
+    ).then(() => toggleMenu(menuId));
   };
-  const onToggleTool = (toolId: number) => {
+  const handleToggleTool = (toolId: string) => {
     toggleTool(toolId);
   };
 
@@ -218,49 +400,51 @@ export default function MenuPage() {
     <div className="flex flex-col gap-4">
       <div className="flex h-[180px] w-full gap-3">
         <CategoryBox
+          message={warnMessage.type === 'category' ? warnMessage.message : ''}
           category={inputMenuForm.category}
-          onCategory={onCategory}
-          onSetInputMenuForm={onSetInputMenuForm}
-          onOpenCategoryOptions={onOpenCategoryOptions}
+          onCategory={handleCategory}
+          onSetInputMenuForm={handleSetInputMenuForm}
+          onOpenCategoryOptions={handleOpenCategoryOptions}
         />
-        <FastToolBox onToggleTool={onToggleTool} />
+        <FastToolBox onToggleTool={handleToggleTool} />
       </div>
       <div className="flex w-full gap-3">
         <MainMenuBox
           search={inputMenuForm.search}
-          onAddMenu={onAddMenu}
-          onSetInputMenuForm={onSetInputMenuForm}
-          onSearchMenu={onSearchMenu}
-          onToggleMenu={onToggleMenu}
-          onSetMenu={onSetMenu}
-          onDeleteMenu={onDeleteMenu}
+          onAddMenu={handleAddMenu}
+          onSetInputMenuForm={handleSetInputMenuForm}
+          onSearchMenu={handleSearchMenu}
+          onToggleMenu={handleToggleMenu}
+          onSetMenu={handleSetMenu}
+          onCancelMenu={handleCancelMenu}
         />
         <div className="flex w-full gap-3">
           {step !== 1 && (
             <ManageMenuBox
+              warn={warnMessage.type === 'menu'}
               inputMenuForm={inputMenuForm}
-              onSetInputMenuForm={onSetInputMenuForm}
-              onSaveMenu={onSaveMenu}
-              onSelectCategory={onSelectCategory}
-              onAddMenuImage={onAddMenuImage}
-              onEditOptions={onEditOptions}
-              onDeleteMenu={onDeleteMenu}
+              onSetInputMenuForm={handleSetInputMenuForm}
+              onSaveMenu={handleSaveMenu}
+              onSelectCategory={handleSelectCategory}
+              onAddMenuImage={handleAddMenuImage}
+              onEditOptions={handleEditOptions}
+              onCancelMenu={handleCancelMenu}
             />
           )}
           {step === 3 ? (
             <AddOptionsBox
               optionsInput={inputMenuForm.optionsInput}
-              onSaveOptions={onSaveOptions}
-              onSetInputOption={onSetInputOption}
-              onDeleteOptions={onDeleteOptions}
-              onAddOptions={onAddOptions}
+              onSaveOptions={handleSaveOptions}
+              onSetInputOption={handleSetInputOption}
+              onDeleteOptions={handleDeleteOptions}
+              onAddOptions={handleAddOptions}
             />
           ) : (
             <div className="w-[50%]"></div>
           )}
         </div>
       </div>
-      {isVisible && <ContextOptions options={MENU_CATEGORY_OPTIONS} onClick={onCategory} />}
+      {isVisible && <ContextOptions options={MENU_CATEGORY_OPTIONS} onClick={handleCategory} />}
     </div>
   );
 }
