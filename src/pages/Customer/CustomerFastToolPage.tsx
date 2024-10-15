@@ -10,7 +10,7 @@ export default function CustomerFastToolPage() {
       <NavHeader>빠른 호출</NavHeader>
       {/* 주문 버튼 */}
       {fastToolList.map(title => (
-        <div className="self-center py-2">
+        <div key={title} className="self-center py-2">
           <IconButton
             title={title}
             onClick={() => {
