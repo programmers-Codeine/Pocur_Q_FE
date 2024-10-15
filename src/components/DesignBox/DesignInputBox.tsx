@@ -3,19 +3,29 @@ import DesignColorButton from '../common/Button/DesignColorButton';
 import Button from '../common/Button/Button';
 import useColorPaletteStore from '@/stores/useColorPaletteStore';
 import useDesignStore from '@/stores/useDesignStore';
-import { MouseEvent } from 'react';
+import { MouseEvent, ChangeEvent, useEffect } from 'react';
 import { NoImage, Reset } from '@/assets/icons';
 import { DesignInputBoxProps } from './DesignBox.types';
+import { setDesignImage, getCurrentDesign } from '@/apis/setting/design.api';
 
 export default function DesignInputBox({
   inputDesignForm,
   onSetInputDesignForm,
+  onSetCurrentDesignForm,
   onReset,
   onNavigate,
   onSaveDesign,
+  onAddDesignImage,
 }: DesignInputBoxProps) {
   const { openPalette } = useColorPaletteStore();
   const { currentDesignId } = useDesignStore();
+
+  useEffect(() => {
+    if (currentDesignId === '0') return;
+    getCurrentDesign(currentDesignId).then(designPresets => {
+      onSetCurrentDesignForm(designPresets);
+    });
+  }, []);
 
   const handleOpenColorPalette = (e: MouseEvent<HTMLDivElement>, color: string) => {
     const { clientX: x, clientY: y } = e;
@@ -26,6 +36,14 @@ export default function DesignInputBox({
       y + paletteHeight > window.innerHeight ? window.innerHeight - paletteHeight : y;
 
     openPalette(x, adjustedY, color, id, textContent as string);
+  };
+
+  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] as File;
+
+    setDesignImage(file).then(res => {
+      onAddDesignImage(res.data.imageUrl);
+    });
   };
 
   return (
@@ -43,10 +61,30 @@ export default function DesignInputBox({
         </div>
         <div>
           <label className="text-em font-semibold">디자인 이미지 설정</label>
-          <div className="my-2 flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed py-4">
-            <NoImage />
-            <p className="text-d200">이미지 업로드</p>
-          </div>
+
+          <label className="relative my-2 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-4 hover:bg-d30">
+            <input
+              id="designImageUpload"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleImageUpload}
+            />
+            <div className="relative flex h-[120px] w-full items-center justify-center">
+              {inputDesignForm.designImage ? (
+                <img
+                  src={inputDesignForm.designImage}
+                  alt="Menu Preview"
+                  className="absolute left-0 top-0 h-full w-full"
+                />
+              ) : (
+                <div className="flex flex-col items-center justify-center">
+                  <NoImage width="64" height="64" className="z-10" />
+                  <p className="text-d200">이미지 업로드</p>
+                </div>
+              )}
+            </div>
+          </label>
         </div>
         <div className="flex items-center justify-between pr-4">
           <p className="text-xl font-semibold">테마 설정</p>
@@ -182,7 +220,7 @@ export default function DesignInputBox({
       </div>
       <div className="flex items-center justify-center gap-8 px-4">
         <Button title="뒤로가기" type="warn" size="small" onClick={() => onNavigate(1)} />
-        {currentDesignId === 0 ? (
+        {currentDesignId === '0' ? (
           <Button
             title="생성하기"
             type="others"

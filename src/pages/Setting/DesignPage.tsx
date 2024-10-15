@@ -1,12 +1,19 @@
 import useContextMenuStore from '@/stores/useContextMenuStore';
 import ContextOptions from '@/components/common/Options/ContextOptions';
 import useDesignStore from '@/stores/useDesignStore';
-import { ChangeEvent, MouseEvent, useState } from 'react';
-import { InputDesignFormTypes } from '@/types';
+import { ChangeEvent, MouseEvent, useState, useEffect } from 'react';
+import { InputDesignFormTypes, SetDesignData } from '@/types';
 import useColorPaletteStore from '@/stores/useColorPaletteStore';
 import { DesignHomeBox, DesignInputBox, DesignPreviewBox } from '@/components/DesignBox';
 import ColorPalettePicker from '@/components/ColorPalettePicker/ColorPalettePicker';
 import { DESIGN_BOX_OPTIONS } from '@/constants/options';
+import {
+  getAllDesignPreset,
+  getCurrentDesignPreset,
+  addDesignPreset,
+  replaceCurrentDesignPreset,
+  deleteDesignPreset,
+} from '@/apis/setting/design.api';
 
 export default function DesignPage() {
   const [inputDesignForm, setInputDesignForm] = useState<InputDesignFormTypes>({
@@ -46,15 +53,63 @@ export default function DesignPage() {
   const { openMenu, isVisible, parentId } = useContextMenuStore();
   const { isPaletteVisible, currentId } = useColorPaletteStore();
   const {
-    designInfos,
+    designs,
     currentDesignId,
     setSelect,
     navigation,
     navigate,
+    setDesign,
     deleteDesign,
     addDesign,
     updateDesign,
   } = useDesignStore();
+
+  useEffect(() => {
+    getAllDesignPreset().then(designPresets => {
+      setDesign(designPresets);
+      console.log(designPresets);
+    });
+
+    getCurrentDesignPreset().then(id => {
+      setSelect(id);
+    });
+  }, []);
+
+  const handleSetCurrentDesignForm = (designPresets: SetDesignData) => {
+    setInputDesignForm({
+      designName: designPresets.name || '',
+      designImage: '',
+      theme: {
+        all: {
+          background: designPresets.background || '#ffffff',
+          largeText: designPresets.bigText || '#ffffff',
+          smallText: designPresets.smallText || '#ffffff',
+          box: designPresets.box || '#ffffff',
+          boxOutline: designPresets.boxBorder || '#ffffff',
+          icon: designPresets.icon || '#ffffff',
+        },
+        button: {
+          normal: {
+            background: designPresets.buttonBackground || '#ffffff',
+            textAndIcon: designPresets.buttonText || '#ffffff',
+            outline: designPresets.buttonBorder || '#ffffff',
+          },
+          active: {
+            background: designPresets.buttonActiveBackground || '#ffffff',
+            textAndIcon: designPresets.buttonActiveText || '#ffffff',
+            outline: designPresets.buttonActiveBorder || '#ffffff',
+          },
+        },
+        addOption: {
+          label: {
+            hot: designPresets.labelHot || '#ffffff',
+            new: designPresets.labelNew || '#ffffff',
+            soldOut: designPresets.labelSoloOut || '#ffffff',
+          },
+        },
+      },
+    });
+  };
 
   const handleSetInputDesignForm = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -64,26 +119,25 @@ export default function DesignPage() {
     }));
   };
 
-  const handleOpenDesignOptions = (e: MouseEvent, id: number) => {
+  const handleOpenDesignOptions = (e: MouseEvent, id: string) => {
     const { clientX: x, clientY: y } = e;
     openMenu(id, x, y);
   };
 
   const handleDesignCards = (id: number) => {
     if (id === 1) {
-      setSelect(parentId);
+      replaceCurrentDesignPreset(parentId).then(() => setSelect(parentId));
     } else if (id === 2) {
-      const foundDesignInfo = designInfos.find(designInfo => designInfo.id === parentId);
-      if (foundDesignInfo) {
-        navigate(2, 'update', foundDesignInfo.id);
-        setInputDesignForm(foundDesignInfo.form);
+      const foundDesign = designs.find(design => design.id === parentId);
+      if (foundDesign) {
+        navigate(2, 'update', foundDesign.id);
       }
     } else if (id === 3) {
-      if (parentId === 1) {
+      if (parentId === '1') {
         //TODO: default Design can't delete.
         // 혹은, 아예 parentId가 1인경우에는 보여주지 않는 걸로.
       } else {
-        deleteDesign(parentId);
+        deleteDesignPreset(parentId).then(() => deleteDesign(parentId));
       }
     }
   };
@@ -101,8 +155,49 @@ export default function DesignPage() {
   const handleSaveDesign = (use: 'create' | 'update') => {
     // TODO: 디자인 이름 설정했는지 체크
     if (inputDesignForm.designName === '') return;
-    if (use === 'create') addDesign(inputDesignForm);
-    else if (use === 'update') updateDesign(inputDesignForm, currentDesignId);
+    if (use === 'create') {
+      const { designName, designImage, theme } = inputDesignForm;
+      console.log({
+        name: designName,
+        background: theme.all.background,
+        bigText: theme.all.largeText,
+        smallText: theme.all.smallText,
+        box: theme.all.box,
+        boxBorder: theme.all.boxOutline,
+        icon: theme.all.icon,
+        buttonBackground: theme.button.normal.background,
+        buttonText: theme.button.normal.textAndIcon,
+        buttonBorder: theme.button.normal.outline,
+        buttonActiveBackground: theme.button.active.background,
+        buttonActiveText: theme.button.active.textAndIcon,
+        buttonActiveBorder: theme.button.active.outline,
+        labelHot: theme.addOption.label.hot,
+        labelNew: theme.addOption.label.new,
+        labelSoloOut: theme.addOption.label.soldOut,
+      });
+      addDesignPreset({
+        name: designName,
+        background: designImage,
+        bigText: theme.all.background,
+        smallText: theme.all.smallText,
+        box: theme.all.box,
+        boxBorder: theme.all.boxOutline,
+        icon: theme.all.icon,
+        buttonBackground: theme.button.normal.background,
+        buttonText: theme.button.normal.textAndIcon,
+        buttonBorder: theme.button.normal.outline,
+        buttonActiveBackground: theme.button.active.background,
+        buttonActiveText: theme.button.active.textAndIcon,
+        buttonActiveBorder: theme.button.active.outline,
+        labelHot: theme.addOption.label.hot,
+        labelNew: theme.addOption.label.new,
+        labelSoloOut: theme.addOption.label.soldOut,
+      }).then(data => {
+        // TODO: designImage가 현재 없음.
+        console.log(data);
+        addDesign({ id: data.id, title: data.name, image: '' });
+      });
+    } else if (use === 'update') updateDesign(inputDesignForm, currentDesignId);
     handleNavigate(1);
   };
 
@@ -160,6 +255,13 @@ export default function DesignPage() {
     }));
   };
 
+  const handleAddDesignImage = (imageUrl: string) => {
+    setInputDesignForm(prev => ({
+      ...prev,
+      designImage: imageUrl,
+    }));
+  };
+
   return (
     <>
       {navigation === 1 && (
@@ -171,9 +273,11 @@ export default function DesignPage() {
           <DesignInputBox
             inputDesignForm={inputDesignForm}
             onSetInputDesignForm={handleSetInputDesignForm}
+            onSetCurrentDesignForm={handleSetCurrentDesignForm}
             onReset={handleReset}
             onNavigate={handleNavigate}
             onSaveDesign={handleSaveDesign}
+            onAddDesignImage={handleAddDesignImage}
           />
           <DesignPreviewBox onNavigate={handleNavigate} />
           {isPaletteVisible && <ColorPalettePicker changeColor={handleChangeColor} />}
