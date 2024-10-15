@@ -11,7 +11,7 @@ import WarnModalContainer from '@/components/common/Modal/WarnModalContainer';
 import ModalTitle from '@/components/common/Modal/Content/ModalTitle';
 import ModalButton from '@/components/common/Modal/Button/ModalButton';
 import ModalContent from '@/components/common/Modal/Content/ModalContent';
-import DetailModal from './Table/DeatailModal';
+import DetailModal from './Table/DetailModal';
 import { downloadAllQR, printAllQR } from '@/utils/QR';
 import useContextMenuStore from '@/stores/useContextMenuStore';
 import ContextOptions from '@/components/common/Options/ContextOptions';
@@ -40,7 +40,7 @@ export default function TablePage() {
     selectedOrderId,
     setSelectedOrderId,
   } = useTableStore();
-    useTableStore();
+  useTableStore();
   const { openMenu, isVisible } = useContextMenuStore();
 
   useEffect(() => {
@@ -96,7 +96,7 @@ export default function TablePage() {
     handleWarnModalClose();
   };
   // TODO 결제하기 클릭 시 테이블 초기화
-  const handleOpenTableOrderOptions = (e: MouseEvent, id: number) => {
+  const handleOpenTableOrderOptions = (e: MouseEvent, id: string) => {
     const { clientX, clientY } = e;
 
     setSelectedOrderId(e.currentTarget.id);

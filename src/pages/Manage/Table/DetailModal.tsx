@@ -7,7 +7,7 @@ interface Props {
   currentTable: Table;
   onCloseModal: () => void;
   onOpenInitModal: () => void;
-  onContextMenu: (e: MouseEvent<HTMLTableRowElement>, id: number) => void;
+  onContextMenu: (e: MouseEvent<HTMLTableRowElement>, id: string) => void;
 }
 
 export default function DetailModal({
@@ -50,12 +50,12 @@ export default function DetailModal({
           </thead>
           <tbody>
             {currentTable?.orderList.map(
-              ({ id, menuName, menuQuantity, menuOptions, totalPrice }, i) => (
+              ({ id, menuName, menuQuantity, menuOptions, totalPrice }) => (
                 <tr
-                  key={i + 1}
+                  key={id}
                   id={id}
                   className="text-center hover:bg-d30"
-                  onContextMenu={e => onContextMenu(e, i + 1)}
+                  onContextMenu={e => onContextMenu(e, id)}
                 >
                   <td className="text-start">{menuName}</td>
                   <td>{menuQuantity}</td>
