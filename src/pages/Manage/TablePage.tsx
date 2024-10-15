@@ -1,5 +1,5 @@
 import Button from '@/components/common/Button/Button';
-import { useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import Tabs from './Table/Tabs';
 import Table from './Table/Table';
 import Tab from './Table/Tab';
@@ -13,6 +13,9 @@ import ModalButton from '@/components/common/Modal/Button/ModalButton';
 import ModalContent from '@/components/common/Modal/Content/ModalContent';
 import DetailModal from './Table/DeatailModal';
 import { downloadAllQR, printAllQR } from '@/utils/QR';
+import useContextMenuStore from '@/stores/useContextMenuStore';
+import ContextOptions from '@/components/common/Options/ContextOptions';
+import { TABLE_ORDER_OPTIONS } from '@/constants/options';
 
 type WarnModalData = {
   title: string;
@@ -21,16 +24,31 @@ type WarnModalData = {
   noText: string;
 };
 
+// TODO 함수명 통일하기
 export default function TablePage() {
   const [currentTab, setCurrentTab] = useState('table');
   const [openDetailModal, setOpenDetailModal] = useState(false);
   const [openWarnModal, setOpenWarnModal] = useState(false);
   const [warnModalData, setWarnModalData] = useState<WarnModalData>();
   const [currentTable, setCurrentTable] = useState<TTable | null>();
-  const { tables, addTable } = useTableStore();
+  const {
+    tables,
+    fetchTables,
+    addTable,
+    resetTable,
+    deleteOrder,
+    selectedOrderId,
+    setSelectedOrderId,
+  } = useTableStore();
+    useTableStore();
+  const { openMenu, isVisible } = useContextMenuStore();
+
+  useEffect(() => {
+    fetchTables();
+  }, []);
 
   const handleAddTable = () => {
-    addTable(tables.length + 1);
+    addTable();
   };
   const handleTabChange = (id: string) => {
     setCurrentTab(id);
@@ -49,7 +67,7 @@ export default function TablePage() {
   const handleWarnModalClose = () => {
     setOpenWarnModal(false);
   };
-  const handleTableInit = () => {
+  const handleOpenInitModal = () => {
     setWarnModalData({
       title: '테이블을 초기화하시겠습니까?',
       desc: '해당 테이블의 정보가 모두 삭제됩니다.',
@@ -59,7 +77,55 @@ export default function TablePage() {
     handleWarnModalOpen();
   };
   // TODO 테이블 초기화 시 동작 구현
+  const handleInitTable = () => {
+    if (currentTable) {
+      resetTable(currentTable.tableNo);
+      setCurrentTable(prev => {
+        if (prev) {
+          return {
+            ...prev,
+            orderList: [],
+            totalPrice: 0,
+          };
+        }
+        return prev;
+      });
+    } else {
+      // TODO 에러 처리
+    }
+    handleWarnModalClose();
+  };
   // TODO 결제하기 클릭 시 테이블 초기화
+  const handleOpenTableOrderOptions = (e: MouseEvent, id: number) => {
+    const { clientX, clientY } = e;
+
+    setSelectedOrderId(e.currentTarget.id);
+    // TODO 기존 clientX, clientY를 사용하는 경우 오차가 발생하기 때문에 오차를 줄였지만, 추가 수정이 필요함
+    openMenu(
+      id,
+      clientX - e.currentTarget.clientWidth * 0.4,
+      clientY - e.currentTarget.clientHeight * 0.3
+    );
+  };
+  const handleClickTableOrderOption = (id: number) => {
+    if (id === 1) {
+      // TODO 주문 목록 수정 로직
+    } else {
+      // 주문 취소 로직
+      deleteOrder(selectedOrderId);
+      setCurrentTable(prev => {
+        if (prev) {
+          const newOrderList = prev.orderList.filter(({ id }) => id !== selectedOrderId);
+          return {
+            ...prev,
+            orderList: newOrderList,
+            totalPrice: newOrderList.reduce((a, order) => a + order.totalPrice, 0),
+          };
+        }
+        return prev;
+      });
+    }
+  };
 
   return (
     <div className="relative flex h-full flex-col" id="tableModal">
@@ -127,7 +193,7 @@ export default function TablePage() {
           <ModalTitle>{warnModalData.title}</ModalTitle>
           <ModalContent>{warnModalData.desc}</ModalContent>
           <div className="mt-3 flex gap-2">
-            <ModalButton onClick={handleWarnModalClose} type="warn">
+            <ModalButton onClick={handleInitTable} type="warn">
               {warnModalData.yesText}
             </ModalButton>
             <ModalButton onClick={handleWarnModalClose}>{warnModalData.noText}</ModalButton>
@@ -139,9 +205,13 @@ export default function TablePage() {
           <DetailModal
             currentTable={currentTable}
             onCloseModal={handleDetailModalClose}
-            onInitTable={handleTableInit}
+            onOpenInitModal={handleOpenInitModal}
+            onContextMenu={handleOpenTableOrderOptions}
           />
         </DetailModalContainer>
+      )}
+      {isVisible && (
+        <ContextOptions options={TABLE_ORDER_OPTIONS} onClick={handleClickTableOrderOption} />
       )}
     </div>
   );
