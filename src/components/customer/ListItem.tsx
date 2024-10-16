@@ -18,7 +18,7 @@ export default function ListItem({ item, variant }: ListItemProps) {
       <div className="text-xs font-bold text-d200">{menu.categoryName}</div>
       <div className="text-xl font-bold">{menu.menuName}</div>
       <div className="text-xs text-d200">{menu.options.join('/')}</div>
-      <div className="text-sm font-bold">{totalPrice}</div>
+      <div className="text-sm font-bold">{totalPrice.toLocaleString()}원</div>
       {/* 수량 조절 */}
       {variant === 'cart' && (
         <div className="mt-2 flex items-center justify-between text-xl font-bold">
