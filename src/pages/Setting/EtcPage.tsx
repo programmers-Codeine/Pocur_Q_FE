@@ -19,9 +19,11 @@ export default function EtcPage() {
       prepayment: false,
     },
   });
+  const [customerPreview, setCustomerPreview] = useState({ id: '', isShow: false });
 
   useEffect(() => {
     getRestaurant().then(data => {
+      setCustomerPreview(prev => ({ ...prev, id: data.id }));
       setInputEtcForm(prev => ({
         ...prev,
         tableCount: data.defaultTableCount || 0,
@@ -68,13 +70,19 @@ export default function EtcPage() {
 
   const handleSaveEtc = () => {
     const { tableCount, shopName, shopLogo, comment } = inputEtcForm;
-    saveRestaurants({
-      name: shopName,
-      defaultTableCount: Number(tableCount),
-      logo: shopLogo,
-      introduce: comment.introduce,
-      comment: comment.success,
-    }).then(res => console.log(res));
+    if (tableCount && shopName) {
+      saveRestaurants({
+        name: shopName,
+        defaultTableCount: Number(tableCount),
+        logo: shopLogo,
+        introduce: comment.introduce,
+        comment: comment.success,
+      }).then(res => console.log(res));
+
+      setCustomerPreview(prev => ({ ...prev, isShow: true }));
+    } else {
+      //TODO: 입력 경고
+    }
   };
 
   const handleLogoUpload = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -195,11 +203,18 @@ export default function EtcPage() {
         <div className="flex min-h-[36px] gap-2"></div>
         <div className="relative aspect-[412/912] w-[50%] bg-deviceFrame bg-contain bg-center bg-no-repeat">
           <div className="absolute inset-0 mx-[2%] my-[15%]">
-            <iframe
-              className="h-full w-full"
-              title="customer-page"
-              src={`https://localhost:5173/customer`}
-            />
+            {customerPreview.isShow ? (
+              <iframe
+                className="h-full w-full"
+                title="customer-page"
+                src={`https://localhost:5173/customer?restaurant_id=${customerPreview.id}&table_num=1`}
+              />
+            ) : (
+              <div className="flex h-full w-full flex-col items-center justify-center text-xl">
+                <p>저장하기를 눌러</p>
+                <p>소비자 화면을 테스트 해보세요.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
