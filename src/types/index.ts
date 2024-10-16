@@ -151,6 +151,10 @@ export type SetMenuData = {
   origin: string | null;
   options?: SetOptionsData[];
   isActive?: boolean;
+  soldOut?: boolean;
+  hot?: boolean;
+  new?: boolean;
+  isRunningOut?: boolean;
 };
 
 export type SetOptionsData = {

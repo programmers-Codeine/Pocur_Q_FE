@@ -21,6 +21,11 @@ export type Menu = {
   origin: string;
   image?: string;
   addOptions?: AddOption[] | null;
+  isActive?: boolean;
+  soldOut?: boolean;
+  hot?: boolean;
+  new?: boolean;
+  isRunningOut?: boolean;
 };
 
 type MenuState = {
@@ -77,6 +82,10 @@ const useMenuStore = create<MenuState>(set => ({
         price: item.price,
         image: item.menuImg,
         origin: item.origin || '',
+        isActive: !!item.isActive,
+        hot: !!item.hot,
+        new: !!item.new,
+        soldOut: !!item.soldOut,
         addOptions:
           item.options?.map(option => ({
             id: option.id as string,
