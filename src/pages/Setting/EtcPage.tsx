@@ -194,7 +194,13 @@ export default function EtcPage() {
       <div className="flex h-full w-[50%] flex-col items-center gap-1">
         <div className="flex min-h-[36px] gap-2"></div>
         <div className="relative aspect-[412/912] w-[50%] bg-deviceFrame bg-contain bg-center bg-no-repeat">
-          <div className="absolute inset-0 px-[2%] py-[15%]"></div>
+          <div className="absolute inset-0 mx-[2%] my-[15%]">
+            <iframe
+              className="h-full w-full"
+              title="customer-page"
+              src={`https://localhost:5173/customer`}
+            />
+          </div>
         </div>
       </div>
     </div>
