@@ -26,7 +26,7 @@ export default function DesignPage() {
         largeText: '#ffffff',
         smallText: '#ffffff',
         box: '#ffffff',
-        boxOutline: '#ffffff',
+        boxOutline: '#d2d1d1',
         icon: '#ffffff',
       },
       button: {
@@ -70,8 +70,8 @@ export default function DesignPage() {
       setDesign(designPresets);
     });
 
-    getCurrentDesignPreset().then(id => {
-      setSelect(id);
+    getCurrentDesignPreset().then(({ designPresetId }) => {
+      setSelect(designPresetId);
     });
   }, []);
 
@@ -82,29 +82,29 @@ export default function DesignPage() {
       theme: {
         all: {
           background: designPresets.background || '#ffffff',
-          largeText: designPresets.bigText || '#ffffff',
-          smallText: designPresets.smallText || '#ffffff',
+          largeText: designPresets.bigText || '#000000',
+          smallText: designPresets.smallText || '#000000a0',
           box: designPresets.box || '#ffffff',
           boxOutline: designPresets.boxBorder || '#ffffff',
-          icon: designPresets.icon || '#ffffff',
+          icon: designPresets.icon || '#505F79',
         },
         button: {
           normal: {
             background: designPresets.buttonBackground || '#ffffff',
-            textAndIcon: designPresets.buttonText || '#ffffff',
-            outline: designPresets.buttonBorder || '#ffffff',
+            textAndIcon: designPresets.buttonText || '#000000bb',
+            outline: designPresets.buttonBorder || '#000000bb',
           },
           active: {
-            background: designPresets.buttonActiveBackground || '#ffffff',
-            textAndIcon: designPresets.buttonActiveText || '#ffffff',
-            outline: designPresets.buttonActiveBorder || '#ffffff',
+            background: designPresets.buttonActiveBackground || '#1b1ecf',
+            textAndIcon: designPresets.buttonActiveText || '#1b1ecf',
+            outline: designPresets.buttonActiveBorder || '#ffffffbb',
           },
         },
         addOption: {
           label: {
-            hot: designPresets.labelHot || '#ffffff',
-            new: designPresets.labelNew || '#ffffff',
-            soldOut: designPresets.labelSoldOut || '#ffffff',
+            hot: designPresets.labelHot || '#f10000',
+            new: designPresets.labelNew || '#f1ff0c',
+            soldOut: designPresets.labelSoldOut || '#000527',
           },
         },
       },
@@ -228,29 +228,29 @@ export default function DesignPage() {
     const defaultTheme = {
       all: {
         background: '#ffffff',
-        largeText: '#ffffff',
-        smallText: '#ffffff',
+        largeText: '#000000',
+        smallText: '#000000a0',
         box: '#ffffff',
-        boxOutline: '#ffffff',
-        icon: '#ffffff',
+        boxOutline: '#d2d1d1',
+        icon: '#505F79',
       },
       button: {
         normal: {
           background: '#ffffff',
-          textAndIcon: '#ffffff',
-          outline: '#ffffff',
+          textAndIcon: '#000000bb',
+          outline: '#000000bb',
         },
         active: {
-          background: '#ffffff',
+          background: '#1b1ecf',
           textAndIcon: '#ffffff',
-          outline: '#ffffff',
+          outline: '#1b1ecf',
         },
       },
       addOption: {
         label: {
-          hot: '#ffffff',
-          new: '#ffffff',
-          soldOut: '#ffffff',
+          hot: '#f10000',
+          new: '#f1ff0c',
+          soldOut: '#000527',
         },
       },
     };

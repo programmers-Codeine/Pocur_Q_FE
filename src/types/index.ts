@@ -92,54 +92,22 @@ export type SetDesignData = {
   id?: string;
   name: string;
   designImage: string | null;
-  background: string | null;
-  bigText: string | null;
-  smallText: string | null;
-  box: string | null;
-  boxBorder: string | null;
-  icon: string | null;
-  buttonBackground: string | null;
-  buttonText: string | null;
-  buttonBorder: string | null;
-  buttonActiveBackground: string | null;
-  buttonActiveText: string | null;
-  buttonActiveBorder: string | null;
-  labelHot: string | null;
-  labelNew: string | null;
-  labelSoldOut: string | null;
+  background: string;
+  bigText: string;
+  smallText: string;
+  box: string;
+  boxBorder: string;
+  icon: string;
+  buttonBackground: string;
+  buttonText: string;
+  buttonBorder: string;
+  buttonActiveBackground: string;
+  buttonActiveText: string;
+  buttonActiveBorder: string;
+  labelHot: string;
+  labelNew: string;
+  labelSoldOut: string;
 };
-
-// designName: '',
-//     designImage: '',
-//     theme: {
-//       all: {
-//         background: '#ffffff',
-//         largeText: '#ffffff',
-//         smallText: '#ffffff',
-//         box: '#ffffff',
-//         boxOutline: '#ffffff',
-//         icon: '#ffffff',
-//       },
-//       button: {
-//         normal: {
-//           background: '#ffffff',
-//           textAndIcon: '#ffffff',
-//           outline: '#ffffff',
-//         },
-//         active: {
-//           background: '#ffffff',
-//           textAndIcon: '#ffffff',
-//           outline: '#ffffff',
-//         },
-//       },
-//       addOption: {
-//         label: {
-//           hot: '#ffffff',
-//           new: '#ffffff',
-//           soldOut: '#ffffff',
-//         },
-//       },
-//     },
 
 export type SetMenuData = {
   id?: string;

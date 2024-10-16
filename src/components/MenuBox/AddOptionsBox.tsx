@@ -37,7 +37,7 @@ export default function AddOptionsBox({
               />
             </div>
             <Trash
-              className="cursor-pointer"
+              className="cursor-pointer fill-d900"
               width="20"
               height="20"
               onClick={() => onDeleteOptions(id)}

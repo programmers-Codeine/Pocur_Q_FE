@@ -21,7 +21,6 @@ interface CustomerMenuCardProps {
 export default function CustomerMenuCard({ menu, theme, onOpenMenuDetail }: CustomerMenuCardProps) {
   const { menuName, menuDetail, price, menuImg } = menu;
 
-  console.log(theme);
   return (
     <div
       className={clsx(
