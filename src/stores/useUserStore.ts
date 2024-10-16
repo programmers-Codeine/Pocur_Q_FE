@@ -12,8 +12,13 @@ const useUserStore = create<userState>(set => ({
   userInfo: {
     id: null,
   },
-  loginFirst: true,
-  setLoginFirst: isFirstLogin => set(() => ({ loginFirst: isFirstLogin })),
+  loginFirst: localStorage.getItem('loginFirst') === 'true',
+  setLoginFirst: isFirstLogin =>
+    set(() => {
+      localStorage.setItem('loginFirst', `${isFirstLogin}`);
+
+      return { loginFirst: isFirstLogin };
+    }),
 }));
 
 export default useUserStore;
