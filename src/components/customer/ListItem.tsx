@@ -46,7 +46,9 @@ export default function ListItem({
     <div className="flex w-full flex-col gap-1 rounded-lg border border-d80 px-4 py-2">
       <div className="text-xs font-bold text-d200">{menu.categoryName}</div>
       <div className="text-xl font-bold">{menu.menuName}</div>
-      <div className="text-xs text-d200">{menu.options.join('/')}</div>
+      <div className="text-xs text-d200">
+        {menu.options.map(option => option.optionName).join('/')}
+      </div>
       <div className="text-sm font-bold">{totalPrice.toLocaleString()}원</div>
       {/* 수량 조절 */}
       {variant === 'cart' && (

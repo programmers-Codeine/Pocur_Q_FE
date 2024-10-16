@@ -49,7 +49,7 @@ export default function CustomerDetailMenuPage() {
       menu: {
         categoryName,
         menuName,
-        options: selectedOptions.map(optionNo => options[optionNo].optionName),
+        options: selectedOptions.map(optionNo => options[optionNo]),
         price,
       },
       quantity: menuQuantity,

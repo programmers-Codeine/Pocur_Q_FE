@@ -30,7 +30,7 @@ export type Menu = {
 type ListItemMenu = {
   categoryName: string;
   menuName: string;
-  options: string[]; // TODO Option으로 수정 필요
+  options: Option[]; // TODO Option으로 수정 필요
   price: number;
 };
 
