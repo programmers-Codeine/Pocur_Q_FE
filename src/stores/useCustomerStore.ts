@@ -5,7 +5,7 @@ type Option = {
   id: string;
   menuId: string;
   optionName: string;
-  optionPrice: number;
+  optionPrice: string;
 };
 
 export type Menu = {
