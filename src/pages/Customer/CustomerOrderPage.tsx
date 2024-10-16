@@ -18,6 +18,7 @@ export default function CustomerOrderPage() {
             categoryName: '메인',
             menuName: menu.menuName,
             options: options.map(({ optionName }) => optionName),
+            price: menu.price,
           },
           quantity: count,
           totalPrice,

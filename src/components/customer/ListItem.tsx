@@ -5,13 +5,42 @@ import { ListItem as TListItem } from '@/stores/useCustomerStore';
 interface ListItemProps {
   item: TListItem;
   variant: 'order' | 'cart';
-  onRemoveCartItem?: () => void;
-  onReduceMenuQuantity?: () => void;
-  onIncreaseMenuQuantity?: () => void;
+  onChangeCartItem?: () => void;
+  onRemoveCartItem?: (id: string) => void;
+  onReduceMenuQuantity?: (id: string, quantity: number) => void;
+  onIncreaseMenuQuantity?: (id: string, quantity: number) => void;
 }
 
-export default function ListItem({ item, variant }: ListItemProps) {
-  const { menu, quantity, totalPrice } = item;
+export default function ListItem({
+  item,
+  variant,
+  onChangeCartItem,
+  onRemoveCartItem,
+  onReduceMenuQuantity,
+  onIncreaseMenuQuantity,
+}: ListItemProps) {
+  const { id, menu, quantity, totalPrice } = item;
+
+  const handleChangeItem = () => {
+    if (variant === 'cart' && onChangeCartItem) {
+      onChangeCartItem();
+    }
+  };
+  const handleDeleteItem = () => {
+    if (variant === 'cart' && onRemoveCartItem) {
+      onRemoveCartItem(id);
+    }
+  };
+  const handleIncreaseMenuQuantity = () => {
+    if (variant === 'cart' && onIncreaseMenuQuantity) {
+      onIncreaseMenuQuantity(id, quantity);
+    }
+  };
+  const handleReduceMenuQuantity = () => {
+    if (variant === 'cart' && onReduceMenuQuantity) {
+      onReduceMenuQuantity(id, quantity);
+    }
+  };
 
   return (
     <div className="flex w-full flex-col gap-1 rounded-lg border border-d80 px-4 py-2">
@@ -22,22 +51,18 @@ export default function ListItem({ item, variant }: ListItemProps) {
       {/* 수량 조절 */}
       {variant === 'cart' && (
         <div className="mt-2 flex items-center justify-between text-xl font-bold">
-          <IconButton
-            title="옵션 수정"
-            sizeVariant="small"
-            onClick={() => {
-              // TODO 옵션 수정 로직
-              // 메뉴 상세 페이지로 다시 이동 후 재주문 방식(기존 주문 삭제)
-            }}
-          >
+          <IconButton title="옵션 수정" sizeVariant="small" onClick={handleChangeItem}>
             <Option />
           </IconButton>
           {quantity === 1 ? (
-            <button className="flex h-5 w-5 items-center justify-center">
+            <button className="flex h-5 w-5 items-center justify-center" onClick={handleDeleteItem}>
               <Trash />
             </button>
           ) : (
-            <button className="flex h-6 w-6 items-center justify-center">
+            <button
+              className="flex h-6 w-6 items-center justify-center"
+              onClick={handleReduceMenuQuantity}
+            >
               <SquareMinus />
             </button>
           )}
@@ -45,6 +70,7 @@ export default function ListItem({ item, variant }: ListItemProps) {
           <button
             className="flex h-6 w-6 items-center justify-center disabled:text-d80"
             disabled={quantity === 10}
+            onClick={handleIncreaseMenuQuantity}
           >
             <SquarePlus />
           </button>

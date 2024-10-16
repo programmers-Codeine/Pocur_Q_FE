@@ -30,7 +30,8 @@ export type Menu = {
 type ListItemMenu = {
   categoryName: string;
   menuName: string;
-  options: string[];
+  options: string[]; // TODO Option으로 수정 필요
+  price: number;
 };
 
 export type ListItem = {
@@ -68,9 +69,9 @@ type CustomerState = {
   selectMenu: (menu: Menu) => void;
 
   cart: ListItem[];
-  addCartItem: () => void;
-  changeCartItem: () => void;
-  deleteCartItem: () => void;
+  addCartItem: (newItem: ListItem) => void;
+  changeCartItem: (id: string, newQuantity: number, newItem?: ListItem) => void;
+  deleteCartItem: (itemId: string) => void;
 
   orders: ListItem[];
   setOrders: (newOrders: ListItem[]) => void;
@@ -103,10 +104,47 @@ const useCustomerStore = create<CustomerState>()(
     selectMenu: selectedMenu => {
       set(() => ({ selectedMenu }));
     },
-    cart: [],
-    addCartItem: () => {},
-    changeCartItem: () => {},
-    deleteCartItem: () => {},
+    cart: JSON.parse(localStorage.getItem('cart') ?? '[]'),
+    addCartItem: newItem => {
+      set(state => {
+        const newCart = [...state.cart, newItem];
+
+        localStorage.setItem('cart', JSON.stringify(newCart));
+
+        return { cart: newCart };
+      });
+    },
+    changeCartItem: (itemId, newQuantity = 0, newItem) => {
+      set(state => {
+        const modifiedItem = state.cart.find(({ id }) => id === itemId);
+        let newCart = [
+          ...state.cart.map(item =>
+            item.id === itemId
+              ? {
+                  ...modifiedItem!,
+                  totalPrice: item.menu.price * newQuantity,
+                  quantity: newQuantity,
+                }
+              : item
+          ),
+        ];
+
+        // TODO 옵션 수정 로직 구현
+
+        localStorage.setItem('cart', JSON.stringify(newCart));
+
+        return { cart: newCart };
+      });
+    },
+    deleteCartItem: delItemId => {
+      set(state => {
+        const newCart = state.cart.filter(item => item.id !== delItemId);
+
+        localStorage.setItem('cart', JSON.stringify(newCart));
+
+        return { cart: newCart };
+      });
+    },
     orders: [],
     setOrders: orders => {
       set(() => ({ orders }));

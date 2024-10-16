@@ -3,33 +3,47 @@ import IconButton from '@/components/customer/IconButton';
 import NavHeader from '@/components/customer/NavHeader';
 import useCustomerMenuStore from '@/stores/useCustomerStore';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // TODO 컴포넌트 분리
 export default function CustomerDetailMenuPage() {
+  const navigate = useNavigate();
   const [menuQuantity, setMenuQuantity] = useState(1);
   const [selectedOptions] = useState<number[]>([]);
-  const { selectedMenu } = useCustomerMenuStore();
+  const { selectedMenu, addCartItem } = useCustomerMenuStore();
 
   if (!selectedMenu) {
     // TODO 에러처리하기
     return null;
   }
 
-  const { menuName, menuDetail, menuImg, origin, price, options } = selectedMenu;
+  const { menuName, categoryName, menuDetail, menuImg, origin, price, options } = selectedMenu;
 
   const handleReduceMenuQuantity = () => {
-    // TODO 수량 조절 로직
     setMenuQuantity(prev => prev - 1);
   };
   const handleIncreaseMenuQuantity = () => {
-    // TODO 수량 조절 로직
     setMenuQuantity(prev => prev + 1);
   };
   const handleSelectOption = () => {
     // TODO 옵션 선택 로직
   };
   const handleAddCart = () => {
-    // TODO 장바구니 담기 로직
+    addCartItem({
+      id: new Date().getTime().toString(),
+      menu: {
+        categoryName,
+        menuName,
+        options: selectedOptions.map(optionNo => options[optionNo].optionName),
+        price,
+      },
+      quantity: menuQuantity,
+      totalPrice: options.length
+        ? price * menuQuantity +
+          selectedOptions.reduce((a, optionNo) => a + options[optionNo].optionPrice, 0)
+        : price * menuQuantity,
+    });
+    navigate('/customer/menu');
   };
 
   return (
