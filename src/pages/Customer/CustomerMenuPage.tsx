@@ -56,7 +56,13 @@ export default function CustomerMenuPage() {
 
       setCategories(mappedCategory);
 
-      setMenus(menuData.map(menu => ({ ...menu, categoryName: mappedCategory[menu.categoryId] })));
+      setMenus(
+        menuData.map(menu => ({
+          ...menu,
+          categoryName: mappedCategory[menu.categoryId],
+          options: menu.options.map(option => ({ ...option, isChecked: false })),
+        }))
+      );
     } catch (error) {
       console.log(error);
     }

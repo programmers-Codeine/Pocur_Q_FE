@@ -1,35 +1,87 @@
 import { Basket, NoImage, SquareMinus, SquarePlus } from '@/assets/icons';
 import IconButton from '@/components/customer/IconButton';
 import NavHeader from '@/components/customer/NavHeader';
-import useCustomerMenuStore from '@/stores/useCustomerStore';
-import { useState } from 'react';
+import useCustomerMenuStore, { ListItem as TListItem } from '@/stores/useCustomerStore';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // TODO 컴포넌트 분리
 export default function CustomerDetailMenuPage() {
+  const navigate = useNavigate();
+  const { state }: { state: { title: string; modItem: TListItem } | null } = useLocation();
   const [menuQuantity, setMenuQuantity] = useState(1);
-  const [selectedOptions] = useState<number[]>([]);
-  const { selectedMenu } = useCustomerMenuStore();
+  const { selectedMenu, addCartItem, changeCartItem, selectOption } = useCustomerMenuStore();
+
+  useEffect(() => {
+    if (state) {
+      setMenuQuantity(state.modItem.quantity);
+      state.modItem.menu.options.forEach(({ id, isChecked }) => {
+        if (isChecked) {
+          selectOption(id);
+        }
+      });
+    }
+  }, []);
 
   if (!selectedMenu) {
     // TODO 에러처리하기
     return null;
   }
 
-  const { menuName, menuDetail, menuImg, origin, price, options } = selectedMenu;
+  const { menuName, categoryName, menuDetail, menuImg, origin, price, options } = selectedMenu;
 
+  const handleChangeCartItem = () => {
+    // TODO 옵션 수정 로직
+    // 메뉴 상세 페이지로 다시 이동 후 재주문 방식
+    if (state) {
+      const newItem = {
+        id: state.modItem.id,
+        menu: {
+          categoryName,
+          menuName,
+          options,
+          price,
+        },
+        quantity: menuQuantity,
+        totalPrice:
+          (price +
+            options.reduce(
+              (a, { optionPrice, isChecked }) => (isChecked ? a + optionPrice : a),
+              0
+            )) *
+          menuQuantity,
+      };
+
+      changeCartItem(state.modItem.id, menuQuantity, newItem);
+      navigate(-1);
+    }
+  };
   const handleReduceMenuQuantity = () => {
-    // TODO 수량 조절 로직
     setMenuQuantity(prev => prev - 1);
   };
   const handleIncreaseMenuQuantity = () => {
-    // TODO 수량 조절 로직
     setMenuQuantity(prev => prev + 1);
   };
-  const handleSelectOption = () => {
+  const handleSelectOption = (optionId: string) => {
     // TODO 옵션 선택 로직
+    selectOption(optionId);
   };
   const handleAddCart = () => {
-    // TODO 장바구니 담기 로직
+    addCartItem({
+      id: new Date().getTime().toString(),
+      menu: {
+        categoryName,
+        menuName,
+        options,
+        price,
+      },
+      quantity: menuQuantity,
+      totalPrice:
+        (price +
+          options.reduce((a, { optionPrice, isChecked }) => (isChecked ? a + optionPrice : a), 0)) *
+        menuQuantity,
+    });
+    navigate('/customer/menu');
   };
 
   return (
@@ -52,20 +104,18 @@ export default function CustomerDetailMenuPage() {
       <div className="flex flex-1 flex-col items-center p-2">
         <div className="text-xl font-bold">추가 옵션</div>
         <ul className="w-full text-base font-bold text-d200">
-          {options
-            ?.map(option => ({ ...option, isChecked: false })) // 해당 부분 API 연결 시 해당 부분으로 이동
-            .map(({ id, optionName, optionPrice, isChecked }) => (
-              <li key={id} className="flex justify-between py-2">
-                <input
-                  type="checkbox"
-                  className="w-4"
-                  checked={isChecked}
-                  onChange={() => handleSelectOption()}
-                />
-                <div>{optionName}</div>
-                <div>+{optionPrice.toLocaleString()}원</div>
-              </li>
-            ))}
+          {options.map(({ id, optionName, optionPrice, isChecked }) => (
+            <li key={id} className="flex justify-between py-2">
+              <input
+                type="checkbox"
+                className="w-4"
+                checked={isChecked}
+                onChange={() => handleSelectOption(id)}
+              />
+              <div>{optionName}</div>
+              <div className="min-w-[70px] text-end">+{optionPrice.toLocaleString()}원</div>
+            </li>
+          ))}
         </ul>
       </div>
       {/* 수량 조절 */}
@@ -90,17 +140,23 @@ export default function CustomerDetailMenuPage() {
       <div className="flex w-full justify-end gap-1 p-2 text-xl font-bold">
         주문 금액:
         <div className="w-24 text-end">
-          {(options.length
-            ? price * menuQuantity +
-              selectedOptions.reduce((a, optionNo) => a + options[optionNo].optionPrice, 0)
-            : price * menuQuantity
+          {(
+            (price +
+              options.reduce(
+                (a, { optionPrice, isChecked }) => (isChecked ? a + optionPrice : a),
+                0
+              )) *
+            menuQuantity
           ).toLocaleString()}
           원
         </div>
       </div>
       {/* 주문 버튼 */}
       <div className="self-center py-2">
-        <IconButton title="장바구니에 담기" onClick={handleAddCart}>
+        <IconButton
+          title={state ? state.title : '장바구니 담기'}
+          onClick={state ? handleChangeCartItem : handleAddCart}
+        >
           <Basket />
         </IconButton>
       </div>
