@@ -33,7 +33,7 @@ export type InputMenuFormTypes = {
   optionsInput: AddOptionsTypes[];
 };
 
-type DesignThemeTypes = {
+export type DesignThemeTypes = {
   all: {
     background: string;
     largeText: string;
