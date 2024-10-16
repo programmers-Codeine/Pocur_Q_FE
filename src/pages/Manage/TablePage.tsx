@@ -26,7 +26,7 @@ type WarnModalData = {
 
 // TODO 함수명 통일하기
 export default function TablePage() {
-  const [currentTab, setCurrentTab] = useState('table');
+  const [currentTab, setCurrentTab] = useState(localStorage.getItem('currentTab') ?? 'table');
   const [openDetailModal, setOpenDetailModal] = useState(false);
   const [openWarnModal, setOpenWarnModal] = useState(false);
   const [warnModalData, setWarnModalData] = useState<WarnModalData>();
@@ -51,6 +51,7 @@ export default function TablePage() {
     addTable();
   };
   const handleTabChange = (id: string) => {
+    localStorage.setItem('currentTab', `${id}`);
     setCurrentTab(id);
   };
   const handleDetailModalOpen = (table: TTable) => {
