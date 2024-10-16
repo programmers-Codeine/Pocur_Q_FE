@@ -9,6 +9,8 @@ interface CustomerMenuCardProps {
 }
 
 export default function CustomerMenuCard({ menu, onOpenMenuDetail }: CustomerMenuCardProps) {
+  const { menuName, menuDetail, price } = menu;
+
   return (
     <div
       className={clsx(
@@ -22,9 +24,9 @@ export default function CustomerMenuCard({ menu, onOpenMenuDetail }: CustomerMen
         <NoImage />
       </div>
       <div className="flex flex-1 flex-col justify-evenly gap-1 px-1">
-        <div className="text-base font-bold">{menu.title}</div>
-        <div className="text-xs text-d200">{menu.description}</div>
-        <div className="text-right text-sm font-bold">{menu.price.toLocaleString()}원</div>
+        <div className="text-base font-bold">{menuName}</div>
+        <div className="text-xs text-d200">{menuDetail}</div>
+        <div className="text-right text-sm font-bold">{price.toLocaleString()}원</div>
       </div>
     </div>
   );
