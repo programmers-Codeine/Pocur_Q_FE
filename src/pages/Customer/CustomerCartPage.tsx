@@ -1,22 +1,27 @@
+import { getCategoryData, getMenuData } from '@/apis/customer.api';
+
 import { Card } from '@/assets/icons';
 import IconButton from '@/components/customer/IconButton';
 import ListItem from '@/components/customer/ListItem';
 import NavHeader from '@/components/customer/NavHeader';
 import useCustomerStore, { ListItem as TListItem } from '@/stores/useCustomerStore';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function CustomerCartPage() {
   const navigate = useNavigate();
-  const { menus, selectMenu, cart, changeCartItem, deleteCartItem } = useCustomerStore();
+  const { menus, setMenus, selectMenu, cart, changeCartItem, deleteCartItem } = useCustomerStore();
 
   const handleChangeCartItem = (item: TListItem) => {
     const selectedMenu = menus.find(menu => menu.menuName === item.menu.menuName);
 
     if (selectedMenu) {
-      selectMenu(selectedMenu);
+      selectMenu({ ...selectedMenu, options: item.menu.options });
       navigate('/customer/detail-menu', {
         state: { title: '주문 수정하기', modItem: item },
       });
+    } else {
+      alert('데이터가 없습니다.');
     }
   };
   const handleRemoveCartItem = (id: string) => {
@@ -28,6 +33,36 @@ export default function CustomerCartPage() {
   const handleIncreaseMenuQuantity = (id: string, quantity: number) => {
     changeCartItem(id, quantity + 1);
   };
+  const handleFetchMenusData = async () => {
+    const menuData = await getMenuData();
+    const categoryData = await getCategoryData();
+    const mappedCategory: { [key: string]: string } = {};
+
+    categoryData
+      // 메인요리 카테고리가 항상 맨 앞으로 오고 그 이후에는 생성된 시간으로 오름차순 정렬
+      .sort((a, b) =>
+        a.categoryName === '메인요리'
+          ? -1
+          : b.categoryName === '메인요리'
+            ? 1
+            : new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      )
+      .forEach(({ id, categoryName }) => {
+        mappedCategory[id] = categoryName;
+      });
+
+    setMenus(
+      menuData.map(menu => ({
+        ...menu,
+        categoryName: mappedCategory[menu.categoryId],
+        options: menu.options.map(option => ({ ...option, isChecked: false })),
+      }))
+    );
+  };
+
+  useEffect(() => {
+    handleFetchMenusData();
+  }, []);
 
   return (
     <div className="flex h-full flex-col overflow-y-scroll">

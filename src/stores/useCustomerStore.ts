@@ -1,11 +1,11 @@
 import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
 
 type Option = {
   id: string;
   menuId: string;
   optionName: string;
   optionPrice: number;
+  isChecked: boolean;
 };
 
 export type Menu = {
@@ -67,6 +67,7 @@ type CustomerState = {
 
   setMenus: (newMenus: Menu[]) => void;
   selectMenu: (menu: Menu) => void;
+  selectOption: (optionId: string) => void;
 
   cart: ListItem[];
   addCartItem: (newItem: ListItem) => void;
@@ -77,79 +78,107 @@ type CustomerState = {
   setOrders: (newOrders: ListItem[]) => void;
 };
 
-const useCustomerStore = create<CustomerState>()(
-  devtools(set => ({
-    customerTableNo: Number(localStorage.getItem('tableNo') ?? 0),
-    setCustomerTableNo: customerTableNo => {
-      localStorage.setItem('tableNo', customerTableNo.toString());
-      set(() => ({ customerTableNo }));
-    },
-    restaurantInfo: null,
-    setRestaurantInfo: restaurantInfo => {
-      set(() => ({ restaurantInfo }));
-    },
-    categories: {},
-    selectedCategory: '',
-    setCategories: categories => {
-      set(() => ({ categories }));
-    },
-    changeCategory: selectedCategory => {
-      set(() => ({ selectedCategory }));
-    },
-    menus: [],
-    selectedMenu: null,
-    setMenus: menus => {
-      set(() => ({ menus }));
-    },
-    selectMenu: selectedMenu => {
-      set(() => ({ selectedMenu }));
-    },
-    cart: JSON.parse(localStorage.getItem('cart') ?? '[]'),
-    addCartItem: newItem => {
-      set(state => {
-        const newCart = [...state.cart, newItem];
-
-        localStorage.setItem('cart', JSON.stringify(newCart));
-
-        return { cart: newCart };
-      });
-    },
-    changeCartItem: (itemId, newQuantity = 0, newItem) => {
-      set(state => {
-        const modifiedItem = state.cart.find(({ id }) => id === itemId);
-        let newCart = [
-          ...state.cart.map(item =>
-            item.id === itemId
-              ? {
-                  ...modifiedItem!,
-                  totalPrice: item.menu.price * newQuantity,
-                  quantity: newQuantity,
-                }
-              : item
+const useCustomerStore = create<CustomerState>()(set => ({
+  customerTableNo: Number(localStorage.getItem('tableNo') ?? 0),
+  setCustomerTableNo: customerTableNo => {
+    localStorage.setItem('tableNo', customerTableNo.toString());
+    set(() => ({ customerTableNo }));
+  },
+  restaurantInfo: null,
+  setRestaurantInfo: restaurantInfo => {
+    set(() => ({ restaurantInfo }));
+  },
+  categories: {},
+  selectedCategory: '',
+  setCategories: categories => {
+    set(() => ({ categories }));
+  },
+  changeCategory: selectedCategory => {
+    set(() => ({ selectedCategory }));
+  },
+  menus: JSON.parse(localStorage.getItem('menus') ?? '[]'),
+  selectedMenu: JSON.parse(localStorage.getItem('selectMenu') ?? 'null'),
+  setMenus: menus => {
+    set(() => ({ menus }));
+  },
+  selectMenu: selectedMenu => {
+    localStorage.setItem('selectMenu', JSON.stringify(selectedMenu));
+    set(() => ({ selectedMenu }));
+  },
+  selectOption: optionId => {
+    set(state => {
+      if (state.selectedMenu) {
+        const newSelectedMenu = {
+          ...state.selectedMenu,
+          options: state.selectedMenu.options.map(option =>
+            option.id === optionId ? { ...option, isChecked: !option.isChecked } : option
           ),
-        ];
+        };
 
-        // TODO 옵션 수정 로직 구현
+        localStorage.setItem('selectMenu', JSON.stringify(newSelectedMenu));
 
-        localStorage.setItem('cart', JSON.stringify(newCart));
+        return {
+          selectedMenu: newSelectedMenu,
+        };
+      }
 
-        return { cart: newCart };
-      });
-    },
-    deleteCartItem: delItemId => {
-      set(state => {
-        const newCart = state.cart.filter(item => item.id !== delItemId);
+      localStorage.setItem('selectMenu', 'null');
 
-        localStorage.setItem('cart', JSON.stringify(newCart));
+      return { selectedMenu: null };
+    });
+  },
+  cart: JSON.parse(localStorage.getItem('cart') ?? '[]'),
+  addCartItem: newItem => {
+    set(state => {
+      const newCart = [...state.cart, newItem];
 
-        return { cart: newCart };
-      });
-    },
-    orders: [],
-    setOrders: orders => {
-      set(() => ({ orders }));
-    },
-  }))
-);
+      localStorage.setItem('cart', JSON.stringify(newCart));
+
+      return { cart: newCart };
+    });
+  },
+  changeCartItem: (itemId, newQuantity = 0, newItem) => {
+    set(state => {
+      const modifiedItem = state.cart.find(({ id }) => id === itemId);
+      let newCart = state.cart.map(item =>
+        item.id === itemId
+          ? {
+              ...modifiedItem!,
+              totalPrice:
+                (item.menu.price +
+                  item.menu.options.reduce(
+                    (a, { optionPrice, isChecked }) => (isChecked ? a + optionPrice : a),
+                    0
+                  )) *
+                newQuantity,
+              quantity: newQuantity,
+            }
+          : item
+      );
+
+      // TODO 옵션 수정 로직 구현
+      if (newItem) {
+        newCart = state.cart.map(item => (item.id === itemId ? newItem : item));
+      }
+
+      localStorage.setItem('cart', JSON.stringify(newCart));
+
+      return { cart: newCart };
+    });
+  },
+  deleteCartItem: delItemId => {
+    set(state => {
+      const newCart = state.cart.filter(item => item.id !== delItemId);
+
+      localStorage.setItem('cart', JSON.stringify(newCart));
+
+      return { cart: newCart };
+    });
+  },
+  orders: [],
+  setOrders: orders => {
+    set(() => ({ orders }));
+  },
+}));
 
 export default useCustomerStore;

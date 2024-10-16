@@ -20,6 +20,7 @@ export default function CustomerOrderPage() {
             options: options.map(option => ({
               ...option,
               menuId: menu.id,
+              isChecked: false,
             })),
             price: menu.price,
           },

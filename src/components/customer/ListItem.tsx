@@ -47,7 +47,10 @@ export default function ListItem({
       <div className="text-xs font-bold text-d200">{menu.categoryName}</div>
       <div className="text-xl font-bold">{menu.menuName}</div>
       <div className="text-xs text-d200">
-        {menu.options.map(option => option.optionName).join('/')}
+        {menu.options
+          .filter(({ isChecked }) => isChecked)
+          .map(({ optionName }) => optionName)
+          .join('/')}
       </div>
       <div className="text-sm font-bold">{totalPrice.toLocaleString()}원</div>
       {/* 수량 조절 */}
