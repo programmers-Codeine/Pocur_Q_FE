@@ -63,8 +63,17 @@ export default function RealTimeMenuPage() {
           </Input>
         </div>
         <div className="flex flex-wrap gap-14">
-          {menus.map(menu => (
-            <MenuCard menu={menu} />
+          {menus
+            // 메뉴 검색 필터링
+            .filter(({ title, category }) => {
+              if (search === '') {
+                return true;
+              } else {
+                return title.includes(search) || category.includes(search);
+              }
+            })
+            .map(menu => (
+              <MenuCard key={menu.id} menu={menu} onSelectLabel={handleSelectLabel} />
             ))}
         </div>
       </div>
