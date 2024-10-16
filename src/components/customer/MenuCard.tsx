@@ -9,7 +9,7 @@ interface CustomerMenuCardProps {
 }
 
 export default function CustomerMenuCard({ menu, onOpenMenuDetail }: CustomerMenuCardProps) {
-  const { menuName, menuDetail, price } = menu;
+  const { menuName, menuDetail, price, menuImg } = menu;
 
   return (
     <div
@@ -21,7 +21,7 @@ export default function CustomerMenuCard({ menu, onOpenMenuDetail }: CustomerMen
     >
       <div className="relative flex h-20 w-20 items-center justify-center">
         <MenuOption optType={menu.hot ? 'hot' : menu.new ? 'new' : menu.soldOut ? 'soldOut' : ''} />
-        <NoImage />
+        {menuImg === '' ? <NoImage /> : <img src={menuImg} alt="메뉴 이미지" />}
       </div>
       <div className="flex flex-1 flex-col justify-evenly gap-1 px-1">
         <div className="text-base font-bold">{menuName}</div>

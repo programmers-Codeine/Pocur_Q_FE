@@ -15,7 +15,7 @@ export default function CustomerDetailMenuPage() {
     return null;
   }
 
-  const { menuName, menuDetail, origin, price, options } = selectedMenu;
+  const { menuName, menuDetail, menuImg, origin, price, options } = selectedMenu;
 
   const handleReduceMenuQuantity = () => {
     // TODO 수량 조절 로직
@@ -38,9 +38,13 @@ export default function CustomerDetailMenuPage() {
       <NavHeader>{menuName}</NavHeader>
       {/* 메뉴 설명 */}
       <div className="flex flex-col border-b border-d50 px-2 py-6">
+        {menuImg === '' ? (
         <div className="mb-4 flex h-40 w-[80%] items-center justify-center self-center bg-d30">
           <NoImage />
         </div>
+        ) : (
+          <img className="h-40 w-[80%] self-center" src={menuImg} alt="메뉴 이미지" />
+        )}
         <div className="text-base text-d200">{menuDetail}</div>
         <div className="text-base text-d200">{origin}</div>
       </div>
