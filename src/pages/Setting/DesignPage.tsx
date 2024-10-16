@@ -285,7 +285,7 @@ export default function DesignPage() {
             onSaveDesign={handleSaveDesign}
             onAddDesignImage={handleAddDesignImage}
           />
-          <DesignPreviewBox onNavigate={handleNavigate} />
+          <DesignPreviewBox onNavigate={handleNavigate} theme={inputDesignForm.theme} />
           {isPaletteVisible && <ColorPalettePicker changeColor={handleChangeColor} />}
         </div>
       )}
