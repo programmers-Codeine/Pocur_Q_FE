@@ -1,9 +1,10 @@
 import Input from '@/components/common/Input/Input';
 import Button from '@/components/common/Button/Button';
 import { NoImage, ToggleOff, ToggleOn } from '@/assets/icons';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useState, useEffect } from 'react';
 import { InputEtcFormTypes } from '@/types';
 import Slider from '@/components/common/Slider/Slider';
+import { getRestaurant, saveRestaurants, setLogoImage } from '@/apis/restaurants.api';
 
 export default function EtcPage() {
   const [inputEtcForm, setInputEtcForm] = useState<InputEtcFormTypes>({
@@ -18,6 +19,22 @@ export default function EtcPage() {
       prepayment: false,
     },
   });
+
+  useEffect(() => {
+    getRestaurant().then(data => {
+      setInputEtcForm(prev => ({
+        ...prev,
+        tableCount: data.defaultTableCount || 0,
+        shopName: data.name || '',
+        shopLogo: data.logo || '',
+        comment: {
+          ...prev.comment,
+          introduce: data.introduce || '',
+          success: data.comment || '',
+        },
+      }));
+    });
+  }, []);
 
   const onSetInputEtcForm = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -49,6 +66,25 @@ export default function EtcPage() {
     }));
   };
 
+  const handleSaveEtc = () => {
+    const { tableCount, shopName, shopLogo, comment } = inputEtcForm;
+    saveRestaurants({
+      name: shopName,
+      defaultTableCount: Number(tableCount),
+      logo: shopLogo,
+      introduce: comment.introduce,
+      comment: comment.success,
+    }).then(res => console.log(res));
+  };
+
+  const handleLogoUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] as File;
+
+    setLogoImage(file).then(res => {
+      setInputEtcForm(prev => ({ ...prev, shopLogo: res.data.imageUrl }));
+    });
+  };
+
   return (
     <div className="flex h-full">
       <div className="flex h-full w-[50%] flex-col justify-between">
@@ -77,10 +113,29 @@ export default function EtcPage() {
           </div>
           <div>
             <label className="text-em font-semibold">가게 로고 설정</label>
-            <div className="my-2 flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed py-4">
-              <NoImage />
-              <p className="text-d200">이미지 업로드</p>
-            </div>
+            <label className="relative my-2 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-4 hover:bg-d30">
+              <input
+                id="logoUpload"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleLogoUpload}
+              />
+              <div className="relative flex h-[120px] w-full items-center justify-center">
+                {inputEtcForm.shopLogo ? (
+                  <img
+                    src={inputEtcForm.shopLogo}
+                    alt="Menu Preview"
+                    className="absolute left-0 top-0 h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex flex-col items-center justify-center">
+                    <NoImage width="64" height="64" className="z-10" />
+                    <p className="text-d200">이미지 업로드</p>
+                  </div>
+                )}
+              </div>
+            </label>
             <div className="w-full text-base text-d200">
               <p>가게 로고를 설정할 수 있어요.</p>
               <p>설정하지 않으면 기본 아이콘이 사용돼요.</p>
@@ -115,7 +170,7 @@ export default function EtcPage() {
               <p className="text-em font-semibold">소비자 선결제 기능</p>
               <p className="text-base text-d200">소비자가 결제 해야 주문이 들어와요.</p>
             </div>
-            {inputEtcForm.tools.prepayment ? (
+            {inputEtcForm.tools?.prepayment ? (
               <ToggleOn
                 width="32"
                 height="32"
@@ -133,13 +188,19 @@ export default function EtcPage() {
           </div>
         </div>
         <div className="flex items-center justify-center">
-          <Button title="저장하기" type="others" />
+          <Button title="저장하기" type="others" onClick={handleSaveEtc} />
         </div>
       </div>
       <div className="flex h-full w-[50%] flex-col items-center gap-1">
         <div className="flex min-h-[36px] gap-2"></div>
-        <div className="bg-deviceFrame relative aspect-[412/912] w-[50%] bg-contain bg-center bg-no-repeat">
-          <div className="absolute inset-0 px-[2%] py-[15%]"></div>
+        <div className="relative aspect-[412/912] w-[50%] bg-deviceFrame bg-contain bg-center bg-no-repeat">
+          <div className="absolute inset-0 mx-[2%] my-[15%]">
+            <iframe
+              className="h-full w-full"
+              title="customer-page"
+              src={`https://localhost:5173/customer`}
+            />
+          </div>
         </div>
       </div>
     </div>

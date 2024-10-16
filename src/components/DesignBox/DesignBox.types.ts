@@ -1,4 +1,4 @@
-import { InputDesignFormTypes, SetDesignData } from '@/types';
+import { DesignThemeTypes, InputDesignFormTypes, SetDesignData } from '@/types';
 import { ChangeEvent, MouseEvent } from 'react';
 
 export type DesignHomeBoxProps = {
@@ -18,4 +18,5 @@ export type DesignInputBoxProps = {
 
 export type DesignPreviewBoxProps = {
   onNavigate: (id: number) => void;
+  theme: DesignThemeTypes;
 };

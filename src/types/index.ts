@@ -33,7 +33,7 @@ export type InputMenuFormTypes = {
   optionsInput: AddOptionsTypes[];
 };
 
-type DesignThemeTypes = {
+export type DesignThemeTypes = {
   all: {
     background: string;
     largeText: string;
@@ -85,11 +85,13 @@ export type InputEtcFormTypes = {
 export type SetDesignPresetData = {
   id: string;
   name: string;
+  designImage: string;
 };
 
 export type SetDesignData = {
   id?: string;
   name: string;
+  designImage: string | null;
   background: string | null;
   bigText: string | null;
   smallText: string | null;
@@ -104,7 +106,7 @@ export type SetDesignData = {
   buttonActiveBorder: string | null;
   labelHot: string | null;
   labelNew: string | null;
-  labelSoloOut: string | null;
+  labelSoldOut: string | null;
 };
 
 // designName: '',
@@ -155,4 +157,14 @@ export type SetOptionsData = {
   id?: string;
   optionName: string;
   optionPrice: number;
+};
+
+export type SetEtcData = {
+  id?: string;
+  name: string;
+  defaultTableCount: number;
+  logo: string | null;
+  comment: string | null;
+  introduce: string | null;
+  totalTableCount?: number;
 };

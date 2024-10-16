@@ -1,4 +1,4 @@
-import { PencilQuestion } from '@/assets/icons';
+import { NoImage, PencilQuestion } from '@/assets/icons';
 import { DesignCardProps } from './DesignCard.types';
 
 export default function DesignCard({
@@ -36,7 +36,11 @@ export default function DesignCard({
       ) : (
         <>
           <div className="flex h-full w-full items-center justify-center border bg-d10">
-            <img src={image} alt="design preview" />
+            {image ? (
+              <img src={image} alt="design preview" className="h-40 w-full object-cover" />
+            ) : (
+              <NoImage width="96" height="96" />
+            )}
           </div>
           <div className={className.getState()[1]}>
             <p className="text-2xl font-bold">{title}</p>
