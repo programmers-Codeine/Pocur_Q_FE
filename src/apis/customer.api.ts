@@ -43,19 +43,19 @@ type ResponseMenu = {
   menuName: string;
   price: number;
   menuDetail: string;
-  menuImg: string | null;
-  origin: string | null;
-  isActive: boolean; //라벨  defaul;
-  soldOut: boolean; //라벨   defaul;
-  hot: boolean; //라벨  defaul;
-  new: boolean; //라벨  defaul;
-  isRunningOut: boolean; //라벨   defaul;
+  menuImg: string;
+  origin: string;
+  isActive: boolean;
+  soldOut: boolean;
+  hot: boolean;
+  new: boolean;
+  isRunningOut: boolean;
   created_at: string;
   updated_at: string;
   options: ResponseOption[];
 };
 
-type ResponseOption = { id: string; menuId: string; optionName: string; optionPrice: string };
+type ResponseOption = { id: string; menuId: string; optionName: string; optionPrice: number };
 
 export const getMenuData = async () => {
   const response = await axiosClient.get<ResponseMenu[]>('/menus');
@@ -75,4 +75,3 @@ export const getCategoryData = async () => {
 
   return response.data;
 };
-

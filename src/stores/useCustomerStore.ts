@@ -15,8 +15,8 @@ export type Menu = {
   menuName: string;
   price: number;
   menuDetail: string;
-  menuImg: string | null;
-  origin: string | null;
+  menuImg: string;
+  origin: string;
   isActive: boolean;
   soldOut: boolean;
   hot: boolean;
