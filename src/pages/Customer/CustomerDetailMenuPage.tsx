@@ -39,9 +39,9 @@ export default function CustomerDetailMenuPage() {
       {/* 메뉴 설명 */}
       <div className="flex flex-col border-b border-d50 px-2 py-6">
         {menuImg === '' ? (
-        <div className="mb-4 flex h-40 w-[80%] items-center justify-center self-center bg-d30">
-          <NoImage />
-        </div>
+          <div className="mb-4 flex h-40 w-[80%] items-center justify-center self-center bg-d30">
+            <NoImage />
+          </div>
         ) : (
           <img className="h-40 w-[80%] self-center" src={menuImg} alt="메뉴 이미지" />
         )}
@@ -90,7 +90,7 @@ export default function CustomerDetailMenuPage() {
       <div className="flex w-full justify-end gap-1 p-2 text-xl font-bold">
         주문 금액:
         <div className="w-24 text-end">
-          {(options
+          {(options.length
             ? price * menuQuantity +
               selectedOptions.reduce((a, optionNo) => a + options[optionNo].optionPrice, 0)
             : price * menuQuantity
