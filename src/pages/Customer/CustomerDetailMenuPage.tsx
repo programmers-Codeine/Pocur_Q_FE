@@ -15,7 +15,7 @@ export default function CustomerDetailMenuPage() {
     return null;
   }
 
-  const { title, description, origin, price, options } = selectedMenu;
+  const { menuName, menuDetail, menuImg, origin, price, options } = selectedMenu;
 
   const handleReduceMenuQuantity = () => {
     // TODO 수량 조절 로직
@@ -35,13 +35,17 @@ export default function CustomerDetailMenuPage() {
   return (
     <div className="flex h-full flex-col overflow-y-scroll">
       {/* 헤더 */}
-      <NavHeader>{title}</NavHeader>
+      <NavHeader>{menuName}</NavHeader>
       {/* 메뉴 설명 */}
       <div className="flex flex-col border-b border-d50 px-2 py-6">
-        <div className="mb-4 flex h-40 w-[80%] items-center justify-center self-center bg-d30">
-          <NoImage />
-        </div>
-        <div className="text-base text-d200">{description}</div>
+        {menuImg === '' ? (
+          <div className="mb-4 flex h-40 w-[80%] items-center justify-center self-center bg-d30">
+            <NoImage />
+          </div>
+        ) : (
+          <img className="h-40 w-[80%] self-center" src={menuImg} alt="메뉴 이미지" />
+        )}
+        <div className="text-base text-d200">{menuDetail}</div>
         <div className="text-base text-d200">{origin}</div>
       </div>
       {/* 메뉴 옵션 */}
@@ -86,7 +90,7 @@ export default function CustomerDetailMenuPage() {
       <div className="flex w-full justify-end gap-1 p-2 text-xl font-bold">
         주문 금액:
         <div className="w-24 text-end">
-          {(options
+          {(options.length
             ? price * menuQuantity +
               selectedOptions.reduce((a, optionNo) => a + options[optionNo].optionPrice, 0)
             : price * menuQuantity

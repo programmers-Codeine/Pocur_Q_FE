@@ -1,41 +1,70 @@
 import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 
 type Option = {
-  id: number;
+  id: string;
+  menuId: string;
   optionName: string;
   optionPrice: number;
 };
 
 export type Menu = {
-  id: number;
-  title: string;
-  description: string;
-  category: number;
+  id: string;
+  categoryId: string;
+  categoryName: string;
+  menuName: string;
   price: number;
+  menuDetail: string;
+  menuImg: string;
+  origin: string;
+  isActive: boolean;
+  soldOut: boolean;
   hot: boolean;
   new: boolean;
-  soldOut: boolean;
-  origin: string;
-  image?: string;
-  options?: Option[];
+  isRunningOut: boolean;
+  created_at: string;
+  updated_at: string;
+  options: Option[];
 };
 
-// TODO menu 관리자 작업 후 타입 재정의 필요
+type ListItemMenu = {
+  categoryName: string;
+  menuName: string;
+  options: string[];
+};
+
 export type ListItem = {
   id: string;
-  menu: Menu;
+  menu: ListItemMenu;
   quantity: number;
+  totalPrice: number;
+};
+
+type RestaurantInfo = { name: string; logo: string; introduce: string };
+
+type Category = {
+  [key: string]: string;
 };
 
 type CustomerState = {
-  categories: { id: number; title: string }[];
-  selectedCategory: number;
+  customerTableNo: number;
 
-  changeCategory: (categoryId: number) => void;
+  setCustomerTableNo: (tableNo: number) => void;
+
+  restaurantInfo: RestaurantInfo | null;
+
+  setRestaurantInfo: (newInfo: RestaurantInfo) => void;
+
+  categories: Category;
+  selectedCategory: string;
+
+  setCategories: (newCategories: Category) => void;
+  changeCategory: (category: string) => void;
 
   menus: Menu[];
   selectedMenu: Menu | null;
 
+  setMenus: (newMenus: Menu[]) => void;
   selectMenu: (menu: Menu) => void;
 
   cart: ListItem[];
@@ -44,101 +73,45 @@ type CustomerState = {
   deleteCartItem: () => void;
 
   orders: ListItem[];
+  setOrders: (newOrders: ListItem[]) => void;
 };
 
-const useCustomerStore = create<CustomerState>(set => ({
-  categories: [
-    { id: 1, title: '메인메뉴' },
-    { id: 2, title: '한정메뉴' },
-    { id: 3, title: '사이드메뉴' },
-    { id: 4, title: '주류' },
-    { id: 5, title: '기타' },
-  ],
-  selectedCategory: 0,
-  changeCategory: () => {},
-  menus: [
-    {
-      id: 1,
-      title: '샘플 1',
-      description: '샘플 1 내용',
-      category: 1,
-      price: 5000,
-      hot: false,
-      new: false,
-      soldOut: false,
-      origin: '돼지고기: 국내산, 배추김치: 국내산',
-      options: [
-        {
-          id: 1,
-          optionName: '곱빼기',
-          optionPrice: 1000,
-        },
-      ],
+const useCustomerStore = create<CustomerState>()(
+  devtools(set => ({
+    customerTableNo: Number(localStorage.getItem('tableNo') ?? 0),
+    setCustomerTableNo: customerTableNo => {
+      localStorage.setItem('tableNo', customerTableNo.toString());
+      set(() => ({ customerTableNo }));
     },
-    {
-      id: 2,
-      title: '샘플 2',
-      description: '샘플 2 내용',
-      category: 2,
-      price: 5000,
-      hot: false,
-      new: false,
-      soldOut: false,
-      origin: '돼지고기: 국내산, 배추김치: 국내산',
-      options: [
-        {
-          id: 2,
-          optionName: '곱빼기',
-          optionPrice: 2000,
-        },
-      ],
+    restaurantInfo: null,
+    setRestaurantInfo: restaurantInfo => {
+      set(() => ({ restaurantInfo }));
     },
-    {
-      id: 3,
-      title: '샘플 3',
-      description: '샘플 3 내용',
-      category: 3,
-      price: 5000,
-      hot: false,
-      new: false,
-      soldOut: false,
-      origin: '돼지고기: 국내산, 배추김치: 국내산',
-      options: [
-        {
-          id: 3,
-          optionName: '곱빼기',
-          optionPrice: 3000,
-        },
-      ],
+    categories: {},
+    selectedCategory: '',
+    setCategories: categories => {
+      set(() => ({ categories }));
     },
-    {
-      id: 4,
-      title: '샘플 4',
-      description: '샘플 4 내용',
-      category: 4,
-      price: 5000,
-      hot: false,
-      new: false,
-      soldOut: false,
-      origin: '돼지고기: 국내산, 배추김치: 국내산',
-      options: [
-        {
-          id: 4,
-          optionName: '곱빼기',
-          optionPrice: 4000,
-        },
-      ],
+    changeCategory: selectedCategory => {
+      set(() => ({ selectedCategory }));
     },
-  ],
-  selectedMenu: null,
-  selectMenu: selectedMenu => {
-    set(() => ({ selectedMenu }));
-  },
-  cart: [],
-  addCartItem: () => {},
-  changeCartItem: () => {},
-  deleteCartItem: () => {},
-  orders: [],
-}));
+    menus: [],
+    selectedMenu: null,
+    setMenus: menus => {
+      set(() => ({ menus }));
+    },
+    selectMenu: selectedMenu => {
+      set(() => ({ selectedMenu }));
+    },
+    cart: [],
+    addCartItem: () => {},
+    changeCartItem: () => {},
+    deleteCartItem: () => {},
+    orders: [],
+    setOrders: orders => {
+      set(() => ({ orders }));
+    },
+  }))
+);
 
 export default useCustomerStore;
