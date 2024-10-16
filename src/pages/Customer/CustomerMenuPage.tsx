@@ -12,6 +12,7 @@ import {
 import useCustomerStore, { Menu } from '@/stores/useCustomerStore';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import useThemeStore from '@/stores/useThemeStore';
 
 export default function CustomerMenuPage() {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ export default function CustomerMenuPage() {
     setCategories,
     setMenus,
   } = useCustomerStore();
+  const { theme } = useThemeStore();
 
   const handleFetchData = async () => {
     try {
@@ -83,10 +85,19 @@ export default function CustomerMenuPage() {
     <div className="flex flex-col gap-2">
       {/* 가게이름 및 네비게이션 */}
       <div className="mr-2 mt-2 flex items-center justify-between">
-        <div className="flex h-9 w-9 items-center justify-center rounded-r-lg border bg-b50 text-xl font-semibold">
+        <div
+          className="flex h-9 w-9 items-center justify-center rounded-r-lg border bg-b50 text-xl font-semibold"
+          style={{
+            backgroundColor: theme.all.box,
+            color: theme.all.largeText,
+            borderColor: theme.all.boxOutline,
+          }}
+        >
           {customerTableNo}
         </div>
-        <div className="text-2xl font-bold text-d900">{restaurantInfo?.name}</div>
+        <div className="text-2xl font-bold text-d900" style={{ color: theme.all.largeText }}>
+          {restaurantInfo?.name}
+        </div>
         <nav>
           <ol className="flex gap-3">
             <li className="flex h-7 w-[1.5rem] items-center justify-center">
@@ -94,6 +105,7 @@ export default function CustomerMenuPage() {
                 onClick={() => {
                   navigate(`/${ROUTE_CUSTOMER}/${ROUTE_CUSTOMER_FAST_TOOL}`);
                 }}
+                style={{ fill: theme.all.icon }}
               />
             </li>
             <li className="flex h-7 w-[1.6rem] items-center justify-center">
@@ -101,6 +113,7 @@ export default function CustomerMenuPage() {
                 onClick={() => {
                   navigate(`/${ROUTE_CUSTOMER}/${ROUTE_CUSTOMER_CART}`);
                 }}
+                style={{ fill: theme.all.icon }}
               />
             </li>
             <li className="flex h-7 w-[1.3rem] items-center justify-center">
@@ -108,20 +121,27 @@ export default function CustomerMenuPage() {
                 onClick={() => {
                   navigate(`/${ROUTE_CUSTOMER}/${ROUTE_CUSTOMER_ORDER}`);
                 }}
+                style={{ stroke: theme.all.icon }}
               />
             </li>
           </ol>
         </nav>
       </div>
       {/* 가게 설명 */}
-      <div className="mx-3 text-d900">{restaurantInfo?.introduce}</div>
+      <div className="mx-3 text-d900" style={{ color: theme.all.smallText }}>
+        {restaurantInfo?.introduce}
+      </div>
       {/* 카테고리 */}
-      <div className="flex justify-between gap-2 border-y border-d50 px-1 py-2">
+      <div
+        className="flex justify-between gap-2 border-y border-d50 px-1 py-2"
+        style={{ borderColor: theme.all.boxOutline }}
+      >
         <div className="flex min-w-[100px] max-w-[390px] gap-2 overflow-x-scroll text-nowrap rounded-md">
           <ItemButton
             title="전체"
             state={selectedCategory === '' ? 'select' : 'normal'}
             onClick={() => handleChangeCategory('')}
+            theme={theme}
           />
           {Object.values(categories).map(category => (
             <ItemButton
@@ -129,6 +149,7 @@ export default function CustomerMenuPage() {
               title={category}
               state={selectedCategory === category ? 'select' : 'normal'}
               onClick={() => handleChangeCategory(category)}
+              theme={theme}
             />
           ))}
         </div>
@@ -136,6 +157,7 @@ export default function CustomerMenuPage() {
           <List
             width={25}
             height={25}
+            style={{ fill: theme.all.icon }}
             onClick={() => {
               // TODO 메뉴 목록 출력 형태 변경 로직 list, grid
             }}
@@ -157,6 +179,16 @@ export default function CustomerMenuPage() {
               key={menu.id}
               menu={menu}
               onOpenMenuDetail={() => handleOpenMenuDetail(menu)}
+              theme={{
+                largeText: theme.all.largeText,
+                smallText: theme.all.smallText,
+                box: theme.all.box,
+                boxBorder: theme.all.boxOutline,
+                icon: theme.all.icon,
+                hot: theme.addOption.label.hot,
+                new: theme.addOption.label.new,
+                soldOut: theme.addOption.label.soldOut,
+              }}
             />
           ))}
       </div>

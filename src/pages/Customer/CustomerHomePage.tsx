@@ -1,13 +1,43 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Spinner, Logo } from '@/assets/icons';
+import useThemeStore from '@/stores/useThemeStore';
+import useCustomerStore from '@/stores/useCustomerStore';
+import { getRestaurantData } from '@/apis/customer.api';
 
 export default function CustomerHomePage() {
   const navigate = useNavigate();
+  const { theme } = useThemeStore();
+  const { setRestaurantInfo, restaurantInfo } = useCustomerStore();
 
-  // TODO 클릭 시 화면 이동으로 변경하기
   useEffect(() => {
-    setTimeout(() => navigate('/customer/menu'), 500);
+    getRestaurantData().then(res =>
+      setRestaurantInfo({
+        name: res.name,
+        introduce: res.introduce,
+        logo: res.logo,
+      })
+    );
   }, []);
 
-  return <div>CustomerHomePage</div>;
+  return (
+    <div
+      className="relative flex h-full flex-col items-center justify-center gap-3"
+      onClick={() => navigate('/customer/menu')}
+    >
+      {restaurantInfo?.logo ? (
+        <img src={restaurantInfo.logo} className="w-[50%]" />
+      ) : (
+        <Spinner fill={theme.all.icon} className="animate-spin" />
+      )}
+
+      <p className="text-2xl" style={{ color: theme.all.largeText }}>
+        {restaurantInfo?.name}
+      </p>
+      <div className="text-base" style={{ color: theme.all.smallText }}>
+        <p>{restaurantInfo?.introduce}</p>
+      </div>
+      <Logo className="absolute bottom-6" fill={theme.all.icon} />
+    </div>
+  );
 }

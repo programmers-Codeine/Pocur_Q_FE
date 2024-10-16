@@ -2,10 +2,12 @@ import { getOrderData } from '@/apis/customer.api';
 import ListItem from '@/components/customer/ListItem';
 import NavHeader from '@/components/customer/NavHeader';
 import useCustomerStore from '@/stores/useCustomerStore';
+import useThemeStore from '@/stores/useThemeStore';
 import { useEffect } from 'react';
 
 export default function CustomerOrderPage() {
   const { customerTableNo, orders, setOrders } = useCustomerStore();
+  const { theme } = useThemeStore();
 
   const handleFetchOrderData = async () => {
     try {
@@ -39,9 +41,12 @@ export default function CustomerOrderPage() {
 
   return (
     <div className="flex h-full flex-col overflow-y-scroll">
-      <NavHeader>주문 내역</NavHeader>
+      <NavHeader theme={theme}>주문 내역</NavHeader>
       {/* 총 금액 */}
-      <div className="flex w-full justify-center gap-1 p-2 text-xl font-bold">
+      <div
+        className="flex w-full justify-center gap-1 p-2 text-xl font-bold"
+        style={{ color: theme.all.largeText }}
+      >
         총액:
         <div className="w-24 text-end">
           {orders.reduce((a, order) => a + order.totalPrice, 0).toLocaleString()}원
@@ -50,7 +55,7 @@ export default function CustomerOrderPage() {
       {/* 주문 목록 */}
       <div className="flex flex-1 flex-col items-center gap-2 p-2">
         {orders.map(order => (
-          <ListItem key={order.id} item={order} variant="order" />
+          <ListItem key={order.id} item={order} variant="order" theme={theme} />
         ))}
       </div>
     </div>
