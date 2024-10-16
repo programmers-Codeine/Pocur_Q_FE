@@ -5,7 +5,7 @@ import { ListItem as TListItem } from '@/stores/useCustomerStore';
 interface ListItemProps {
   item: TListItem;
   variant: 'order' | 'cart';
-  onChangeCartItem?: () => void;
+  onChangeCartItem?: (item: TListItem) => void;
   onRemoveCartItem?: (id: string) => void;
   onReduceMenuQuantity?: (id: string, quantity: number) => void;
   onIncreaseMenuQuantity?: (id: string, quantity: number) => void;
@@ -23,7 +23,7 @@ export default function ListItem({
 
   const handleChangeItem = () => {
     if (variant === 'cart' && onChangeCartItem) {
-      onChangeCartItem();
+      onChangeCartItem(item);
     }
   };
   const handleDeleteItem = () => {

@@ -1,16 +1,25 @@
 import { Basket, NoImage, SquareMinus, SquarePlus } from '@/assets/icons';
 import IconButton from '@/components/customer/IconButton';
 import NavHeader from '@/components/customer/NavHeader';
-import useCustomerMenuStore from '@/stores/useCustomerStore';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import useCustomerMenuStore, { ListItem as TListItem } from '@/stores/useCustomerStore';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // TODO 컴포넌트 분리
 export default function CustomerDetailMenuPage() {
   const navigate = useNavigate();
+  const { state } = useLocation();
   const [menuQuantity, setMenuQuantity] = useState(1);
-  const [selectedOptions] = useState<number[]>([]);
-  const { selectedMenu, addCartItem } = useCustomerMenuStore();
+  const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
+  const { selectedMenu, addCartItem, changeCartItem } = useCustomerMenuStore();
+
+  useEffect(() => {
+    if (state) {
+      const { modItem }: { modItem: TListItem } = state;
+      setMenuQuantity(modItem.quantity);
+      setSelectedOptions([]); // TODO 선택된 옵션 세팅
+    }
+  }, []);
 
   if (!selectedMenu) {
     // TODO 에러처리하기
@@ -19,6 +28,12 @@ export default function CustomerDetailMenuPage() {
 
   const { menuName, categoryName, menuDetail, menuImg, origin, price, options } = selectedMenu;
 
+  const handleChangeCartItem = () => {
+    // TODO 옵션 수정 로직
+    // 메뉴 상세 페이지로 다시 이동 후 재주문 방식
+    changeCartItem(state.modItem.id, menuQuantity);
+    navigate(-1);
+  };
   const handleReduceMenuQuantity = () => {
     setMenuQuantity(prev => prev - 1);
   };
@@ -114,7 +129,10 @@ export default function CustomerDetailMenuPage() {
       </div>
       {/* 주문 버튼 */}
       <div className="self-center py-2">
-        <IconButton title="장바구니에 담기" onClick={handleAddCart}>
+        <IconButton
+          title={state ? state.title : '장바구니 담기'}
+          onClick={state ? handleChangeCartItem : handleAddCart}
+        >
           <Basket />
         </IconButton>
       </div>

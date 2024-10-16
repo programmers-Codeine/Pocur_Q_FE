@@ -2,14 +2,22 @@ import { Card } from '@/assets/icons';
 import IconButton from '@/components/customer/IconButton';
 import ListItem from '@/components/customer/ListItem';
 import NavHeader from '@/components/customer/NavHeader';
-import useCustomerStore from '@/stores/useCustomerStore';
+import useCustomerStore, { ListItem as TListItem } from '@/stores/useCustomerStore';
+import { useNavigate } from 'react-router-dom';
 
 export default function CustomerCartPage() {
-  const { cart, changeCartItem, deleteCartItem } = useCustomerStore();
+  const navigate = useNavigate();
+  const { menus, selectMenu, cart, changeCartItem, deleteCartItem } = useCustomerStore();
 
-  const handleChangeCartItem = () => {
-    // TODO 옵션 수정 로직
-    // 메뉴 상세 페이지로 다시 이동 후 재주문 방식(기존 주문 삭제?)
+  const handleChangeCartItem = (item: TListItem) => {
+    const selectedMenu = menus.find(menu => menu.menuName === item.menu.menuName);
+
+    if (selectedMenu) {
+      selectMenu(selectedMenu);
+      navigate('/customer/detail-menu', {
+        state: { title: '주문 수정하기', modItem: item },
+      });
+    }
   };
   const handleRemoveCartItem = (id: string) => {
     deleteCartItem(id);
