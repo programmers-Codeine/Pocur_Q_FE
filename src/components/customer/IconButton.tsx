@@ -1,8 +1,10 @@
+import { DesignThemeTypes } from '@/types';
 import clsx from 'clsx';
 import { PropsWithChildren, MouseEvent } from 'react';
 
 interface IconButtonProps {
   title: string;
+  theme?: DesignThemeTypes;
   sizeVariant?: 'normal' | 'small'; // 텍스트 및 아이콘 사이즈 조절
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
 }
@@ -10,6 +12,7 @@ interface IconButtonProps {
 export default function IconButton({
   children,
   title,
+  theme,
   sizeVariant = 'normal',
   onClick,
 }: PropsWithChildren<IconButtonProps>) {
@@ -20,6 +23,11 @@ export default function IconButton({
         sizeVariant === 'normal' && 'gap-2 p-3 text-base font-semibold',
         sizeVariant === 'small' && 'gap-1 p-2 text-xs font-medium'
       )}
+      style={{
+        borderColor: theme?.button.active.outline,
+        backgroundColor: theme?.button.active.background,
+        color: theme?.button.active.textAndIcon
+      }}
       onClick={onClick}
     >
       {title}
