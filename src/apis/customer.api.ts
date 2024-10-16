@@ -75,3 +75,59 @@ export const getCategoryData = async () => {
 
   return response.data;
 };
+
+type ResponseOrder = {
+  id: string;
+  tableNum: number;
+  orderedAt: string;
+  count: number;
+  totalPrice: number;
+  createdAt: string;
+  updatedAt: string;
+  restaurant: {
+    id: string;
+    name: string;
+    defaultTableCount: number;
+    totalTableCount: number;
+    logo: string | null;
+    introduce: string;
+    comment: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  menu: {
+    id: string;
+    menuName: string;
+    price: number;
+    menuDetail: string;
+    menuImg: string | null;
+    origin: string | null;
+    isActive: boolean;
+    soldOut: boolean;
+    hot: boolean;
+    new: boolean;
+    isRunningOut: boolean;
+    created_at: string;
+    updated_at: string;
+    options: [
+      {
+        id: string;
+        optionName: string;
+        optionPrice: number;
+      },
+    ];
+  };
+  options: [
+    {
+      id: string;
+      optionName: string;
+      optionPrice: number;
+    },
+  ];
+};
+
+export const getOrderData = async (tableNo: number) => {
+  const response = await axiosClient.get<ResponseOrder[]>(`/orders/table/${tableNo}`);
+
+  return response.data;
+};
