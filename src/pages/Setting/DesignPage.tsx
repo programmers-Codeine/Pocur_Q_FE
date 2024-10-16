@@ -13,6 +13,7 @@ import {
   addDesignPreset,
   replaceCurrentDesignPreset,
   deleteDesignPreset,
+  updateDesignPreset,
 } from '@/apis/setting/design.api';
 
 export default function DesignPage() {
@@ -52,13 +53,21 @@ export default function DesignPage() {
 
   const { openMenu, isVisible, parentId } = useContextMenuStore();
   const { isPaletteVisible, currentId } = useColorPaletteStore();
-  const { designs, setSelect, navigation, navigate, setDesign, deleteDesign, addDesign } =
-    useDesignStore();
+  const {
+    designs,
+    currentDesignId,
+    navigation,
+    setSelect,
+    navigate,
+    setDesign,
+    deleteDesign,
+    addDesign,
+    updateDesign,
+  } = useDesignStore();
 
   useEffect(() => {
     getAllDesignPreset().then(designPresets => {
       setDesign(designPresets);
-      console.log(designPresets);
     });
 
     getCurrentDesignPreset().then(id => {
@@ -69,7 +78,7 @@ export default function DesignPage() {
   const handleSetCurrentDesignForm = (designPresets: SetDesignData) => {
     setInputDesignForm({
       designName: designPresets.name || '',
-      designImage: '',
+      designImage: designPresets.designImage || '',
       theme: {
         all: {
           background: designPresets.background || '#ffffff',
@@ -95,7 +104,7 @@ export default function DesignPage() {
           label: {
             hot: designPresets.labelHot || '#ffffff',
             new: designPresets.labelNew || '#ffffff',
-            soldOut: designPresets.labelSoloOut || '#ffffff',
+            soldOut: designPresets.labelSoldOut || '#ffffff',
           },
         },
       },
@@ -146,10 +155,11 @@ export default function DesignPage() {
   const handleSaveDesign = (use: 'create' | 'update') => {
     // TODO: 디자인 이름 설정했는지 체크
     if (inputDesignForm.designName === '') return;
-    if (use === 'create') {
-      const { designName, designImage, theme } = inputDesignForm;
-      console.log({
+    const { designName, designImage, theme } = inputDesignForm;
+    if (use === 'create')
+      addDesignPreset({
         name: designName,
+        designImage: designImage,
         background: theme.all.background,
         bigText: theme.all.largeText,
         smallText: theme.all.smallText,
@@ -164,33 +174,37 @@ export default function DesignPage() {
         buttonActiveBorder: theme.button.active.outline,
         labelHot: theme.addOption.label.hot,
         labelNew: theme.addOption.label.new,
-        labelSoloOut: theme.addOption.label.soldOut,
+        labelSoldOut: theme.addOption.label.soldOut,
+      }).then(({ id, name }) => {
+        addDesign({ id: id, title: name, image: designImage });
       });
-      addDesignPreset({
-        name: designName,
-        background: designImage,
-        bigText: theme.all.background,
-        smallText: theme.all.smallText,
-        box: theme.all.box,
-        boxBorder: theme.all.boxOutline,
-        icon: theme.all.icon,
-        buttonBackground: theme.button.normal.background,
-        buttonText: theme.button.normal.textAndIcon,
-        buttonBorder: theme.button.normal.outline,
-        buttonActiveBackground: theme.button.active.background,
-        buttonActiveText: theme.button.active.textAndIcon,
-        buttonActiveBorder: theme.button.active.outline,
-        labelHot: theme.addOption.label.hot,
-        labelNew: theme.addOption.label.new,
-        labelSoloOut: theme.addOption.label.soldOut,
-      }).then(data => {
-        // TODO: designImage가 현재 없음.
-        console.log(data);
-        addDesign({ id: data.id, title: data.name, image: '' });
-      });
-    } else if (use === 'update')
-      // updateDesign(inputDesignForm, currentDesignId);
-      handleNavigate(1);
+    else if (use === 'update')
+      updateDesignPreset(
+        {
+          name: designName,
+          designImage: designImage,
+          background: theme.all.background,
+          bigText: theme.all.largeText,
+          smallText: theme.all.smallText,
+          box: theme.all.box,
+          boxBorder: theme.all.boxOutline,
+          icon: theme.all.icon,
+          buttonBackground: theme.button.normal.background,
+          buttonText: theme.button.normal.textAndIcon,
+          buttonBorder: theme.button.normal.outline,
+          buttonActiveBackground: theme.button.active.background,
+          buttonActiveText: theme.button.active.textAndIcon,
+          buttonActiveBorder: theme.button.active.outline,
+          labelHot: theme.addOption.label.hot,
+          labelNew: theme.addOption.label.new,
+          labelSoldOut: theme.addOption.label.soldOut,
+        },
+        currentDesignId
+      ).then(({ id, name }) =>
+        updateDesign({ id: id, title: name, image: designImage }, currentDesignId)
+      );
+
+    handleNavigate(1);
   };
 
   const handleChangeColor = (color: string) => {
@@ -271,7 +285,7 @@ export default function DesignPage() {
             onSaveDesign={handleSaveDesign}
             onAddDesignImage={handleAddDesignImage}
           />
-          <DesignPreviewBox onNavigate={handleNavigate} />
+          <DesignPreviewBox onNavigate={handleNavigate} theme={inputDesignForm.theme} />
           {isPaletteVisible && <ColorPalettePicker changeColor={handleChangeColor} />}
         </div>
       )}

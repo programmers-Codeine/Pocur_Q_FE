@@ -27,6 +27,8 @@ import SquareMinus from './square-minus.svg';
 import SquarePlus from './square-plus.svg';
 import Card from './card.svg';
 import Option from './option.svg';
+import Spinner from './spinner.svg';
+import Logo from './logo.svg';
 
 export {
   Avatar,
@@ -58,4 +60,6 @@ export {
   SquarePlus,
   Card,
   Option,
+  Spinner,
+  Logo,
 };
