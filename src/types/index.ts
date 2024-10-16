@@ -156,3 +156,13 @@ export type SetOptionsData = {
   optionName: string;
   optionPrice: number;
 };
+
+export type SetEtcData = {
+  id?: string;
+  name: string;
+  defaultTableCount: number;
+  logo: string | null;
+  comment: string | null;
+  introduce: string | null;
+  totalTableCount?: number;
+};
