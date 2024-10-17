@@ -156,7 +156,11 @@ export default function CustomerMenuPage() {
             <CustomerMenuCard
               key={menu.id}
               menu={menu}
-              onOpenMenuDetail={() => handleOpenMenuDetail(menu)}
+              onOpenMenuDetail={() => {
+                if (!menu.soldOut) {
+                  handleOpenMenuDetail(menu);
+                }
+              }}
             />
           ))}
       </div>
