@@ -11,8 +11,16 @@ import { useNavigate } from 'react-router-dom';
 
 export default function CustomerCartPage() {
   const navigate = useNavigate();
-  const { customerTableNo, menus, setMenus, selectMenu, cart, changeCartItem, deleteCartItem } =
-    useCustomerStore();
+  const {
+    customerTableNo,
+    menus,
+    setMenus,
+    selectMenu,
+    cart,
+    changeCartItem,
+    deleteCartItem,
+    clearCartItem,
+  } = useCustomerStore();
   const { socket } = useSocketStore();
 
   const handleChangeCartItem = (item: TListItem) => {
@@ -96,15 +104,18 @@ export default function CustomerCartPage() {
         <IconButton
           title="주문하기"
           onClick={() => {
-            // TODO cart 데이터 type 변경 및 주문 요청 로직 수정
-            socket.emit('placeOrder', [
-              {
-                menuId: '0ac695f2-22a6-44c5-a469-cb64fa77f500',
-                count: 2,
+            socket.emit(
+              'placeOrder',
+              cart.map(({ menu, quantity }) => ({
+                menuId: menu.menuId,
+                count: quantity,
                 tableNum: customerTableNo,
-                optionIds: ['41601607-f723-4561-9673-4143e4b4674b'],
-              },
-            ]);
+                optionIds: menu.options
+                  .filter(({ isChecked }) => isChecked === true)
+                  .map(({ id }) => id),
+              }))
+            );
+            clearCartItem();
           }}
         >
           <Card />
