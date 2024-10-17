@@ -178,7 +178,6 @@ export default function CustomerMenuPage() {
             <CustomerMenuCard
               key={menu.id}
               menu={menu}
-              onOpenMenuDetail={() => handleOpenMenuDetail(menu)}
               theme={{
                 largeText: theme.all.largeText,
                 smallText: theme.all.smallText,
@@ -188,6 +187,11 @@ export default function CustomerMenuPage() {
                 hot: theme.addOption.label.hot,
                 new: theme.addOption.label.new,
                 soldOut: theme.addOption.label.soldOut,
+              }}
+              onOpenMenuDetail={() => {
+                if (!menu.soldOut) {
+                  handleOpenMenuDetail(menu);
+                }
               }}
             />
           ))}
