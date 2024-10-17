@@ -97,7 +97,7 @@ export default function MainMenuBox({
                       <Trash
                         width="20"
                         height="20"
-                        className="cursor-pointer"
+                        className="cursor-pointer fill-d900"
                         onClick={() => onCancelMenu(menu.id)}
                       />
                     </div>

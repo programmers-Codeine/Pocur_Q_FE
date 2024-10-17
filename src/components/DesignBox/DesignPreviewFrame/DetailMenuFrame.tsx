@@ -32,10 +32,12 @@ const sampleData = {
 export default function DetailMenuFrame({ theme }: MenuFrameProps) {
   return (
     <div className="flex h-full flex-col overflow-y-scroll">
-      <NavHeader theme={theme}>menuName</NavHeader>
+      <NavHeader theme={theme} isAdmin={true}>
+        menuName
+      </NavHeader>
       <div
         className="flex flex-col border-b border-d50 px-2 py-6"
-        style={{ backgroundColor: theme.all.box }}
+        style={{ backgroundColor: theme.all.box, borderColor: theme.all.boxOutline }}
       >
         <img className="h-40 w-[80%] self-center" src={sampleData.menuImg} alt="메뉴 이미지" />
         <div className="text-base text-d200" style={{ color: theme.all.smallText }}>
@@ -54,10 +56,10 @@ export default function DetailMenuFrame({ theme }: MenuFrameProps) {
         </div>
         <ul className="w-full text-base font-bold text-d200" style={{ color: theme.all.smallText }}>
           {sampleData.options
-            ?.map(option => ({ ...option, isChecked: false }))
-            .map(({ id, optionName, optionPrice, isChecked }) => (
+            ?.map(option => ({ ...option }))
+            .map(({ id, optionName, optionPrice }) => (
               <li key={id} className="flex justify-between py-2">
-                <input type="checkbox" className="w-4" checked={isChecked} />
+                <input type="checkbox" className="w-4" />
                 <div>{optionName}</div>
                 <div>+{optionPrice.toLocaleString()}원</div>
               </li>

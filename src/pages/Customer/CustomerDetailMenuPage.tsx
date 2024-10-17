@@ -2,6 +2,7 @@ import { Basket, NoImage, SquareMinus, SquarePlus } from '@/assets/icons';
 import IconButton from '@/components/customer/IconButton';
 import NavHeader from '@/components/customer/NavHeader';
 import useCustomerMenuStore, { ListItem as TListItem } from '@/stores/useCustomerStore';
+import useThemeStore from '@/stores/useThemeStore';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -11,6 +12,7 @@ export default function CustomerDetailMenuPage() {
   const { state }: { state: { title: string; modItem: TListItem } | null } = useLocation();
   const [menuQuantity, setMenuQuantity] = useState(1);
   const { selectedMenu, addCartItem, changeCartItem, selectOption } = useCustomerMenuStore();
+  const { theme } = useThemeStore();
 
   useEffect(() => {
     if (state) {
@@ -87,23 +89,35 @@ export default function CustomerDetailMenuPage() {
   return (
     <div className="flex h-full flex-col overflow-y-scroll">
       {/* 헤더 */}
-      <NavHeader>{menuName}</NavHeader>
+      <NavHeader theme={theme}>{menuName}</NavHeader>
       {/* 메뉴 설명 */}
-      <div className="flex flex-col border-b border-d50 px-2 py-6">
+      <div
+        className="flex flex-col border-b border-d50 px-2 py-6"
+        style={{ backgroundColor: theme.all.box, borderColor: theme.all.boxOutline }}
+      >
         {menuImg === '' ? (
           <div className="mb-4 flex h-40 w-[80%] items-center justify-center self-center bg-d30">
-            <NoImage />
+            <NoImage style={{ stroke: theme.all.icon }} />
           </div>
         ) : (
           <img className="h-40 w-[80%] self-center" src={menuImg} alt="메뉴 이미지" />
         )}
-        <div className="text-base text-d200">{menuDetail}</div>
-        <div className="text-base text-d200">{origin}</div>
+        <div className="text-base text-d200" style={{ color: theme.all.smallText }}>
+          {menuDetail}
+        </div>
+        <div className="text-base text-d200" style={{ color: theme.all.smallText }}>
+          {origin}
+        </div>
       </div>
       {/* 메뉴 옵션 */}
-      <div className="flex flex-1 flex-col items-center p-2">
-        <div className="text-xl font-bold">추가 옵션</div>
-        <ul className="w-full text-base font-bold text-d200">
+      <div
+        className="flex flex-1 flex-col items-center p-2"
+        style={{ backgroundColor: theme.all.box }}
+      >
+        <div className="text-xl font-bold" style={{ color: theme.all.largeText }}>
+          추가 옵션
+        </div>
+        <ul className="w-full text-base font-bold text-d200" style={{ color: theme.all.smallText }}>
           {options.map(({ id, optionName, optionPrice, isChecked }) => (
             <li key={id} className="flex justify-between py-2">
               <input
@@ -120,24 +134,29 @@ export default function CustomerDetailMenuPage() {
       </div>
       {/* 수량 조절 */}
       <div className="flex items-center justify-between border-y border-d50 p-2 text-xl font-bold">
-        <div>수량</div>
+        <div style={{ color: theme.all.largeText }}>수량</div>
         <button
           className="flex h-6 w-6 items-center justify-center disabled:text-d80"
           onClick={handleReduceMenuQuantity}
           disabled={menuQuantity === 1}
         >
-          <SquareMinus />
+          <SquareMinus style={{ stroke: theme.all.icon }} />
         </button>
-        <div className="w-6 text-center">{menuQuantity}</div>
+        <div className="w-6 text-center" style={{ color: theme.all.largeText }}>
+          {menuQuantity}
+        </div>
         <button
           className="flex h-6 w-6 items-center justify-center disabled:text-d80"
           onClick={handleIncreaseMenuQuantity}
           disabled={menuQuantity === 10}
         >
-          <SquarePlus />
+          <SquarePlus style={{ stroke: theme.all.icon }} />
         </button>
       </div>
-      <div className="flex w-full justify-end gap-1 p-2 text-xl font-bold">
+      <div
+        className="flex w-full justify-end gap-1 p-2 text-xl font-bold"
+        style={{ color: theme.all.largeText }}
+      >
         주문 금액:
         <div className="w-24 text-end">
           {(
@@ -156,8 +175,9 @@ export default function CustomerDetailMenuPage() {
         <IconButton
           title={state ? state.title : '장바구니 담기'}
           onClick={state ? handleChangeCartItem : handleAddCart}
+          theme={theme}
         >
-          <Basket />
+          <Basket style={{ fill: theme.button.active.textAndIcon }} />
         </IconButton>
       </div>
     </div>

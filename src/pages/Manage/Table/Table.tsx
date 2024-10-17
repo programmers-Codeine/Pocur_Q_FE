@@ -56,7 +56,7 @@ export default function Table({ table, onModalOpen }: TableProps) {
           {tableNo}번
           {tableNo > (restaurant?.defaultTableCount ?? 0) && (
             <div className="absolute right-1 top-1 hover:text-b300" onClick={handleOpenWarnModal}>
-              <Trash width={20} height={20} />
+              <Trash width={20} height={20} className="fill-d900" />
             </div>
           )}
         </div>

@@ -86,7 +86,11 @@ export default function MenuFrame({ theme }: MenuFrameProps) {
       <div className="mr-2 mt-2 flex items-center justify-between">
         <div
           className="flex h-9 w-9 items-center justify-center rounded-r-lg border bg-b50 text-xl font-semibold"
-          style={{ backgroundColor: theme.all.box, color: theme.all.largeText }}
+          style={{
+            backgroundColor: theme.all.box,
+            color: theme.all.largeText,
+            borderColor: theme.all.boxOutline,
+          }}
         >
           1
         </div>
@@ -110,7 +114,10 @@ export default function MenuFrame({ theme }: MenuFrameProps) {
       <div className="mx-3 text-d900" style={{ color: theme.all.smallText }}>
         가게 소개란
       </div>
-      <div className="flex justify-between gap-2 border-y border-d50 px-1 py-2">
+      <div
+        className="flex justify-between gap-2 border-y border-d50 px-1 py-2"
+        style={{ borderColor: theme.all.boxOutline }}
+      >
         <div className="flex min-w-[100px] max-w-[390px] gap-2 overflow-x-scroll text-nowrap rounded-md">
           <ItemButton title="카테고리 1" state="select" theme={theme} />
           <ItemButton title="카테고리 2" state="normal" theme={theme} />
@@ -118,7 +125,7 @@ export default function MenuFrame({ theme }: MenuFrameProps) {
           <ItemButton title="카테고리 4" state="normal" theme={theme} />
         </div>
         <div className="flex w-11 items-center justify-center">
-          <List width={25} height={25} />
+          <List width={25} height={25} style={{ stroke: theme.all.icon }} />
         </div>
       </div>
       <div className="flex flex-col gap-2 px-2">

@@ -10,7 +10,7 @@ export const getAllDesignPreset = async () => {
 export const getCurrentDesignPreset = async () => {
   const response = await axiosClient.get('/designs');
 
-  return response.data.designPresetId;
+  return response.data;
 };
 
 export const replaceCurrentDesignPreset = async (design_id: string) => {
