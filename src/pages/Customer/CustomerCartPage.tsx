@@ -5,12 +5,15 @@ import IconButton from '@/components/customer/IconButton';
 import ListItem from '@/components/customer/ListItem';
 import NavHeader from '@/components/customer/NavHeader';
 import useCustomerStore, { ListItem as TListItem } from '@/stores/useCustomerStore';
+import useSocketStore from '@/stores/useCustomerSocketStore';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function CustomerCartPage() {
   const navigate = useNavigate();
-  const { menus, setMenus, selectMenu, cart, changeCartItem, deleteCartItem } = useCustomerStore();
+  const { customerTableNo, menus, setMenus, selectMenu, cart, changeCartItem, deleteCartItem } =
+    useCustomerStore();
+  const { socket } = useSocketStore();
 
   const handleChangeCartItem = (item: TListItem) => {
     const selectedMenu = menus.find(menu => menu.menuName === item.menu.menuName);
@@ -90,7 +93,20 @@ export default function CustomerCartPage() {
       </div>
       {/* 주문 버튼 */}
       <div className="self-center py-2">
-        <IconButton title="주문하기" onClick={() => {}}>
+        <IconButton
+          title="주문하기"
+          onClick={() => {
+            // TODO cart 데이터 type 변경 및 주문 요청 로직 수정
+            socket.emit('placeOrder', [
+              {
+                menuId: '0ac695f2-22a6-44c5-a469-cb64fa77f500',
+                count: 2,
+                tableNum: customerTableNo,
+                optionIds: ['41601607-f723-4561-9673-4143e4b4674b'],
+              },
+            ]);
+          }}
+        >
           <Card />
         </IconButton>
       </div>
