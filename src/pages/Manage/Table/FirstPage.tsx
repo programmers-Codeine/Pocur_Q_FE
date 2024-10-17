@@ -5,8 +5,11 @@ import { CircleArrow } from '@/assets/icons';
 import clsx from 'clsx';
 import Slider from '@/components/common/Slider/Slider';
 import { createRestaurant } from '@/apis/restaurants.api';
+import useUserStore from '@/stores/useUserStore';
+import { reissue } from '@/apis/user.api';
 
 export default function FirstPage() {
+  const { setLoginFirst } = useUserStore();
   const [defaultTableNum, setDefaultTableNum] = useState(0);
   const [shopName, setShopName] = useState('');
   const navigate = useNavigate();
@@ -17,12 +20,15 @@ export default function FirstPage() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setShopName(e.target.value);
   };
-  const handleCreateShop = (e: React.SyntheticEvent) => {
+  const handleCreateShop = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     createRestaurant({ name: shopName, defaultTableCount: defaultTableNum })
-      .then(() => {
+      .then(({ id }) => {
         // 성공 시 첫 입장 처리 및 화면 이동
-        navigate('/admin/manage/table');
+        reissue(id).then(() => {
+          setLoginFirst(false);
+          navigate('/admin/manage/table');
+        });
       })
       .catch(() => {});
   };
