@@ -32,7 +32,12 @@ export default function AdminLayout() {
           <div className="flex w-full items-center gap-5 border-b-2 border-d900 py-2 text-d900">
             <Avatar />
             <p className="w-full text-3xl">관리자 이름</p>
-            <div onClick={() => handleNavigate('logout')}>
+            <div
+              onClick={() => {
+                localStorage.clear();
+                handleNavigate('logout');
+              }}
+            >
               <Logout />
             </div>
           </div>
