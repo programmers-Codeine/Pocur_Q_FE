@@ -1,5 +1,5 @@
 export type UserType = {
-  id: string | string | null;
+  id: string | null;
 };
 
 export type UserFormTypes = {

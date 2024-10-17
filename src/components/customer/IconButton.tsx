@@ -26,7 +26,7 @@ export default function IconButton({
       style={{
         borderColor: theme?.button.active.outline,
         backgroundColor: theme?.button.active.background,
-        color: theme?.button.active.textAndIcon
+        color: theme?.button.active.textAndIcon,
       }}
       onClick={onClick}
     >
