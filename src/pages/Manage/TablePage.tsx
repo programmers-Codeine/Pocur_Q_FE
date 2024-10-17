@@ -207,8 +207,10 @@ export default function TablePage() {
               deleteSocketOrder(index);
             }}
           >
-            <div className="w-full">{time}</div>
-            <div>{`${order.tableNum}번 테이블 ${order.callName}`}</div>
+            <div className="w-full">
+              {time} {`${order.tableNum}번 테이블`}
+            </div>
+            <div>{order.callName}</div>
           </div>
         ))}
       </div>
