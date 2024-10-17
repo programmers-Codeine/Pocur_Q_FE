@@ -1,7 +1,7 @@
 import { Basket, Bell, List, OrderList } from '@/assets/icons';
 import { getCategoryData, getMenuData, getRestaurantData } from '@/apis/customer.api';
 import ItemButton from '@/components/common/Button/ItemButton';
-import CustomerMenuCard from '@/components/customer/MenuCard';
+import CustomerMenuCard from '@/components/customer/CustomerMenuCard';
 import {
   ROUTE_CUSTOMER,
   ROUTE_CUSTOMER_CART,
@@ -178,7 +178,6 @@ export default function CustomerMenuPage() {
             <CustomerMenuCard
               key={menu.id}
               menu={menu}
-              onOpenMenuDetail={() => handleOpenMenuDetail(menu)}
               theme={{
                 largeText: theme.all.largeText,
                 smallText: theme.all.smallText,
@@ -188,6 +187,11 @@ export default function CustomerMenuPage() {
                 hot: theme.addOption.label.hot,
                 new: theme.addOption.label.new,
                 soldOut: theme.addOption.label.soldOut,
+              }}
+              onOpenMenuDetail={() => {
+                if (!menu.soldOut) {
+                  handleOpenMenuDetail(menu);
+                }
               }}
             />
           ))}

@@ -6,13 +6,24 @@ import ListItem from '@/components/customer/ListItem';
 import NavHeader from '@/components/customer/NavHeader';
 import useCustomerStore, { ListItem as TListItem } from '@/stores/useCustomerStore';
 import useThemeStore from '@/stores/useThemeStore';
+import useSocketStore from '@/stores/useCustomerSocketStore';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function CustomerCartPage() {
   const navigate = useNavigate();
-  const { menus, setMenus, selectMenu, cart, changeCartItem, deleteCartItem } = useCustomerStore();
+  const {
+    customerTableNo,
+    menus,
+    setMenus,
+    selectMenu,
+    cart,
+    changeCartItem,
+    deleteCartItem,
+    clearCartItem,
+  } = useCustomerStore();
   const { theme } = useThemeStore();
+  const { socket } = useSocketStore();
 
   const handleChangeCartItem = (item: TListItem) => {
     const selectedMenu = menus.find(menu => menu.menuName === item.menu.menuName);
@@ -96,7 +107,24 @@ export default function CustomerCartPage() {
       </div>
       {/* 주문 버튼 */}
       <div className="self-center py-2">
-        <IconButton title="주문하기" theme={theme} onClick={() => {}}>
+        <IconButton
+          title="주문하기"
+          theme={theme}
+          onClick={() => {
+            socket.emit(
+              'placeOrder',
+              cart.map(({ menu, quantity }) => ({
+                menuId: menu.menuId,
+                count: quantity,
+                tableNum: customerTableNo,
+                optionIds: menu.options
+                  .filter(({ isChecked }) => isChecked === true)
+                  .map(({ id }) => id),
+              }))
+            );
+            clearCartItem();
+          }}
+        >
           <Card style={{ fill: theme.button.active.textAndIcon }} />
         </IconButton>
       </div>

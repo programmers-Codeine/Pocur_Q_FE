@@ -22,7 +22,7 @@ export default function Table({ table, onModalOpen }: TableProps) {
     if ($ol) {
       setIsOverflow($ol.offsetHeight < $ol.scrollHeight);
     }
-  }, [tableNo]);
+  }, [table]);
 
   // TODO 서버 요청 구현 필요
   const handleDeleteTable = () => {
@@ -60,7 +60,7 @@ export default function Table({ table, onModalOpen }: TableProps) {
             </div>
           )}
         </div>
-        <ol className={clsx('flex-1 px-2 py-1', isOverflow && 'overflow-y-hidden')}>
+        <ol className={clsx('h-12 flex-1 px-2 py-1', isOverflow && 'overflow-y-hidden')}>
           {orderList.map(({ menuName, menuQuantity }, index) => (
             <li key={index}>
               {menuName}*{menuQuantity}

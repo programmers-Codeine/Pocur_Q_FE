@@ -1,6 +1,6 @@
 import { Bell, Basket, OrderList, List } from '@/assets/icons';
 import ItemButton from '@/components/common/Button/ItemButton';
-import CustomerMenuCard from '@/components/customer/MenuCard';
+import CustomerMenuCard from '@/components/customer/CustomerMenuCard';
 import { DesignThemeTypes } from '@/types';
 
 type MenuFrameProps = {

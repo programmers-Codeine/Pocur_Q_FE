@@ -4,11 +4,68 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { manageNavList, settingNavList } from '@/stores/navItemData';
 import { Avatar, Logout, Setting } from '@/assets/icons';
 import Button from '../Button/Button';
+import useRestaurantStore from '@/stores/useRestaurantStore';
+import { useEffect } from 'react';
+import useTableStore from '@/stores/useTableStore';
+import useAdminSocketStore from '@/stores/useAdminSocketStore';
+import { getRestaurant } from '@/apis/restaurants.api';
 
 export default function AdminLayout() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const [main, sub] = pathname.split('/').slice(2);
+  const { setRestaurant } = useRestaurantStore();
+  const { addSocketOrder, addNewOrder, fetchOrders } = useTableStore();
+  const { socket, setSocket } = useAdminSocketStore();
+
+  const handleConnectSocket = async () => {
+    const restaurantData = await getRestaurant();
+
+    setRestaurant(restaurantData);
+    setSocket(restaurantData.id);
+  };
+
+  useEffect(() => {
+    handleConnectSocket();
+  }, []);
+
+  useEffect(() => {
+    // TODO 서버 업데이트 후 수정
+    socket.on('newCallRequest', (data: { callName: string; tableNum: number }) => {
+      addSocketOrder(data);
+      addNewOrder(data.tableNum);
+    });
+    socket.on(
+      'orderUpdate',
+      ({
+        orders,
+      }: {
+        orders: {
+          tableNum: number;
+          count: number;
+          menu: { menuName: string };
+          options: { id: string; optionName: string }[];
+        }[];
+      }) => {
+        console.log(orders);
+        orders.forEach(({ tableNum, count, menu, options }) => {
+          addNewOrder(tableNum);
+          addSocketOrder({
+            callName: `${menu.menuName} ${options
+              .map(({ optionName }) => optionName)
+              .join(',')} ${count}개`,
+            tableNum: tableNum,
+          });
+          fetchOrders();
+        });
+      }
+    );
+
+    return () => {
+      socket.off('newCallRequest');
+      socket.off('orderUpdate');
+    };
+  }, [socket]);
 
   const handleNavigate = (target: string, src: string = '') => {
     if (target === 'logout') return navigate('/'); // TODO: logout 로직 구현
@@ -32,7 +89,12 @@ export default function AdminLayout() {
           <div className="flex w-full items-center gap-5 border-b-2 border-d900 py-2 text-d900">
             <Avatar />
             <p className="w-full text-3xl">관리자 이름</p>
-            <div onClick={() => handleNavigate('logout')}>
+            <div
+              onClick={() => {
+                localStorage.clear();
+                handleNavigate('logout');
+              }}
+            >
               <Logout />
             </div>
           </div>
@@ -61,7 +123,18 @@ export default function AdminLayout() {
         </div>
 
         {/* TODO: 가게마감 핸들러 작성 필요 */}
-        {sub && main === 'manage' && <Button title="가게마감" type="menu" state="normal" />}
+        {sub && main === 'manage' && (
+          <>
+            <Button
+              title="가게마감"
+              type="menu"
+              state="normal"
+              onClick={() => {
+                socket.disconnect();
+              }}
+            />
+          </>
+        )}
         {sub && main === 'setting' && (
           <Button title="테이블로 이동" type="menu" state="normal" onClick={handleSaveSetting} />
         )}
