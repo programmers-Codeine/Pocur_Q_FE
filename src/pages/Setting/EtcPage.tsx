@@ -207,7 +207,7 @@ export default function EtcPage() {
               <iframe
                 className="h-full w-full"
                 title="customer-page"
-                src={`https://localhost:5173/customer?restaurant_id=${customerPreview.id}&table_num=1`}
+                src={`https://pocurq.shop/customer?restaurant_id=${customerPreview.id}&table_num=1`}
               />
             ) : (
               <div className="flex h-full w-full flex-col items-center justify-center text-xl">
