@@ -19,7 +19,7 @@ interface CustomerMenuCardProps {
 }
 
 export default function CustomerMenuCard({ menu, theme, onOpenMenuDetail }: CustomerMenuCardProps) {
-  const { menuName, menuDetail, price, menuImg } = menu;
+  const { menuName, menuDetail, price, menuImg, soldOut } = menu;
 
   return (
     <div
@@ -41,7 +41,9 @@ export default function CustomerMenuCard({ menu, theme, onOpenMenuDetail }: Cust
           <img src={menuImg} alt="메뉴 이미지" />
         )}
       </div>
-      <div className="flex flex-1 flex-col justify-evenly gap-1 px-1">
+      <div
+        className={clsx('flex flex-1 flex-col justify-evenly gap-1 px-1', soldOut && 'opacity-50')}
+      >
         <div className="text-base font-bold" style={{ color: theme?.largeText }}>
           {menuName}
         </div>
