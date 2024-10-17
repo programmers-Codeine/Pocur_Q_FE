@@ -2,6 +2,7 @@ import { getCustomerToken } from '@/apis/customer.api';
 import { getCurrentDesignPreset } from '@/apis/setting/design.api';
 import useCustomerStore from '@/stores/useCustomerStore';
 import useThemeStore from '@/stores/useThemeStore';
+import useSocketStore from '@/stores/useCustomerSocketStore';
 import { useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
@@ -10,6 +11,7 @@ export default function CustomerLayout() {
   const location = useLocation();
   const { setCustomerTableNo } = useCustomerStore();
   const { setTheme, theme } = useThemeStore();
+  const { setSocket } = useSocketStore();
 
   const handleMoveHome = async () => {
     if (location.search !== '') {
@@ -25,6 +27,7 @@ export default function CustomerLayout() {
 
         if (jwtStatus === 200) {
           setCustomerTableNo(Number(tableNum));
+          setSocket(restaurantId);
           navigate('/customer/home');
         }
       } catch (error) {
