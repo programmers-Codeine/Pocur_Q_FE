@@ -1,7 +1,7 @@
 import { Basket, Bell, List, OrderList } from '@/assets/icons';
 import { getCategoryData, getMenuData, getRestaurantData } from '@/apis/customer.api';
 import ItemButton from '@/components/common/Button/ItemButton';
-import CustomerMenuCard from '@/components/customer/MenuCard';
+import CustomerMenuCard from '@/components/customer/CustomerMenuCard';
 import {
   ROUTE_CUSTOMER,
   ROUTE_CUSTOMER_CART,
