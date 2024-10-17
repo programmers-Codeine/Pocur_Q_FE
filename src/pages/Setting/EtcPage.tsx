@@ -5,6 +5,8 @@ import { ChangeEvent, useState, useEffect } from 'react';
 import { InputEtcFormTypes } from '@/types';
 import Slider from '@/components/common/Slider/Slider';
 import { getRestaurant, saveRestaurants, setLogoImage } from '@/apis/restaurants.api';
+import { reissue } from '@/apis/user.api';
+import useRestaurantStore from '@/stores/useRestaurantStore';
 
 export default function EtcPage() {
   const [inputEtcForm, setInputEtcForm] = useState<InputEtcFormTypes>({
@@ -20,6 +22,7 @@ export default function EtcPage() {
     },
   });
   const [customerPreview, setCustomerPreview] = useState({ id: '', isShow: false });
+  const { restaurant } = useRestaurantStore();
 
   useEffect(() => {
     getRestaurant().then(data => {
@@ -36,6 +39,10 @@ export default function EtcPage() {
         },
       }));
     });
+
+    return () => {
+      reissue(restaurant!.id);
+    };
   }, []);
 
   const onSetInputEtcForm = (e: ChangeEvent<HTMLInputElement>) => {
