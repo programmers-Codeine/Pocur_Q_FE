@@ -39,10 +39,14 @@ export default function MenuCard({ menu, onSelectLabel }: MenuCardProps) {
 
   return (
     <div className="relative flex flex-col items-center gap-2 pr-7">
-      {menu.image ? (
+      {menu.image !== '' ? (
         <img className="relative z-[2] h-24 w-24" src={menu.image} />
       ) : (
-        <NoImage className="relative z-[2]" width={100} height={100} />
+        <NoImage
+          className="relative z-[2] rounded-lg bg-d10 stroke-d900"
+          width={100}
+          height={100}
+        />
       )}
       <div>{menu.title}</div>
       <div className="absolute right-4 top-0 z-[1]">

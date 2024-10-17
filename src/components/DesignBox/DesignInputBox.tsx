@@ -79,7 +79,7 @@ export default function DesignInputBox({
                 />
               ) : (
                 <div className="flex flex-col items-center justify-center">
-                  <NoImage width="64" height="64" className="z-10" />
+                  <NoImage width="64" height="64" className="z-10 stroke-d900" />
                   <p className="text-d200">이미지 업로드</p>
                 </div>
               )}

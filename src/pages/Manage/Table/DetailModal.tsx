@@ -35,7 +35,7 @@ export default function DetailModal({
           className="rounded-lg border border-d900 bg-b300 p-1 text-d10"
           onClick={onOpenInitModal}
         >
-          <Trash width={20} height={20} className="cursor-pointer fill-d900" />
+          <Trash width={20} height={20} className="cursor-pointer fill-d10" />
         </button>
       </div>
       <div className="max-h-[360px] min-h-[100px] overflow-y-scroll text-lg">
