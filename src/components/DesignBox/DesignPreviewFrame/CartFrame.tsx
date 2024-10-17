@@ -11,14 +11,14 @@ type CartFrameProps = {
 const cart = [
   {
     id: '1729099786727',
-    menu: { categoryName: '사이드2', menuName: '짜장면', options: [], price: 8000 },
+    menu: { menuId: '', categoryName: '사이드2', menuName: '짜장면', options: [], price: 8000 },
     quantity: 1,
     totalPrice: 9600,
   },
 
   {
     id: '1729099875749',
-    menu: { categoryName: '사이드2', menuName: '짜장면', options: [], price: 8000 },
+    menu: { menuId: '', categoryName: '사이드2', menuName: '짜장면', options: [], price: 8000 },
     quantity: 3,
     totalPrice: 27300,
   },

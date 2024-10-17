@@ -39,7 +39,7 @@ export default function DesignCard({
             {image ? (
               <img src={image} alt="design preview" className="h-40 w-full object-cover" />
             ) : (
-              <NoImage width="96" height="96" />
+              <NoImage className="stroke-d900" width="96" height="96" />
             )}
           </div>
           <div className={className.getState()[1]}>

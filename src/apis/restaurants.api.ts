@@ -3,10 +3,14 @@ import { SetEtcData } from '@/types';
 import { axiosClient } from './axios';
 import type { Restaurant } from '@/stores/useRestaurantStore';
 
-export const createRestaurant = async (defaultData: RestaurantDefaultData) => {
-  const response = await axiosClient.post('/restaurants', defaultData);
+type ResponseRestaurant = {
+  id: string;
+};
 
-  return response.status;
+export const createRestaurant = async (defaultData: RestaurantDefaultData) => {
+  const response = await axiosClient.post<ResponseRestaurant>('/restaurants', defaultData);
+
+  return response.data;
 };
 
 export const getRestaurant = async () => {
