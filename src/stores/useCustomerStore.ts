@@ -28,6 +28,7 @@ export type Menu = {
 };
 
 type ListItemMenu = {
+  menuId: string;
   categoryName: string;
   menuName: string;
   options: Option[]; // TODO Option으로 수정 필요
@@ -73,6 +74,7 @@ type CustomerState = {
   addCartItem: (newItem: ListItem) => void;
   changeCartItem: (id: string, newQuantity: number, newItem?: ListItem) => void;
   deleteCartItem: (itemId: string) => void;
+  clearCartItem: () => void;
 
   orders: ListItem[];
   setOrders: (newOrders: ListItem[]) => void;
@@ -174,6 +176,11 @@ const useCustomerStore = create<CustomerState>()(set => ({
 
       return { cart: newCart };
     });
+  },
+  clearCartItem: () => {
+    localStorage.setItem('cart', '[]');
+
+    set(() => ({ cart: [] }));
   },
   orders: [],
   setOrders: orders => {

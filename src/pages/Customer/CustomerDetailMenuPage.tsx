@@ -30,7 +30,7 @@ export default function CustomerDetailMenuPage() {
     return null;
   }
 
-  const { menuName, categoryName, menuDetail, menuImg, origin, price, options } = selectedMenu;
+  const { id, menuName, categoryName, menuDetail, menuImg, origin, price, options } = selectedMenu;
 
   const handleChangeCartItem = () => {
     // TODO 옵션 수정 로직
@@ -39,6 +39,7 @@ export default function CustomerDetailMenuPage() {
       const newItem = {
         id: state.modItem.id,
         menu: {
+          menuId: id,
           categoryName,
           menuName,
           options,
@@ -72,6 +73,7 @@ export default function CustomerDetailMenuPage() {
     addCartItem({
       id: new Date().getTime().toString(),
       menu: {
+        menuId: id,
         categoryName,
         menuName,
         options,
