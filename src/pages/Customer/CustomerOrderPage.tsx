@@ -17,6 +17,7 @@ export default function CustomerOrderPage() {
         orderData.map(({ id, menu, count, totalPrice, options }) => ({
           id,
           menu: {
+            menuId: menu.id,
             categoryName: '메인',
             menuName: menu.menuName,
             options: options.map(option => ({
