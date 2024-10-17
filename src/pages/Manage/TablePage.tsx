@@ -201,7 +201,7 @@ export default function TablePage() {
         {socketOrder.reverse().map(({ order, time }, index) => (
           <div
             key={index}
-            className="flex min-h-20 w-64 flex-col rounded-[30px] bg-b300 p-4 text-d10 opacity-40 hover:opacity-100"
+            className="flex min-h-20 w-64 cursor-pointer flex-col rounded-[30px] bg-b300 p-4 text-d10 opacity-40 hover:opacity-100"
             onClick={() => {
               checkOneNewOrder(order.tableNum);
               deleteSocketOrder(index);
