@@ -2,8 +2,12 @@ import { NAVIGATION_DESIGN } from '@/constants/designs';
 import useDesignStore from '@/stores/useDesignStore';
 import clsx from 'clsx';
 import { DesignPreviewBoxProps } from './DesignBox.types';
+import IntroFrame from './DesignPreviewFrame/IntroFrame';
+import MenuFrame from './DesignPreviewFrame/MenuFrame';
+import DetailMenuFrame from './DesignPreviewFrame/DetailMenuFrame';
+import CartFrame from './DesignPreviewFrame/CartFrame';
 
-export default function DesignPreviewBox({ onNavigate }: DesignPreviewBoxProps) {
+export default function DesignPreviewBox({ onNavigate, theme }: DesignPreviewBoxProps) {
   const { navigation } = useDesignStore();
 
   return (
@@ -22,13 +26,22 @@ export default function DesignPreviewBox({ onNavigate }: DesignPreviewBoxProps) 
           </div>
         ))}
       </div>
-      <div className="bg-deviceFrame relative aspect-[412/912] w-[50%] bg-contain bg-center bg-no-repeat">
-        <div className="absolute inset-0 px-[2%] py-[15%]">
+      <div className="relative aspect-[412/912] w-[50%] bg-deviceFrame bg-contain bg-center bg-no-repeat">
+        <div
+          className="absolute inset-0 mx-[2%] my-[15%]"
+          style={{ backgroundColor: theme.all.background }}
+        >
           {/* TODO: navigation에 따른 디자인적 요소 보여주기 */}
-          {navigation === 2 && <div>소개/로딩/결제</div>}
-          {navigation === 3 && <div>메뉴판</div>}
-          {navigation === 4 && <div>메뉴상세</div>}
-          {navigation === 5 && <div>장바구니 및 결제</div>}
+          {navigation === 2 && (
+            <IntroFrame
+              icon={theme.all.icon}
+              largeText={theme.all.largeText}
+              smallText={theme.all.smallText}
+            />
+          )}
+          {navigation === 3 && <MenuFrame theme={theme} />}
+          {navigation === 4 && <DetailMenuFrame theme={theme} />}
+          {navigation === 5 && <CartFrame theme={theme} />}
         </div>
       </div>
     </div>

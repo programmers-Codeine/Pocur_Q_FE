@@ -1,3 +1,4 @@
+import { DesignThemeTypes } from '@/types';
 import { MouseEvent, ReactNode } from 'react';
 
 export type ButtonProps = {
@@ -10,6 +11,7 @@ export type ButtonProps = {
 };
 
 export type ItemButtonProps = {
+  theme?: DesignThemeTypes;
   title: string;
   state: 'normal' | 'active' | 'select';
   onClick?: (e: MouseEvent<HTMLDivElement>) => void;

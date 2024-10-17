@@ -67,7 +67,7 @@ export default function MainMenuBox({
                 {menu.image ? (
                   <img src={menu.image} alt="Menu Preview" className="h-12 w-12 object-cover" />
                 ) : (
-                  <NoImage width="48" height="48" />
+                  <NoImage className="stroke-d900" width="48" height="48" />
                 )}
                 <div className="flex w-full flex-col">
                   <div className="flex w-full justify-between">
@@ -97,7 +97,7 @@ export default function MainMenuBox({
                       <Trash
                         width="20"
                         height="20"
-                        className="cursor-pointer"
+                        className="cursor-pointer fill-d900"
                         onClick={() => onCancelMenu(menu.id)}
                       />
                     </div>

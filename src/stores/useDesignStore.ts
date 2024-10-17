@@ -4,8 +4,8 @@ import { create } from 'zustand';
 type DesignTypes = {
   id: string;
   title: string;
-  edit?: string;
   image?: string;
+  edit?: string;
 };
 type DesignState = {
   designs: DesignTypes[];
@@ -20,7 +20,7 @@ type DesignState = {
   deleteDesign: (id: string) => void;
 
   addDesign: (design: DesignTypes) => void;
-  // updateDesign: (design: DesignTypes, id: string) => void;
+  updateDesign: (design: DesignTypes, id: string) => void;
 };
 
 const useDesignStore = create<DesignState>(set => ({
@@ -40,6 +40,7 @@ const useDesignStore = create<DesignState>(set => ({
       designs: data.map(item => ({
         id: item.id,
         title: item.name,
+        image: item.designImage || '',
       })),
     })),
 
@@ -53,7 +54,12 @@ const useDesignStore = create<DesignState>(set => ({
       designs: [...state.designs, design],
     })),
 
-  // updateDesign: (design: DesignTypes, id: string) => set(state => ({})),
+  updateDesign: (newDesign: DesignTypes, id: string) =>
+    set(state => ({
+      designs: state.designs.map(design =>
+        design.id === id ? { ...design, ...newDesign } : design
+      ),
+    })),
 }));
 
 export default useDesignStore;

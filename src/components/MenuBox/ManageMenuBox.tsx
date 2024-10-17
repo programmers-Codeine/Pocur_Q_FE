@@ -135,7 +135,7 @@ export default function ManageMenuBox({
             </label>
           ) : (
             <label htmlFor="menuImageUpload" className="cursor-pointer">
-              <NoImage width="48" height="48" />
+              <NoImage className="stroke-d900" width="48" height="48" />
               <input
                 id="menuImageUpload"
                 type="file"

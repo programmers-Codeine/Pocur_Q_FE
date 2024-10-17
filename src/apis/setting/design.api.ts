@@ -9,16 +9,15 @@ export const getAllDesignPreset = async () => {
 
 export const getCurrentDesignPreset = async () => {
   const response = await axiosClient.get('/designs');
-  console.log(response.data);
-  return response.data.id;
+
+  return response.data;
 };
 
 export const replaceCurrentDesignPreset = async (design_id: string) => {
-  //TODO: 안됨
-  const response = await axiosClient.put(`/designs/${design_id}`, {
+  const response = await axiosClient.put('/designs', {
     designPresetId: design_id,
   });
-  console.log(response.data);
+
   return response.data.designPresetId;
 };
 
@@ -29,8 +28,12 @@ export const addDesignPreset = async (designPreset: SetDesignData) => {
 };
 
 export const deleteDesignPreset = async (design_preset_id: string) => {
-  const response = await axiosClient.delete(`/designPresets/${design_preset_id}`);
-  console.log(response);
+  return await axiosClient.delete(`/designPresets/${design_preset_id}`);
+};
+
+export const updateDesignPreset = async (designPreset: SetDesignData, designPreset_id: string) => {
+  const response = await axiosClient.put(`/designPresets/${designPreset_id}`, designPreset);
+
   return response.data;
 };
 

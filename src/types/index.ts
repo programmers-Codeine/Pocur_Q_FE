@@ -1,5 +1,5 @@
 export type UserType = {
-  id: string | string | null;
+  id: string | null;
 };
 
 export type UserFormTypes = {
@@ -33,7 +33,7 @@ export type InputMenuFormTypes = {
   optionsInput: AddOptionsTypes[];
 };
 
-type DesignThemeTypes = {
+export type DesignThemeTypes = {
   all: {
     background: string;
     largeText: string;
@@ -85,59 +85,29 @@ export type InputEtcFormTypes = {
 export type SetDesignPresetData = {
   id: string;
   name: string;
+  designImage: string;
 };
 
 export type SetDesignData = {
   id?: string;
   name: string;
-  background: string | null;
-  bigText: string | null;
-  smallText: string | null;
-  box: string | null;
-  boxBorder: string | null;
-  icon: string | null;
-  buttonBackground: string | null;
-  buttonText: string | null;
-  buttonBorder: string | null;
-  buttonActiveBackground: string | null;
-  buttonActiveText: string | null;
-  buttonActiveBorder: string | null;
-  labelHot: string | null;
-  labelNew: string | null;
-  labelSoloOut: string | null;
+  designImage: string | null;
+  background: string;
+  bigText: string;
+  smallText: string;
+  box: string;
+  boxBorder: string;
+  icon: string;
+  buttonBackground: string;
+  buttonText: string;
+  buttonBorder: string;
+  buttonActiveBackground: string;
+  buttonActiveText: string;
+  buttonActiveBorder: string;
+  labelHot: string;
+  labelNew: string;
+  labelSoldOut: string;
 };
-
-// designName: '',
-//     designImage: '',
-//     theme: {
-//       all: {
-//         background: '#ffffff',
-//         largeText: '#ffffff',
-//         smallText: '#ffffff',
-//         box: '#ffffff',
-//         boxOutline: '#ffffff',
-//         icon: '#ffffff',
-//       },
-//       button: {
-//         normal: {
-//           background: '#ffffff',
-//           textAndIcon: '#ffffff',
-//           outline: '#ffffff',
-//         },
-//         active: {
-//           background: '#ffffff',
-//           textAndIcon: '#ffffff',
-//           outline: '#ffffff',
-//         },
-//       },
-//       addOption: {
-//         label: {
-//           hot: '#ffffff',
-//           new: '#ffffff',
-//           soldOut: '#ffffff',
-//         },
-//       },
-//     },
 
 export type SetMenuData = {
   id?: string;
@@ -149,10 +119,24 @@ export type SetMenuData = {
   origin: string | null;
   options?: SetOptionsData[];
   isActive?: boolean;
+  soldOut?: boolean;
+  hot?: boolean;
+  new?: boolean;
+  isRunningOut?: boolean;
 };
 
 export type SetOptionsData = {
   id?: string;
   optionName: string;
   optionPrice: number;
+};
+
+export type SetEtcData = {
+  id?: string;
+  name: string;
+  defaultTableCount: number;
+  logo: string | null;
+  comment: string | null;
+  introduce: string | null;
+  totalTableCount?: number;
 };

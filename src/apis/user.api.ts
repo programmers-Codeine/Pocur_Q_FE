@@ -12,3 +12,9 @@ export const login = async (loginData: UserLoginFormTypes) => {
 
   return response.data;
 };
+
+export const reissue = async (restaurantId: string) => {
+  const response = await axiosClient.post('/users/jwtReissue', { restaurantId: restaurantId });
+
+  return response.status;
+};
