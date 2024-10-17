@@ -35,11 +35,31 @@ export default function AdminLayout() {
       addSocketOrder(data);
       addNewOrder(data.tableNum);
     });
-    socket.on('orderUpdate', () => {
-      addNewOrder(2);
-      addSocketOrder({ callName: '"음식" 주문', tableNum: 2 });
-      fetchOrders();
-    });
+    socket.on(
+      'orderUpdate',
+      ({
+        orders,
+      }: {
+        orders: {
+          tableNum: number;
+          count: number;
+          menu: { menuName: string };
+          options: { id: string; optionName: string }[];
+        }[];
+      }) => {
+        console.log(orders);
+        orders.forEach(({ tableNum, count, menu, options }) => {
+          addNewOrder(tableNum);
+          addSocketOrder({
+            callName: `${menu.menuName} ${options
+              .map(({ optionName }) => optionName)
+              .join(',')} ${count}개`,
+            tableNum: tableNum,
+          });
+          fetchOrders();
+        });
+      }
+    );
 
     return () => {
       socket.off('newCallRequest');
